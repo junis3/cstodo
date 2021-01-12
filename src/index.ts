@@ -39,33 +39,51 @@ slackEvents.on('message', async (event) => {
     }
 
     let cstodo = await getCstodo();
-    
+    let post_todolist = true; //list 전체를 보여주는가?
+
     // cstodo length 또는 cstodo size 커맨드
     if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
       webClient.chat.postMessage({
-        text: 'cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
+        text: '와... cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
         channel: event.channel,
       });
+      post_todolist = false;
     }
-
-    // cstodo add 커맨드
-    if (tokens[1] === 'add' && tokens.length >= 3) {
-      const query = tokens.slice(2).join(' ');
-      if (query.indexOf(',') === -1 && !cstodo.find((value) => value === query)) {
-        cstodo.push(query);
-        setCstodo(cstodo);
+    if (tokens[1] === 'add') {
+      if(tokens.length < 3){ //empty query string
         webClient.chat.postMessage({
-          text: `cs님의 할 일에 '${query}'를 추가했어요!`,
+          text: "nothing is added :blobnomouth:",
           channel: event.channel,
         });
+        post_todolist = false;
+      } else{ //tokens.length >= 3
+        let query = tokens.slice(2).join(' ');
+        if(query.indexOf(",") != -1) {
+          webClient.chat.postMessage({
+            text: "add 쿼리에 comma가 들어가면 똑떨이에요... :blobddokddulsad:",
+            channel: event.channel,
+          });
+          post_todolist = false;
+        }else{
+          cstodo.push(query);
+          setCstodo(cstodo);
+          webClient.chat.postMessage({
+            text: `cs님의 할 일에 '${query}'를 추가했어요!`,
+            channel: event.channel,
+          });
+        }
       }
     }
 
-    // cstodo remove 커맨드
-    if (tokens[1] === 'remove' && tokens.length >= 3) {
-      let query = tokens.slice(2).join(' ');
-
-      if (query.indexOf(',') === -1 && cstodo.find((value) => value === query)) {
+    if (tokens[1] === 'remove') {
+      if(tokens.length < 3){ //empty query string
+        webClient.chat.postMessage({
+          text: "빈 remove 쿼리는 똑떨이에요... :blobcry:",
+          channel: event.channel,
+        });
+        post_todolist = false;
+      } else{ //tokens.length >= 3
+        let query = tokens.slice(2).join(' ');
         cstodo = cstodo.filter((value) => value !== query);
         setCstodo(cstodo);
         webClient.chat.postMessage({
@@ -87,10 +105,12 @@ slackEvents.on('message', async (event) => {
     } else {
       fmtText += cstodo.join(', ');
     }
-    webClient.chat.postMessage({
-      text: fmtText,
-      channel: event.channel,
-    });
+    if(post_todolist) {
+      webClient.chat.postMessage({
+        text: fmtText,
+        channel: event.channel,
+      });
+    }
   }
 });
 

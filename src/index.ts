@@ -25,9 +25,12 @@ slackEvents.on('message', async (event) => {
   console.log(event);
 
   const text : string = event.text;
+  console.log(event.ts)
+  const date : Date = new Date(event.ts * 1000);
   const tokens = text.split(' ');
 
   if (tokens[0] === 'cstodo') {
+    let cstodo = await getCstodo();
 
     // cstodo help 커맨드
     if (tokens.length === 2 && tokens[1] === 'help') {
@@ -38,16 +41,13 @@ slackEvents.on('message', async (event) => {
       return;
     }
 
-    let cstodo = await getCstodo();
-    let post_todolist = true; //list 전체를 보여주는가?
-
     // cstodo length 또는 cstodo size 커맨드
     if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
       webClient.chat.postMessage({
         text: '와... cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
         channel: event.channel,
       });
-      post_todolist = false;
+      return;
     }
     if (tokens[1] === 'add') {
       if(tokens.length < 3){ //empty query string
@@ -55,7 +55,7 @@ slackEvents.on('message', async (event) => {
           text: "nothing is added :blobnomouth:",
           channel: event.channel,
         });
-        post_todolist = false;
+        return;
       } else{ //tokens.length >= 3
         let query = tokens.slice(2).join(' ');
         if(query.indexOf(",") != -1) {
@@ -63,7 +63,7 @@ slackEvents.on('message', async (event) => {
             text: "add 쿼리에 comma가 들어가면 똑떨이에요... :blobddokddulsad:",
             channel: event.channel,
           });
-          post_todolist = false;
+          return;
         }else{
           cstodo.push(query);
           setCstodo(cstodo);
@@ -81,7 +81,7 @@ slackEvents.on('message', async (event) => {
           text: "빈 remove 쿼리는 똑떨이에요... :blobcry:",
           channel: event.channel,
         });
-        post_todolist = false;
+        return;
       } else{ //tokens.length >= 3
         let query = tokens.slice(2).join(' ');
         cstodo = cstodo.filter((value) => value !== query);
@@ -92,8 +92,8 @@ slackEvents.on('message', async (event) => {
         });
       }
     }
-
-    let fmtText = ':god: :시신: 할 일 목록 :god: : \n';
+    
+    let fmtText = `:god: :시신: 할 일 목록 :god: (Request Time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n`;
     if (tokens[1] === 'format') {
       for(var i = 0; i < bulletEmoji.length && i < cstodo.length; i++) {
         fmtText += bulletEmoji[i] + ' ' + cstodo[i] + '\n';
@@ -105,12 +105,10 @@ slackEvents.on('message', async (event) => {
     } else {
       fmtText += cstodo.join(', ');
     }
-    if(post_todolist) {
-      webClient.chat.postMessage({
-        text: fmtText,
-        channel: event.channel,
-      });
-    }
+    webClient.chat.postMessage({
+      text: fmtText,
+      channel: event.channel,
+    });
   }
 });
 

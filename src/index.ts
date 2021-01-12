@@ -57,7 +57,7 @@ slackEvents.on('message', async (event) => {
     if (tokens[1] === 'add') {
       if(tokens.length < 3){ //empty query string
         webClient.chat.postMessage({
-          text: "nothing is added :blobnomouth:",
+          text: "빈 add 쿼리는 똑떨이에요... :blobcry:",
           channel: event.channel,
         });
         return;
@@ -103,9 +103,9 @@ slackEvents.on('message', async (event) => {
       for(var i = 0; i < bulletEmoji.length && i < cstodo.length; i++) {
         fmtText += bulletEmoji[i] + ' ' + cstodo[i] + '\n';
       }
-      var remainingTodos = String(Math.max(0, cstodo.length - bulletEmoji.length));
+      const remainingTodos = String(Math.max(0, cstodo.length - bulletEmoji.length));
       if(cstodo.length > bulletEmoji.length) {
-        fmtText += '아직도 할 일이 ' + remainingTodos + '개나 더 있어요... :blobaww:\n'
+        fmtText += ':keycap_star: ' + '아직도 할 일이 ' + remainingTodos + '개나 더 있어요... :blobaww:\n'
       }
     } else {
       fmtText += cstodo.join(', ');

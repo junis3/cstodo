@@ -8,7 +8,7 @@ export const getProblemInfo = async (id: number) => {
 
     const title = response.data.result.problems[0].title;
     const levelNum = response.data.result.problems[0].level;
-    const level = ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.round((levelNum-1)/5)] + `${5 - (levelNum-1)%5}`;
+    const level = ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum-1)/5+0.000001)] + `${5 - (levelNum-1)%5}`;
 
     return {
         id,

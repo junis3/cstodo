@@ -51,7 +51,7 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
 
   const today = await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => ({
     id: id,
-    diff: getDifficulty(Number.parseInt(id)),
+    diff: await getDifficulty(Number.parseInt(id)),
   })));
 
 

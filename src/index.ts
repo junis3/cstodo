@@ -15,7 +15,11 @@ const cstodoTestChannel = 'C01JER4T7AN';
 const slackEvents = createEventAdapter(signingSecret);
 const webClient = new WebClient(accessToken);
 
-const bulletEmoji: string[] = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
+const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
+const helpText = `:god: :시신: cstodo봇 :시신: :god:
+cstodo: :시신:의 할 일 목록을 볼 수 있습니다.
+cstodo add [내용]: :시신:의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
+cstodo remove [내용]: :시신:의 할 일 목록에 항목을 뺄 수 있습니다.`;
 
 slackEvents.on('message', async (event) => {
   console.log(event);
@@ -24,8 +28,16 @@ slackEvents.on('message', async (event) => {
   const tokens = text.split(' ');
 
   if (tokens[0] === 'cstodo') {
+    if (tokens.length === 2 && tokens[1] === 'help') {
+      webClient.chat.postMessage({
+        text: helpText,
+        channel: event.channel,
+      });
+      return;
+    }
+
     let cstodo = await getCstodo();
-    if (tokens[1] === 'length' || tokens[1] == 'size') {
+    if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
       webClient.chat.postMessage({
         text: 'cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
         channel: event.channel,
@@ -42,6 +54,7 @@ slackEvents.on('message', async (event) => {
       cstodo = cstodo.filter((value) => value !== query);
       setCstodo(cstodo);
     }
+
     let fmtText = ':god: :시신: 할 일 목록 :god: : \n';
     if (tokens[1] === 'format') {
       for(var i = 0; i < bulletEmoji.length && i < cstodo.length; i++) {

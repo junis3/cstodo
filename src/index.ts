@@ -5,8 +5,12 @@ import getCurrentHistory from "./getCurrentHistory";
 import schedule from 'node-schedule';
 import { getCstodo, setCstodo, getHistory, setHistory } from "./file";
 import { accessToken, signingSecret } from "./config";
+import { getDifficulty } from "./getDifficulty";
 
 const app = express();
+
+const cstodoChannel = 'C01H4RY69CL';
+const cstodoTestChannel = 'C01JER4T7AN';
 
 const slackEvents = createEventAdapter(signingSecret);
 const webClient = new WebClient(accessToken);
@@ -45,11 +49,15 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
 
   setHistory(currentHistory);
 
-  const diff = currentHistory.filter((value) => !history.find((item) => item === value));
+  const today = await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => ({
+    id: id,
+    diff: getDifficulty(Number.parseInt(id)),
+  })));
+
 
   webClient.chat.postMessage({
-    text: '오늘 :god: :시신: :god:님이 푼 문제들: ' + diff.map((item) => `<http://icpc.me/${item}|${item}>`).join(', '),
-    channel: 'C01H4RY69CL'
+    text: '오늘 :god: :시신: :god:님이 푼 문제들: ' + today.map((item) => `<http://icpc.me/${item.id}|:${item.diff}:${item.id}>`).join(', '),
+    channel: cstodoChannel,
   })
 });
 

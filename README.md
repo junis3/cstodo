@@ -8,7 +8,11 @@ This is a slackbot built in order to help cs71107 catch his dream.
 
 After installing the bot and inviting the bot into the channel, you can use the following commands.
 
-* Command `cstodo` shows what cs71107 wants to do
+* Command `cstodo` shows what cs71107 desires to do.
+
+* Command `cstodo format` shows in more neat and organized way what cs71107 desires to do.
+
+* Command `cstodo size` or `cstodo length` shows the length of the cstodo list.
 
 * Command `cstodo add [content]` adds his todo.
 

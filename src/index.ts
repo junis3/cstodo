@@ -9,9 +9,11 @@ import { getProblemInfo } from "./getProblemInfo";
 
 const app = express();
 
+const isTesting = false;
+
 const csGod = 'UV78YL6TW';
-const cstodoChannel = 'C01H4RY69CL';
 const cstodoTestChannel = 'C01JER4T7AN';
+const cstodoChannel = isTesting ? cstodoTestChannel : 'C01H4RY69CL';
 
 const slackEvents = createEventAdapter(signingSecret);
 const webClient = new WebClient(accessToken);
@@ -149,6 +151,18 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
     });
   });
 });
+
+// 테스트 모드가 켜져있으면 끄라고 #cstodo-test에 알림을 보냅니다.
+if (isTesting) {
+  const alertTest = () => webClient.chat.postMessage({
+    text: '지금 cstodo 슬랙봇이 테스트 모드로 켜져 있어요. 의도한 게 아니라면 테스트 모드를 끄고 실행해 주세요!',
+    channel: cstodoTestChannel,
+  });
+
+  alertTest();
+  schedule.scheduleJob('0 0 * * * *', alertTest);
+  schedule.scheduleJob('0 30 * * * *', alertTest);
+}
 
 app.use('/cstodo', slackEvents.requestListener());
 

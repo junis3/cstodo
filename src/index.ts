@@ -28,6 +28,8 @@ slackEvents.on('message', async (event) => {
   const tokens = text.split(' ');
 
   if (tokens[0] === 'cstodo') {
+
+    // cstodo help 커맨드
     if (tokens.length === 2 && tokens[1] === 'help') {
       webClient.chat.postMessage({
         text: helpText,
@@ -37,22 +39,40 @@ slackEvents.on('message', async (event) => {
     }
 
     let cstodo = await getCstodo();
+    
+    // cstodo length 또는 cstodo size 커맨드
     if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
       webClient.chat.postMessage({
         text: 'cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
         channel: event.channel,
       });
     }
+
+    // cstodo add 커맨드
     if (tokens[1] === 'add' && tokens.length >= 3) {
-      let query = tokens.slice(2).join(' ');
-      cstodo.push(query);
-      setCstodo(cstodo);
+      const query = tokens.slice(2).join(' ');
+      if (query.indexOf(',') === -1 && !cstodo.find((value) => value === query)) {
+        cstodo.push(query);
+        setCstodo(cstodo);
+        webClient.chat.postMessage({
+          text: `cs님의 할 일에 '${query}'를 추가했어요!`,
+          channel: event.channel,
+        });
+      }
     }
 
+    // cstodo remove 커맨드
     if (tokens[1] === 'remove' && tokens.length >= 3) {
       let query = tokens.slice(2).join(' ');
-      cstodo = cstodo.filter((value) => value !== query);
-      setCstodo(cstodo);
+
+      if (query.indexOf(',') === -1 && cstodo.find((value) => value === query)) {
+        cstodo = cstodo.filter((value) => value !== query);
+        setCstodo(cstodo);
+        webClient.chat.postMessage({
+          text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
+          channel: event.channel,
+        });
+      }
     }
 
     let fmtText = ':god: :시신: 할 일 목록 :god: : \n';
@@ -74,6 +94,7 @@ slackEvents.on('message', async (event) => {
   }
 });
 
+// 자정에 울리는 '오늘 CS님이 푼 문제 목록'
 schedule.scheduleJob('0 0 0 * * *', async () => {
   const history = await getHistory();
   const currentHistory = await getCurrentHistory();

@@ -5,7 +5,7 @@ import getCurrentHistory from "./getCurrentHistory";
 import schedule from 'node-schedule';
 import { getCstodo, setCstodo, getHistory, setHistory } from "./file";
 import { accessToken, signingSecret } from "./config";
-import { getDifficulty } from "./getDifficulty";
+import { getProblemInfo } from "./getProblemInfo";
 
 const app = express();
 
@@ -49,14 +49,10 @@ schedule.scheduleJob('0 0 0 * * *', async () => {
 
   setHistory(currentHistory);
 
-  const today = await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => ({
-    id: id,
-    diff: await getDifficulty(Number.parseInt(id)),
-  })));
-
+  const today = await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => await getProblemInfo(Number.parseInt(id))));
 
   webClient.chat.postMessage({
-    text: '오늘 :god: :시신: :god:님이 푼 문제들: ' + today.map((item) => `<http://icpc.me/${item.id}|:${item.diff}:${item.id}>`).join(', '),
+    text: '오늘 :god: :시신: :god:님이 푼 문제들: ' + today.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
     channel: cstodoChannel,
   })
 });

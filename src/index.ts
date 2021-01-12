@@ -109,6 +109,11 @@ slackEvents.on('message', async (event) => {
       text: fmtText,
       channel: event.channel,
     });
+  } else if ( Math.random() < 0.005) {
+    webClient.chat.postMessage({
+      text: `역시 <@${event.user}>님이에요... :blobaww:`,
+      channel: event.channel,
+    })
   }
 });
 

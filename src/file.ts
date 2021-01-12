@@ -4,7 +4,7 @@ import fs from 'fs';
 export const getCstodo = async () => {
     return new Promise<string[]>((resolve, reject) => fs.readFile('cstodo.txt', 'utf-8', (error, data) => {
       if (error) reject(error);
-      resolve(data.split('\n'));
+      resolve(data.trim().split('\n'));
     }));
   }
   
@@ -20,7 +20,7 @@ export const setCstodo = async (cstodo : string[]) => {
 export const getHistory = async () => {
     return new Promise<string[]>((resolve, reject) => fs.readFile('history.txt', 'utf-8', (error, data) => {
         if (error) reject(error);
-        resolve(data.split('\n'));
+        resolve(data.trim().split('\n'));
     }));
   }
   

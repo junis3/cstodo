@@ -15,6 +15,8 @@ const cstodoTestChannel = 'C01JER4T7AN';
 const slackEvents = createEventAdapter(signingSecret);
 const webClient = new WebClient(accessToken);
 
+const bulletEmoji: string[] = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
+
 slackEvents.on('message', async (event) => {
   console.log(event);
 
@@ -23,7 +25,12 @@ slackEvents.on('message', async (event) => {
 
   if (tokens[0] === 'cstodo') {
     let cstodo = await getCstodo();
-
+    if (tokens[1] === 'length' || tokens[1] == 'size') {
+      webClient.chat.postMessage({
+        text: 'cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
+        channel: event.channel,
+      });
+    }
     if (tokens[1] === 'add' && tokens.length >= 3) {
       let query = tokens.slice(2).join(' ');
       cstodo.push(query);
@@ -35,9 +42,20 @@ slackEvents.on('message', async (event) => {
       cstodo = cstodo.filter((value) => value !== query);
       setCstodo(cstodo);
     }
-
+    let fmtText = ':god: :시신: 할 일 목록 :god: : \n';
+    if (tokens[1] === 'format') {
+      for(var i = 0; i < bulletEmoji.length && i < cstodo.length; i++) {
+        fmtText += bulletEmoji[i] + ' ' + cstodo[i] + '\n';
+      }
+      var remainingTodos = String(Math.max(0, cstodo.length - bulletEmoji.length));
+      if(cstodo.length > bulletEmoji.length) {
+        fmtText += '아직도 할 일이 ' + remainingTodos + '개나 더 있어요... :blobaww:\n'
+      }
+    } else {
+      fmtText += cstodo.join(', ');
+    }
     webClient.chat.postMessage({
-      text: ':god: :시신: 할 일 목록 :god: : ' + cstodo.join(', '),
+      text: fmtText,
       channel: event.channel,
     });
   }

@@ -11,6 +11,8 @@ const app = express();
 
 const isTesting = false;
 
+const turnOnTimestamp = new Date().getTime() / 1000;
+
 const csGod = 'UV78YL6TW';
 const cstodoTestChannel = 'C01JER4T7AN';
 const cstodoChannel = isTesting ? cstodoTestChannel : 'C01H4RY69CL';
@@ -28,9 +30,9 @@ const helpText = `:god: :시신: cstodo봇 :시신: :god:
 
 slackEvents.on('message', async (event) => {
   console.log(event);
+  if (event.ts < turnOnTimestamp) return;
 
   const text : string = event.text;
-  console.log(event.ts)
   const date : Date = new Date(event.ts * 1000);
   const tokens = text.split(' ');
 

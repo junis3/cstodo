@@ -1,6 +1,6 @@
 import fs from "fs";
-import { setHistory } from "./filesystem";
-import getCurrentHistory from "./getCurrentHistory";
+import { setHistory } from "./etc/filesystem";
+import getCurrentHistory from "./etc/getCurrentHistory";
 
 const preprocess = async () => {
     setHistory(await getCurrentHistory());

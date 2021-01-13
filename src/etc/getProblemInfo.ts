@@ -1,7 +1,6 @@
 import axios from "axios";
 
-
-export const getProblemInfo = async (id: number) => {
+const getProblemInfo = async (id: number) => {
     let response = await axios.get(`https://api.solved.ac/v2/problems/show.json?id=${id}`);
 
     if (response.status != 200) throw new Error('Solved.ac api returned non-200.');
@@ -16,3 +15,5 @@ export const getProblemInfo = async (id: number) => {
         title,
     }
 }
+
+export default getProblemInfo

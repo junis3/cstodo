@@ -31,16 +31,19 @@ Preprocess `cstodo.txt` and `history.txt` which are git-ignored. If you run with
 
 ## Run
 
-Write
+Make file named `.env` on project folder and write
 
-`export const signingSecret = 'YOUR SLACKBOT SIGNING SECRET';`
+```
+SIGNING_SECRET = (your signing secret)
+ACCESS_TOKEN = (your access token)
+```
 
-`export const accessToken = 'YOUR SLACKBOT ACCESS TOKEN';`
-
-in `src/config.ts` (after making the file)
-
-Execute
+Then, Execute
 
 `yarn`
 
 `yarn start`
+
+and slackbot will run on `localhost:3000/cstodo`. If you want to run it on slack, go to [Slack API page](https://api.slack.com/) > Feature > Event subscription and enter `(YOUR PUBLIC IP):3000/cstodo` on Request URL form.
+
+(If your IP is not a public IP, you should forward your IP to public IP using tools like `ngrok`.)

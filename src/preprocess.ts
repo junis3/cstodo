@@ -1,7 +1,6 @@
 import fs from "fs";
-import { setCstodo, setHistory } from "./file";
+import { setHistory } from "./filesystem";
 import getCurrentHistory from "./getCurrentHistory";
-
 
 const preprocess = async () => {
     setHistory(await getCurrentHistory());
@@ -15,6 +14,5 @@ const preprocess = async () => {
         }
     }));   
 }
-
 
 preprocess();

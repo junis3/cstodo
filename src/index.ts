@@ -3,7 +3,7 @@ import { WebClient } from "@slack/web-api";
 import express from "express";
 import getCurrentHistory from "./getCurrentHistory";
 import schedule from 'node-schedule';
-import { getCstodo, setCstodo, getHistory, setHistory } from "./file";
+import { getCstodo, setCstodo, getHistory, setHistory } from "./filesystem";
 import { accessToken, signingSecret } from "./config";
 import { getProblemInfo } from "./getProblemInfo";
 
@@ -107,7 +107,7 @@ slackEvents.on('message', async (event) => {
       }
       const remainingTodos = String(Math.max(0, cstodo.length - bulletEmoji.length));
       if(cstodo.length > bulletEmoji.length) {
-        fmtText += ':keycap_star: ' + '아직도 할 일이 ' + remainingTodos + '개나 더 있어요... :blobaww:\n'
+        fmtText += '*아직도 할 일이 ' + remainingTodos + '개나 더 있어요...* :blobaww:\n'
       }
     } else {
       fmtText += cstodo.join(', ');
@@ -116,7 +116,7 @@ slackEvents.on('message', async (event) => {
       text: fmtText,
       channel: event.channel,
     });
-  } else if ( Math.random() < 0.005) {
+  } else if (Math.random() < 0.003 + (event.user === csGod ? 0.007 : 0)) {
     webClient.chat.postMessage({
       text: `역시 <@${event.user}>님이에요... :blobaww:`,
       channel: event.channel,

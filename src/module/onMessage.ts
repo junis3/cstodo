@@ -15,6 +15,7 @@ const onMessage = async (event: any) => {
         webClient.chat.postMessage({
           text: `역시 <@${event.user}>님이에요... :blobaww:`,
           channel: event.channel,
+          icon_emoji: ':blobaww:'
         });
     }
 }

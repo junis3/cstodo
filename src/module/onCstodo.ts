@@ -29,6 +29,7 @@ const onCstodo = async (event: any) => {
     webClient.chat.postMessage({
       text: '와... cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
       channel: event.channel,
+      icon_emoji: ':시신:',
     });
     return;
   }
@@ -37,6 +38,7 @@ const onCstodo = async (event: any) => {
       webClient.chat.postMessage({
         text: "빈 add 쿼리는 똑떨이에요... :blobcry:",
         channel: event.channel,
+        icon_emoji: ':blobddokddulsad:'
       });
       return;
     } else { //tokens.length >= 3
@@ -45,6 +47,7 @@ const onCstodo = async (event: any) => {
         webClient.chat.postMessage({
           text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... :blobddokddulsad:",
           channel: event.channel,
+          icon_emoji: ':blobddokddulsad:',
         });
         return;
       }
@@ -52,6 +55,7 @@ const onCstodo = async (event: any) => {
         webClient.chat.postMessage({
           text: "add 쿼리에 comma가 들어가면 똑떨이에요... :blobddokddulsad:",
           channel: event.channel,
+          icon_emoji: ':blobddokddulsad:',
         });
         return;
       } else {
@@ -71,12 +75,14 @@ const onCstodo = async (event: any) => {
       webClient.chat.postMessage({
         text: "빈 remove 쿼리는 똑떨이에요... :blobcry:",
         channel: event.channel,
+        icon_emoji: ':blobddokddulsad:',
       });
       return;
     } else if (!cstodo.find((item) => item === query)) {
       webClient.chat.postMessage({
         text: "할 일에 있지 않은 걸 빼면 똑떨이에요... :blobddokddulsad:",
         channel: event.channel,
+        icon_emoji: ':blobddokddulsad:',
       });
       return;
     } else { //tokens.length >= 3
@@ -106,6 +112,7 @@ const onCstodo = async (event: any) => {
   webClient.chat.postMessage({
     text: fmtText,
     channel: event.channel,
+    icon_emoji: ':시신:',
   });
 }
 

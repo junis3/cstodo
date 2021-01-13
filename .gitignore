@@ -1,5 +1,5 @@
 node_modules
 cstodo.txt
 history.txt
-src/config.ts
 yarn-error.log
+.env

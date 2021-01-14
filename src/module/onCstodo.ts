@@ -42,7 +42,7 @@ const onCstodo = async (event: any) => {
       });
       return;
     } else { //tokens.length >= 3
-      let query = tokens.slice(2).join(' ');
+      let query = tokens.slice(2).join(' ').trim();
       if (cstodo.find((item) => item === query)) {
         webClient.chat.postMessage({
           text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... :blobddokddulsad:",
@@ -70,7 +70,7 @@ const onCstodo = async (event: any) => {
   }
 
   if (tokens[1] === 'remove') {
-    let query = tokens.slice(2).join(' ');
+    let query = tokens.slice(2).join(' ').trim();
     if(tokens.length < 3) { //empty query string
       webClient.chat.postMessage({
         text: "빈 remove 쿼리는 똑떨이에요... :blobcry:",

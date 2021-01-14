@@ -4,7 +4,7 @@ import { webClient } from '../index';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
-const onMessage = async (event: any) => {
+const onMessage = (event: any) => {
     if (event.ts < turnOnTimestamp) return;
   
     const text : string = event.text;

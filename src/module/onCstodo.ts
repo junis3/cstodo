@@ -4,7 +4,7 @@ import { webClient } from '../index';
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = `:god: :시신: cstodo봇 :시신: :god:
 \`cstodo\`: :시신:의 할 일 목록을 볼 수 있습니다.
-\`cstodo format\`: :시신:의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
+\`cstodo format (페이지번호)\`: :시신:의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
 \`cstodo size\` 또는 \`cstodo length\`: :시신:의 할 일의 개수를 볼 수 있습니다.
 \`cstodo add [내용]\`: :시신:의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
 \`cstodo remove [내용]\`: :시신:의 할 일 목록에 항목을 뺄 수 있습니다.`;
@@ -20,6 +20,8 @@ const onCstodo = async (event: any) => {
     webClient.chat.postMessage({
       text: helpText,
       channel: event.channel,
+      icon_emoji: `:blobok:`,
+      username: `cstodo help`,
     });
     return;
   }
@@ -98,12 +100,55 @@ const onCstodo = async (event: any) => {
   
   let fmtText = `:god: :시신: 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n`;
   if (tokens[1] === 'format') {
-    for (let i = 0; i < bulletEmoji.length && i < cstodo.length; i++) {
-      fmtText += bulletEmoji[i] + ' ' + cstodo[i] + '\n';
+    var page_offset = 0;
+    var page = 1;
+    if(tokens.length >= 3){
+      if(tokens.length > 3) {
+        webClient.chat.postMessage({
+          text: "추가해준 인자가 3개를 넘으면 똑떨이에요... :blobsob:",
+          channel: event.channel,
+          icon_emoji: ":blobddokddulsad:",
+          username: "똑떨한 cstodo",
+        });
+        return;
+      }
+      const tok = tokens[2].trim();
+      var mat = tok.match(/[0-9]/g);
+      if(mat !== null){
+        var recoveredToken = mat.join("");
+        if(recoveredToken === tok){
+          page = parseInt(tok);
+        }else{
+          page = 0;
+        }
+      }else{
+        page = 0;
+      }
+      if(!(1 <= page && (page - 1) * bulletEmoji.length < cstodo.length)){
+        webClient.chat.postMessage({
+          text: "page의 범위가 올바르지 않아요... :blobddokddul:",
+          channel: event.channel,
+          icon_emoji: ":blobddokddulsad:",
+          username: "똑떨한 cstodo",
+        });
+        return;
+      }
+      page_offset = (page - 1) * bulletEmoji.length;
     }
-    const remainingTodos = String(Math.max(0, cstodo.length - bulletEmoji.length));
-    if (cstodo.length > bulletEmoji.length) {
-      fmtText += '*아직도 할 일이 ' + remainingTodos + '개나 더 있어요...* :blobaww:\n'
+    var numListedTodos = 0;
+    for (let i = 0; i < bulletEmoji.length && page_offset + i < cstodo.length; i++) {
+      fmtText += bulletEmoji[i] + ' ' + cstodo[page_offset + i] + '\n';
+      numListedTodos += 1;
+    }
+    for (let i = 0, j = 0; i < cstodo.length; i += bulletEmoji.length, j++) {
+      fmtText += '| ';
+      if(i == page_offset) fmtText += `*${j+1}*`;
+      else fmtText += `${j+1}`;
+      fmtText += ' ';
+    }
+    fmtText += '|\n';
+    if (cstodo.length > numListedTodos) {
+      fmtText += `*이밖에도 할 일이 ${cstodo.length - numListedTodos}개나 더 있어요...* :blobaww:\n`
     }
   } else {
     fmtText += cstodo.join(', ');

@@ -33,6 +33,11 @@ const onCstodo = async (event: any) => {
       channel: event.channel,
       icon_emoji: ':blobfudouble:',
     });
+    await webClient.chat.postMessage({
+      text: 'ㅂㅇ',
+      channel: event.channel,
+      icon_emoji: ':blobfudouble:',
+    });
     webClient.conversations.leave({
       channel: event.channel,
     });

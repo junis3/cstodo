@@ -36,6 +36,7 @@ Make file named `.env` on project folder and write
 ```
 SIGNING_SECRET = (your signing secret)
 ACCESS_TOKEN = (your access token)
+LOG_WEBHOOK = (optional, webhook address to log on the testing slack channel)
 ```
 
 Then, Execute
@@ -44,6 +45,6 @@ Then, Execute
 
 `yarn start`
 
-and slackbot will run on `localhost:3000/cstodo`. If you want to run it on slack, go to [Slack API page](https://api.slack.com/) > Feature > Event subscription and enter `(YOUR PUBLIC IP):3000/cstodo` on Request URL form.
+and slackbot will run on `localhost:3000/cstodo`. If you want to run it on slack, [create a new new slackbot app](https://api.slack.com/apps) and go to administrating page for the app > Feature > Event subscription and enter `(YOUR PUBLIC IP):3000/cstodo` on Request URL form. (If your IP is not a public IP, you should forward your IP to public IP using tools like `ngrok`.)
 
-(If your IP is not a public IP, you should forward your IP to public IP using tools like `ngrok`.)
+If you want to forward the log messages and the error messages to your slack, go to app > Feature > Incoming Webhook and create a webhook URL for the testing channel.

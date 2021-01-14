@@ -4,6 +4,7 @@ dotenv.config();
 
 export const signingSecret = process.env.SIGNING_SECRET || 'cs71107';
 export const accessToken = process.env.ACCESS_TOKEN || 'cs71107';
+export const logWebhook = process.env.LOG_WEBHOOK || '';
 
 export const isTesting = false;
 

@@ -2,10 +2,15 @@ import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 import express from "express";
 import schedule from 'node-schedule';
-import { accessToken, cstodoTestChannel, isTesting, signingSecret } from "./config";
+import { accessToken, cstodoTestChannel, isTesting, logWebhook, signingSecret } from "./config";
 import onMessage from './module/onMessage';
 import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
+
+if (logWebhook) {
+    const consoleToSlack = require('console-to-slack');
+    consoleToSlack.init(logWebhook, 4);
+}
 
 const port = 3000;
 

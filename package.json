@@ -18,6 +18,7 @@
     "@types/voca": "^1.4.0",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
+    "console-to-slack": "^0.1.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",

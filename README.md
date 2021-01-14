@@ -39,6 +39,12 @@ ACCESS_TOKEN = (your access token)
 LOG_WEBHOOK = (optional, webhook address to log on the testing slack channel)
 ```
 
+If you want to rather open the app than to test the app, also append
+
+```
+IS_PRODUCTION = true
+```
+
 Then, Execute
 
 `yarn`

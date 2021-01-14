@@ -6,11 +6,19 @@ import { accessToken, cstodoTestChannel, isTesting, logWebhook, signingSecret } 
 import onMessage from './module/onMessage';
 import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
+import axios from "axios";
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
     consoleToSlack.init(logWebhook, 4);
 }
+
+(async () => {
+    const response = await axios.get('http://ip-api.com/json');
+    const data = response.data;
+
+    console.log(`${data.country} ${data.regionName}(${data.city})의 IP ${data.query} (위도 ${data.lat}, 경도 ${data.lon})에서 슬랙봇을 실행하고 있습니다.`);
+})();
 
 const port = 3000;
 
@@ -28,4 +36,4 @@ if (isTesting) onTest();
 const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
-app.listen(port, () => { console.log('Running slackbot..'); });
+app.listen(port, () => { console.log(`Running slackbot on port ${port}.`); });

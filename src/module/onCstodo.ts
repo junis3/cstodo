@@ -12,7 +12,8 @@ const helpText = `:god: :시신: cstodo봇 :시신: :god:
 const onCstodo = async (event: any) => {
   const text : string = event.text;
   const tokens = text.split(' ');
-  const date : Date = new Date(event.ts * 1000);
+  const date = new Date(event.ts * 1000);
+
   let cstodo = await getCstodo();
 
   // cstodo help 커맨드
@@ -20,8 +21,20 @@ const onCstodo = async (event: any) => {
     webClient.chat.postMessage({
       text: helpText,
       channel: event.channel,
-      icon_emoji: `:blobok:`,
-      username: `cstodo help`,
+      icon_emoji: ':blobok:',
+      username: 'cs71107',
+    });
+    return;
+  }
+
+  if (tokens.length === 2 && tokens[1] === 'fuck') {
+    await webClient.chat.postMessage({
+      text: ':blobfudouble: '.repeat(13),
+      channel: event.channel,
+      icon_emoji: ':blobfudouble:',
+    });
+    webClient.conversations.leave({
+      channel: event.channel,
     });
     return;
   }
@@ -35,77 +48,91 @@ const onCstodo = async (event: any) => {
     });
     return;
   }
-  if (tokens[1] === 'add') {
-    if(tokens.length < 3) { //empty query string
-      webClient.chat.postMessage({
-        text: "빈 add 쿼리는 똑떨이에요... :blobcry:",
-        channel: event.channel,
-        icon_emoji: ':blobddokddulsad:'
-      });
-      return;
-    } else { //tokens.length >= 3
-      let query = tokens.slice(2).join(' ').trim();
-      if (cstodo.find((item) => item === query)) {
-        webClient.chat.postMessage({
-          text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... :blobddokddulsad:",
-          channel: event.channel,
-          icon_emoji: ':blobddokddulsad:',
-        });
-        return;
-      }
-      if(query.indexOf(",") != -1) {
-        webClient.chat.postMessage({
-          text: "add 쿼리에 comma가 들어가면 똑떨이에요... :blobddokddulsad:",
-          channel: event.channel,
-          icon_emoji: ':blobddokddulsad:',
-        });
-        return;
-      } else {
-        cstodo.push(query);
-        await setCstodo(cstodo);
-        webClient.chat.postMessage({
-          text: `cs님의 할 일에 '${query}'를 추가했어요!`,
-          channel: event.channel,
-        });
-      }
-    }
-  }
 
-  if (tokens[1] === 'remove') {
-    let query = tokens.slice(2).join(' ').trim();
-    if(tokens.length < 3) { //empty query string
+  // cstodo add 커맨드
+  if (tokens[1] === 'add') {
+    if(tokens.length === 2) {
       webClient.chat.postMessage({
-        text: "빈 remove 쿼리는 똑떨이에요... :blobcry:",
+        text: "빈 add 쿼리는 똑떨이에요... :blobddokddulsad:",
         channel: event.channel,
         icon_emoji: ':blobddokddulsad:',
+        username: "똑떨한 cstodo",
       });
       return;
-    } else if (!cstodo.find((item) => item === query)) {
+    } 
+    
+    let query = tokens.slice(2).join(' ').trim();
+
+    if (cstodo.find((item) => item === query)) {
+      webClient.chat.postMessage({
+        text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... :blobddokddulsad:",
+        channel: event.channel,
+        icon_emoji: ':blobddokddulsad:',
+        username: "똑떨한 cstodo",
+      });
+      return;
+    }
+
+    if(query.indexOf(",") != -1) {
+      webClient.chat.postMessage({
+        text: "add 쿼리에 쉼표가 들어가면 똑떨이에요... :blobddokddulsad:",
+        channel: event.channel,
+        icon_emoji: ':blobddokddulsad:',
+        username: "똑떨한 cstodo",
+      });
+      return;
+    } 
+    
+    cstodo.push(query);
+    await setCstodo(cstodo);
+
+    webClient.chat.postMessage({
+      text: `cs님의 할 일에 '${query}'를 추가했어요!`,
+      channel: event.channel,
+    });
+  }
+
+  // cstodo remove 커맨드
+  if (tokens[1] === 'remove') {
+    if (tokens.length === 2) {
+      webClient.chat.postMessage({
+        text: "빈 remove 쿼리는 똑떨이에요... :blobddokddulsad:",
+        channel: event.channel,
+        icon_emoji: ':blobddokddulsad:',
+        username: "똑떨한 cstodo",
+      });
+      return;
+    } 
+
+    let query = tokens.slice(2).join(' ').trim();
+    
+    if (!cstodo.find((item) => item === query)) {
       webClient.chat.postMessage({
         text: "할 일에 있지 않은 걸 빼면 똑떨이에요... :blobddokddulsad:",
         channel: event.channel,
         icon_emoji: ':blobddokddulsad:',
+        username: "똑떨한 cstodo",
       });
       return;
-    } else { //tokens.length >= 3
-      cstodo = cstodo.filter((value) => value !== query);
+    } 
+    
+    cstodo = cstodo.filter((value) => value !== query);
       
-      setCstodo(cstodo);
-      webClient.chat.postMessage({
-        text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
-        channel: event.channel,
-      });
-    }
+    setCstodo(cstodo);
+    webClient.chat.postMessage({
+      text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
+      channel: event.channel,
+    });
   }
   
   let fmtText = `:god: :시신: 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n`;
   if (tokens[1] === 'format') {
-    var page_offset = 0;
-    var page = 1;
+    let page_offset = 0;
+    let page = 1;
     if(tokens.length >= 3){
       if(tokens.length > 3) {
         webClient.chat.postMessage({
-          text: "추가해준 인자가 3개를 넘으면 똑떨이에요... :blobsob:",
+          text: "추가해준 인자가 3개를 넘으면 똑떨이에요... :blobddokddulsad:",
           channel: event.channel,
           icon_emoji: ":blobddokddulsad:",
           username: "똑떨한 cstodo",
@@ -113,9 +140,9 @@ const onCstodo = async (event: any) => {
         return;
       }
       const tok = tokens[2].trim();
-      var mat = tok.match(/[0-9]/g);
+      let mat = tok.match(/[0-9]/g);
       if(mat !== null){
-        var recoveredToken = mat.join("");
+        let recoveredToken = mat.join("");
         if(recoveredToken === tok){
           page = parseInt(tok);
         }else{
@@ -135,14 +162,14 @@ const onCstodo = async (event: any) => {
       }
       page_offset = (page - 1) * bulletEmoji.length;
     }
-    var numListedTodos = 0;
+    let numListedTodos = 0;
     for (let i = 0; i < bulletEmoji.length && page_offset + i < cstodo.length; i++) {
       fmtText += bulletEmoji[i] + ' ' + cstodo[page_offset + i] + '\n';
       numListedTodos += 1;
     }
     for (let i = 0, j = 0; i < cstodo.length; i += bulletEmoji.length, j++) {
       fmtText += '| ';
-      if(i == page_offset) fmtText += `*${j+1}*`;
+      if (i == page_offset) fmtText += `*${j+1}*`;
       else fmtText += `${j+1}`;
       fmtText += ' ';
     }

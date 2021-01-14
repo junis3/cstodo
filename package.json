@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "pm2 start ./src/index.ts --name slackbot --log ./diary.log --time --watch --ignore-watch=\"node_modules\"",
-    "stop": "pm2 stop slackbot && pm2 delete slackbot",
+    "start": "npx ts-node ./src/index.ts",
     "preprocess": "npx ts-node ./src/preprocess.ts"
   },
   "author": "",

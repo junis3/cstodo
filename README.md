@@ -55,6 +55,16 @@ and slackbot will run on `localhost:3000/cstodo`. If you want to run it on slack
 
 If you want to forward the log messages and the error messages to your slack, go to app > Feature > Incoming Webhook and create a webhook URL for the testing channel.
 
-If you want to stop running the app, execute
+If you want to use PM2 to manage processes, execute
 
-`yarn stop`
+`yarn pm2 install typescript`
+
+at the first time. Execute
+
+`yarn pm2 start`
+
+to start the process and
+
+`yarn pm2 stop cstodo`
+
+to stop the process.

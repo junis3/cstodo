@@ -36,4 +36,4 @@ if (isTesting) onTest();
 const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
-app.listen(port, () => { console.log(`Running slackbot on port ${port}.`); });
+app.listen(port, () => console.log(`Running slackbot on port ${port}.`));

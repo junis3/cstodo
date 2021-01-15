@@ -10,7 +10,7 @@ const dailyProblem = async () => {
 
     setHistory(currentHistory);
 
-    const today = await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => await getProblemInfo(Number.parseInt(id))));
+    const today = (await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => await getProblemInfo(Number.parseInt(id))))).filter((item) => !!item);
 
     const diamonds = today.filter((item) => item.level.includes('dia'));
     const rubys = today.filter((item) => item.level.includes('ruby'));

@@ -6,7 +6,8 @@ const turnOnTimestamp = new Date().getTime() / 1000;
 
 const onMessage = (event: any) => {
     if (event.ts < turnOnTimestamp) return;
-  
+    if (!event.text) return;
+
     const text : string = event.text;
     const tokens = text.split(' ');
 

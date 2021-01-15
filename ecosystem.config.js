@@ -8,6 +8,8 @@ module.exports = {
                 "node_modules",
                 "\.git",
                 ".\.log",
+                "cstodo.txt",
+                "history.txt"
             ],
         }
     ]

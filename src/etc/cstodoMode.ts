@@ -33,13 +33,21 @@ export const IconEmojiMap: NestedStringMap = {
   sob: {
       blob: ':blobsob:',
       weeb: ':weebcry:',
-  }
+  },
+  go: {
+      mark: ':blobimfine:',
+      marx: ':blobcommunism:',
+  },
 };
 
 export const MessageMap : NestedStringMap = {
   fuck: {
     blob: ':blobfudouble:'.repeat(13),
     weeb: ':weebfu:'.repeat(13),
+  },
+  go: {
+    mark: 'and <https://youtu.be/1RRStUaTZZk|go...>',
+    marx: 'and <https://youtu.be/YZuAf7VAeKg|go...>',
   },
 };
 

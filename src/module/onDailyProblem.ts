@@ -1,4 +1,5 @@
 import { getHistory, setHistory } from '../etc/filesystem';
+import { IconEmojiMap, MessageMap, cstodoMode } from '../etc/cstodoMode';
 import getCurrentHistory from '../etc/getCurrentHistory';
 import { webClient } from '../index';
 import getProblemInfo from '../etc/getProblemInfo';
@@ -34,7 +35,7 @@ const dailyProblem = async () => {
             webClient.chat.postMessage({
                 text: '오늘 :god: :시신: :god:님이 푼 문제들입니다!\n' + today.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
                 channel: cstodoChannel,
-                icon_emoji: ':시신:',
+                icon_emoji: IconEmojiMap['default'][cstodoMode],
             });
         }
         
@@ -42,13 +43,13 @@ const dailyProblem = async () => {
             webClient.chat.postMessage({
                 text: emptyMessage[Math.floor(Math.random()*emptyMessage.length)],
                 channel: cstodoChannel,
-                icon_emoji: ':blobsob:'
+                icon_emoji: IconEmojiMap['sob'][cstodoMode],
             });
         } else if (diamonds.length === 0 && rubys.length === 0) {
             webClient.chat.postMessage({
                 text: diamondEmptyMessage[Math.floor(Math.random()*diamondEmptyMessage.length)],
                 channel: cstodoChannel,
-                icon_emoji: ':blobsob:'
+                icon_emoji: IconEmojiMap['sob'][cstodoMode],
             });
         }
 
@@ -56,7 +57,7 @@ const dailyProblem = async () => {
             webClient.chat.postMessage({
                 text: `:tada: cs신님께 새로 학살당한 루비! <http://icpc.me/${problem.id}|:${problem.level}:${problem.title}> 입니다! :시신: :tada:`,
                 channel: cstodoChannel,
-                icon_emoji: ':시신:',
+                icon_emoji: IconEmojiMap['default'][cstodoMode],
             });
         });
     };
@@ -65,7 +66,7 @@ const dailyProblem = async () => {
         webClient.chat.postMessage({
             text: '오늘 cs님은 몇 문제를 풀었을까요..? 60초 후에 공개합니다!!!',
             channel: cstodoChannel,
-            icon_emoji: ':시신:',
+            icon_emoji: IconEmojiMap['default'][cstodoMode],
         });
 
         setTimeout(postResult, 60000);

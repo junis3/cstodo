@@ -1,9 +1,11 @@
 import { getCstodo, setCstodo } from '../etc/filesystem';
+import { IconEmojiMap, MessageMap, cstodoMode, setCstodoMode } from '../etc/cstodoMode';
 import { webClient } from '../index';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = `:god: :시신: cstodo봇 :시신: :god:
 \`cstodo\`: :시신:의 할 일 목록을 볼 수 있습니다.
+\`cstodo blob|weeb\`: cstodo의 프사를 바꿀 수 있습니다.
 \`cstodo format (페이지번호)\`: :시신:의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
 \`cstodo size\` 또는 \`cstodo length\`: :시신:의 할 일의 개수를 볼 수 있습니다.
 \`cstodo add [내용]\`: :시신:의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
@@ -21,22 +23,34 @@ const onCstodo = async (event: any) => {
     webClient.chat.postMessage({
       text: helpText,
       channel: event.channel,
-      icon_emoji: ':blobok:',
+      icon_emoji: IconEmojiMap['help'][cstodoMode],
       username: 'cs71107',
+    });
+    return;
+  }
+
+  //cstodo weeb | blob
+  if( tokens.length === 2 && (tokens[1] === 'blob' || tokens[1] === 'weeb')){
+    setCstodoMode(tokens[1]);
+    webClient.chat.postMessage({
+      text: `cstodo의 프사가 ${cstodoMode} 모드로 바뀌었습니다.`,
+      channel: event.channel,
+      icon_emoji: IconEmojiMap['default'][cstodoMode],
+      usename: `cstodo(${cstodoMode})`,
     });
     return;
   }
 
   if (tokens.length === 2 && tokens[1] === 'fuck') {
     await webClient.chat.postMessage({
-      text: ':blobfudouble: '.repeat(13),
+      text: MessageMap['fuck'][cstodoMode],
       channel: event.channel,
-      icon_emoji: ':blobfudouble:',
+      icon_emoji: IconEmojiMap['fuck'][cstodoMode],
     });
     await webClient.chat.postMessage({
       text: 'ㅂㅇ',
       channel: event.channel,
-      icon_emoji: ':blobfudouble:',
+      icon_emoji: IconEmojiMap['fuck'][cstodoMode],
     });
     webClient.conversations.leave({
       channel: event.channel,
@@ -47,9 +61,9 @@ const onCstodo = async (event: any) => {
   // cstodo length 또는 cstodo size 커맨드
   if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
     webClient.chat.postMessage({
-      text: '와... cs님의 할 일은 총 ' + String(cstodo.length) + ' 개가 있어요... :시신:',
+      text: `와... cs님의 할 일은 총 ${cstodo.length} 개가 있어요... :시신:`,
       channel: event.channel,
-      icon_emoji: ':시신:',
+      icon_emoji: IconEmojiMap['default'][cstodoMode],
     });
     return;
   }
@@ -58,9 +72,9 @@ const onCstodo = async (event: any) => {
   if (tokens[1] === 'add') {
     if(tokens.length === 2) {
       webClient.chat.postMessage({
-        text: "빈 add 쿼리는 똑떨이에요... :blobddokddulsad:",
+        text: "빈 add 쿼리는 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
         channel: event.channel,
-        icon_emoji: ':blobddokddulsad:',
+        icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
         username: "똑떨한 cstodo",
       });
       return;
@@ -70,9 +84,9 @@ const onCstodo = async (event: any) => {
 
     if (cstodo.find((item) => item === query)) {
       webClient.chat.postMessage({
-        text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... :blobddokddulsad:",
+        text: "이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
         channel: event.channel,
-        icon_emoji: ':blobddokddulsad:',
+        icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
         username: "똑떨한 cstodo",
       });
       return;
@@ -80,9 +94,9 @@ const onCstodo = async (event: any) => {
 
     if(query.indexOf(",") != -1) {
       webClient.chat.postMessage({
-        text: "add 쿼리에 쉼표가 들어가면 똑떨이에요... :blobddokddulsad:",
+        text: "add 쿼리에 쉼표가 들어가면 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
         channel: event.channel,
-        icon_emoji: ':blobddokddulsad:',
+        icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
         username: "똑떨한 cstodo",
       });
       return;
@@ -93,17 +107,24 @@ const onCstodo = async (event: any) => {
 
     webClient.chat.postMessage({
       text: `cs님의 할 일에 '${query}'를 추가했어요!`,
+      icon_emoji: IconEmojiMap['add'][cstodoMode],
       channel: event.channel,
     });
+    webClient.chat.postMessage({
+      text: `:god: :시신: 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', '),
+      channel: event.channel,
+      icon_emoji: IconEmojiMap['add'][cstodoMode],
+    });
+    return;
   }
 
   // cstodo remove 커맨드
   if (tokens[1] === 'remove') {
     if (tokens.length === 2) {
       webClient.chat.postMessage({
-        text: "빈 remove 쿼리는 똑떨이에요... :blobddokddulsad:",
+        text: "빈 remove 쿼리는 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
         channel: event.channel,
-        icon_emoji: ':blobddokddulsad:',
+        icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
         username: "똑떨한 cstodo",
       });
       return;
@@ -113,9 +134,9 @@ const onCstodo = async (event: any) => {
     
     if (!cstodo.find((item) => item === query)) {
       webClient.chat.postMessage({
-        text: "할 일에 있지 않은 걸 빼면 똑떨이에요... :blobddokddulsad:",
+        text: "할 일에 있지 않은 걸 빼면 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
         channel: event.channel,
-        icon_emoji: ':blobddokddulsad:',
+        icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
         username: "똑떨한 cstodo",
       });
       return;
@@ -126,8 +147,15 @@ const onCstodo = async (event: any) => {
     setCstodo(cstodo);
     webClient.chat.postMessage({
       text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
+      icon_emoji: IconEmojiMap['remove'][cstodoMode],
       channel: event.channel,
     });
+    webClient.chat.postMessage({
+      text: `:god: :시신: 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', '),
+      channel: event.channel,
+      icon_emoji: IconEmojiMap['remove'][cstodoMode],
+    });
+    return;
   }
   
   let fmtText = `:god: :시신: 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n`;
@@ -137,9 +165,9 @@ const onCstodo = async (event: any) => {
     if(tokens.length >= 3){
       if(tokens.length > 3) {
         webClient.chat.postMessage({
-          text: "추가해준 인자가 3개를 넘으면 똑떨이에요... :blobddokddulsad:",
+          text: "추가해준 인자가 3개를 넘으면 똑떨이에요... " + IconEmojiMap['ddokddul'][cstodoMode],
           channel: event.channel,
-          icon_emoji: ":blobddokddulsad:",
+          icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
           username: "똑떨한 cstodo",
         });
         return;
@@ -158,9 +186,9 @@ const onCstodo = async (event: any) => {
       }
       if(!(1 <= page && (page - 1) * bulletEmoji.length < cstodo.length)){
         webClient.chat.postMessage({
-          text: "page의 범위가 올바르지 않아요... :blobddokddul:",
+          text: "page의 범위가 올바르지 않아요... " + IconEmojiMap['ddokddul'][cstodoMode],
           channel: event.channel,
-          icon_emoji: ":blobddokddulsad:",
+          icon_emoji: IconEmojiMap['ddokddul'][cstodoMode],
           username: "똑떨한 cstodo",
         });
         return;
@@ -180,7 +208,7 @@ const onCstodo = async (event: any) => {
     }
     fmtText += '|\n';
     if (cstodo.length > numListedTodos) {
-      fmtText += `*이밖에도 할 일이 ${cstodo.length - numListedTodos}개나 더 있어요...* :blobaww:\n`
+      fmtText += `*이밖에도 할 일이 ${cstodo.length - numListedTodos}개나 더 있어요...* ${IconEmojiMap['add'][cstodoMode]}\n`
     }
   } else {
     fmtText += cstodo.join(', ');
@@ -189,7 +217,7 @@ const onCstodo = async (event: any) => {
   webClient.chat.postMessage({
     text: fmtText,
     channel: event.channel,
-    icon_emoji: ':시신:',
+    icon_emoji: IconEmojiMap['default'][cstodoMode],
   });
 }
 

@@ -30,6 +30,4 @@ const getProblemInfo = async (id: number) => {
     }
 }
 
-getProblemInfo(7982).then(({ source }) => console.log(source));
-
 export default getProblemInfo;

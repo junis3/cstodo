@@ -3,7 +3,7 @@ import getCurrentHistory from '../etc/getCurrentHistory';
 import { webClient } from '../index';
 import getProblemInfo from '../etc/getProblemInfo';
 import { cstodoChannel } from '../config';
-import { emoji } from 'etc/cstodoMode';
+import { emoji } from '../etc/cstodoMode';
 
 const emptyMessage = () => [
     emoji('sob').repeat(23),

@@ -2,7 +2,7 @@ import { csGod } from '../config';
 import onCstodo from './onCstodo';
 import onYourMark from './onYourMark';
 import { webClient } from '../index';
-import { emoji } from 'etc/cstodoMode';
+import { emoji } from '../etc/cstodoMode';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 

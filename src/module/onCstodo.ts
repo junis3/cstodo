@@ -9,7 +9,7 @@ const helpText = (mode: string = cstodoMode) => `:god: 시신 cstodo봇 시신 :
 \`cstodo format (페이지번호)\`: 시신의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
 \`cstodo size\` 또는 \`cstodo length\`: 시신의 할 일의 개수를 볼 수 있습니다.
 \`cstodo add [내용]\`: 시신의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
-\`cstodo remove [내용]\`: 시신의 할 일 목록에 항목을 뺄 수 있습니다.`.replace('시신', emoji('cs'));
+\`cstodo remove [내용]\`: 시신의 할 일 목록에 항목을 뺄 수 있습니다.`.replaceAll('시신', emoji('cs'));
 
 const onCstodo = async (event: any) => {
   const text : string = event.text;

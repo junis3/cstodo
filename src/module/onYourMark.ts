@@ -1,22 +1,22 @@
-import { IconEmojiMap, MessageMap, cstodoMode, setCstodoMode } from '../etc/cstodoMode';
+import { cstodoMode, setCstodoMode, emoji, message } from '../etc/cstodoMode';
 import { webClient } from '../index';
 
 const onYourMark = async (event: any) => {
     const text : string = event.text;
     if(text.toLowerCase() === 'on your mark...'){
         webClient.chat.postMessage({
-            text: MessageMap.go['mark'],
+            text: message('go', 'mark'),
             channel: event.channel,
-            icon_emoji: IconEmojiMap.go['mark'],
+            icon_emoji: emoji('go', 'mark'),
             username: 'Get Set...',
         });
         return;
     }
     if(text.toLowerCase() === 'on your marx...'){
         webClient.chat.postMessage({
-            text: MessageMap.go['marx'],
+            text: message('go', 'marx'),
             channel: event.channel,
-            icon_emoji: IconEmojiMap.go['marx'],
+            icon_emoji: emoji('go', 'marx'),
             username: 'Gyet Syet...',
         });
         return;

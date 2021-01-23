@@ -2,17 +2,24 @@ import fs from "fs";
 import { setHistory } from "./etc/filesystem";
 import getCurrentHistory from "./etc/getCurrentHistory";
 
-const preprocess = async () => {
-    setHistory(await getCurrentHistory());
-
-    await new Promise<void>((resolve, reject) => fs.readFile('cstodo.txt', 'UTF-8', (err) => {
+// Make empty 'filename' file on project root if it does not exist
+const makeEmptyFile = async (fileName: string) => {
+    await new Promise<void>((resolve, reject) => fs.readFile(fileName, 'UTF-8', (err) => {
         if (err && err.code === 'ENOENT') {
-            fs.writeFile('cstodo.txt', '', 'UTF-8', (err) => {
+            fs.writeFile(fileName, '', 'UTF-8', (err) => {
                 if (err) reject(err);
                 resolve();
             });
         }
     }));   
+}
+
+export const preprocess = async () => {
+    setHistory(await getCurrentHistory());
+
+    await Promise.all([
+        makeEmptyFile('cstodo.txt'),
+    ]);
 }
 
 preprocess();

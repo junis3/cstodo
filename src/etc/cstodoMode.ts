@@ -5,10 +5,14 @@ interface NestedStringMap {
   [key: string]: StringMap; 
 }
 
-export const IconEmojiMap: NestedStringMap = {
+const EmojiMap: NestedStringMap = {
   default: {
     blob: ':시신:',
     weeb: ':weebstare:',
+  },
+  cs: {
+    blob: ':시신:',
+    weeb: ':weebdead:',
   },
   ddokddul: {
     blob: ':blobddokddulsad:',
@@ -32,7 +36,19 @@ export const IconEmojiMap: NestedStringMap = {
   },
   sob: {
       blob: ':blobsob:',
+      weeb: ':weebcry2:',
+  },
+  cry: {
+      blob: ':blobcry:',
       weeb: ':weebcry:',
+  },
+  hug: {
+      blob: ':blobhug:',
+      weeb: ':weebyay2:',
+  },
+  aww: {
+      blob: ':blobaww:',
+      weeb: ':weebsugoi:'
   },
   go: {
       mark: ':blobimfine:',
@@ -40,7 +56,11 @@ export const IconEmojiMap: NestedStringMap = {
   },
 };
 
-export const MessageMap : NestedStringMap = {
+export const emoji = (name: string = '', mode: string = cstodoMode) => {
+  return EmojiMap[name][mode] || ':시신:';
+}
+
+const MessageMap : NestedStringMap = {
   fuck: {
     blob: ':blobfudouble:'.repeat(13),
     weeb: ':weebfu:'.repeat(13),
@@ -50,6 +70,10 @@ export const MessageMap : NestedStringMap = {
     marx: 'and <https://youtu.be/YZuAf7VAeKg|go...>',
   },
 };
+
+export const message = (name: string = '', mode: string = cstodoMode) => {
+  return MessageMap[name][mode] || ':시신:';
+}
 
 export let cstodoMode : string = 'blob';
 export function setCstodoMode(mode: string) {

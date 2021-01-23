@@ -3,13 +3,16 @@ import { cstodoMode, setCstodoMode, emoji, message } from '../etc/cstodoMode';
 import { webClient } from '../index';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
-const helpText = (mode: string = cstodoMode) => `:god: 시신 cstodo봇 시신 :god:
-\`cstodo\`: 시신의 할 일 목록을 볼 수 있습니다.
+const helpText = (mode: string = cstodoMode) => {
+  const cs = emoji('cs');
+  return `:god: ${cs} cstodo봇 ${cs} :god:
+\`cstodo\`: ${cs}의 할 일 목록을 볼 수 있습니다.
 \`cstodo blob|weeb\`: cstodo의 프로필을 바꿀 수 있습니다.
-\`cstodo format (페이지번호)\`: 시신의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
-\`cstodo size\` 또는 \`cstodo length\`: 시신의 할 일의 개수를 볼 수 있습니다.
-\`cstodo add [내용]\`: 시신의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
-\`cstodo remove [내용]\`: 시신의 할 일 목록에 항목을 뺄 수 있습니다.`.replaceAll('시신', emoji('cs'));
+\`cstodo format (페이지번호)\`: ${cs}의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
+\`cstodo size\` 또는 \`cstodo length\`: ${cs}의 할 일의 개수를 볼 수 있습니다.
+\`cstodo add [내용]\`: ${cs}의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
+\`cstodo remove [내용]\`: ${cs}의 할 일 목록에 항목을 뺄 수 있습니다.`
+}
 
 const onCstodo = async (event: any) => {
   const text : string = event.text;

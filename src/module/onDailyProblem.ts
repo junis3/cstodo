@@ -40,13 +40,13 @@ const dailyProblem = async () => {
         
         if (today.length === 0) {
             webClient.chat.postMessage({
-                text: emptyMessage()[Math.floor(Math.random()*emptyMessage.length)],
+                text: emptyMessage()[Math.floor(Math.random()*emptyMessage().length)],
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
         } else if (diamonds.length === 0 && rubys.length === 0) {
             webClient.chat.postMessage({
-                text: diamondEmptyMessage()[Math.floor(Math.random()*diamondEmptyMessage.length)],
+                text: diamondEmptyMessage()[Math.floor(Math.random()*diamondEmptyMessage().length)],
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });

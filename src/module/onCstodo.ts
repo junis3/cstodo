@@ -4,7 +4,7 @@ import { webClient } from '../index';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = (mode: string = cstodoMode) => {
-  const cs = emoji('cs');
+  const cs = emoji('cs', mode);
   return `:god: ${cs} cstodo봇 ${cs} :god:
 \`cstodo\`: ${cs}의 할 일 목록을 볼 수 있습니다.
 \`cstodo blob|weeb\`: cstodo의 프로필을 바꿀 수 있습니다.

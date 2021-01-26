@@ -17,7 +17,7 @@ const onMessage = async (event: any) => {
 
     if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);
-    else if (Math.random() < 0.7 + (event.user === csGod ? 0.007 : 0)) {
+    else if (Math.random() < 0.003 + (event.user === csGod ? 0.007 : 0)) {
         let profileResult = await webClient.users.profile.get({
           user: event.user,
         });

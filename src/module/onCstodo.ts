@@ -99,7 +99,7 @@ const onCstodo = async (event: any) => {
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
       
-      if (cstodo.find((item) => item === query)) {
+      if (cstodo.find((item) => item === nowQuery)) {
         webClient.chat.postMessage({
           text: `이미 할 일에 있는 ${nowQuery}를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
           channel: event.channel,

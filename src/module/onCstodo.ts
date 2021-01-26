@@ -11,13 +11,23 @@ const helpText = (mode: string = cstodoMode) => {
 \`cstodo format (페이지번호)\`: ${cs}의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
 \`cstodo size\` 또는 \`cstodo length\`: ${cs}의 할 일의 개수를 볼 수 있습니다.
 \`cstodo add [내용]\`: ${cs}의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
-\`cstodo remove [내용]\`: ${cs}의 할 일 목록에 항목을 뺄 수 있습니다.`
+\`cstodo remove [내용]\`: ${cs}의 할 일 목록에 항목을 뺄 수 있습니다.
+\`cstodo pop\`: ${cs}의 마지막 할 일을 뺍니다.`
 }
 
 const onCstodo = async (event: any) => {
   const text : string = event.text;
-  const tokens = text.split(' ');
+  const tokens = text.split(' ')
   const date = new Date(event.ts * 1000);
+
+  if (text.split('').filter((chr) => ['\n', '`'].find((x) => x === chr)).length > 0 || text.length > 2000) {
+    webClient.chat.postMessage({
+      text: `${emoji('fuck')}`,
+      channel: event.channel,
+      icon_emoji: emoji('fuck'),
+    });
+    return;
+  }
 
   let cstodo = await getCstodo();
 

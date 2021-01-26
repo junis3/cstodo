@@ -212,18 +212,10 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  
-  let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', ');
-
-  webClient.chat.postMessage({
-    text: fmtText,
-    channel: event.channel,
-    icon_emoji: emoji('default'),
-  });
-
   let maxLen = Math.max(...cstodo.map((str) => str.length));
+  let sumLen = cstodo.map((str) => str.length).reduce((x, y) => x + y);
 
-  while (cstodo.length > 200 || cstodo.map((str) => str.length).reduce((x, y) => x + y) > 2000) {
+  while (cstodo.length > 200 || sumLen > 2000) {
     while (true) {
       let i = Math.floor(Math.random() * cstodo.length);
 
@@ -237,10 +229,21 @@ const onCstodo = async (event: any) => {
           icon_emoji: emoji('communism'),
           channel: event.channel,
         });
+        sumLen -= query.length;
+
         break;
       }
     }
   }
+  
+  let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', ');
+
+  await webClient.chat.postMessage({
+    text: fmtText,
+    channel: event.channel,
+    icon_emoji: emoji('default'),
+  });
+
 }
 
 export default onCstodo;

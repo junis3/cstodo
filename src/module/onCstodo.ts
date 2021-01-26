@@ -94,26 +94,28 @@ const onCstodo = async (event: any) => {
     
     let query = tokens.slice(2).join(' ').trim();
 
-    if (cstodo.find((item) => item === query)) {
-      webClient.chat.postMessage({
-        text: `이미 할 일에 있는 걸 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
-        channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
-        username: "똑떨한 cstodo",
-      });
-      return;
-    }
+    
 
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
-
-      cstodo.push(nowQuery);
-      await setCstodo(cstodo);  
-      await webClient.chat.postMessage({
-        text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
-        icon_emoji: emoji('add'),
-        channel: event.channel,
-      });
+      
+      if (cstodo.find((item) => item === query)) {
+        webClient.chat.postMessage({
+          text: `이미 할 일에 있는 ${nowQuery}를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
+          channel: event.channel,
+          icon_emoji: emoji('ddokddul'),
+          username: "똑떨한 cstodo",
+        });
+        return;
+      } else {
+        cstodo.push(nowQuery);
+        await setCstodo(cstodo);  
+        await webClient.chat.postMessage({
+          text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
+          icon_emoji: emoji('add'),
+          channel: event.channel,
+        });
+      }
     }));
   }
 

@@ -20,7 +20,7 @@ const onCstodo = async (event: any) => {
   const tokens = text.split(' ').map((token) => token.trim());
   const date = new Date(event.ts * 1000);
 
-  if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 2000) {
+  if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 500) {
     webClient.chat.postMessage({
       text: `${emoji('fuck')}`,
       channel: event.channel,
@@ -213,9 +213,9 @@ const onCstodo = async (event: any) => {
   }
 
   let maxLen = Math.max(...cstodo.map((str) => str.length));
-  let sumLen = cstodo.map((str) => str.length).reduce((x, y) => x + y);
+  let sumLen = cstodo.map((str) => str.length).reduce((x, y) => x + y, 0);
 
-  while (cstodo.length > 200 || sumLen > 2000) {
+  while (cstodo.length > 200 || sumLen > 500) {
     while (true) {
       let i = Math.floor(Math.random() * cstodo.length);
 
@@ -228,6 +228,7 @@ const onCstodo = async (event: any) => {
           text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니까 수고하십시오..`,
           icon_emoji: emoji('communism'),
           channel: event.channel,
+          username: '당대표',
         });
         sumLen -= query.length;
 

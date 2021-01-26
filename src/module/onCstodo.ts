@@ -106,7 +106,7 @@ const onCstodo = async (event: any) => {
 
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
-      
+
       cstodo.push(nowQuery);
       await setCstodo(cstodo);  
       await webClient.chat.postMessage({
@@ -139,22 +139,20 @@ const onCstodo = async (event: any) => {
         username: "똑떨한 cstodo",
       });
       return;
-    } 
-    
-    cstodo = cstodo.filter((value) => value !== query);
+    }
+
+    await Promise.all(query.split(',').map(async (nowQuery) => {
+      nowQuery = nowQuery.trim();
       
-    setCstodo(cstodo);
-    webClient.chat.postMessage({
-      text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
-      icon_emoji: emoji('remove'),
-      channel: event.channel,
-    });
-    webClient.chat.postMessage({
-      text: `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', '),
-      icon_emoji: emoji('remove'),
-      channel: event.channel,
-    });
-    return;
+      cstodo = cstodo.filter((value) => value !== nowQuery);
+
+      await setCstodo(cstodo);  
+      await webClient.chat.postMessage({
+        text: `cs님의 할 일에서 '${nowQuery}'를 제거했어요!`,
+        icon_emoji: emoji('remove'),
+        channel: event.channel,
+      });
+    }));
   }
   
   // cstodo pop

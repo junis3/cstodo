@@ -105,6 +105,8 @@ const onCstodo = async (event: any) => {
     }
 
     await Promise.all(query.split(',').map(async (nowQuery) => {
+      nowQuery = nowQuery.trim();
+      
       cstodo.push(nowQuery);
       await setCstodo(cstodo);  
       await webClient.chat.postMessage({

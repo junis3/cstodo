@@ -220,6 +220,27 @@ const onCstodo = async (event: any) => {
     channel: event.channel,
     icon_emoji: emoji('default'),
   });
+
+  let maxLen = Math.max(...cstodo.map((str) => str.length));
+
+  while (cstodo.length > 200 || cstodo.map((str) => str.length).reduce((x, y) => x + y) > 2000) {
+    while (true) {
+      let i = Math.floor(Math.random() * cstodo.length);
+
+      if (Math.random() < cstodo[i].length / maxLen) {
+        let query = cstodo[i];
+
+        cstodo = cstodo.filter((val, idx) => idx != i);
+        await setCstodo(cstodo);
+        await webClient.chat.postMessage({
+          text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니까 수고하십시오..`,
+          icon_emoji: emoji('communism'),
+          channel: event.channel,
+        });
+        break;
+      }
+    }
+  }
 }
 
 export default onCstodo;

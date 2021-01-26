@@ -50,6 +50,10 @@ const EmojiMap: NestedStringMap = {
       blob: ':blobaww:',
       weeb: ':weebsugoi:'
   },
+  communism: {
+      blob: ':blobcommunism:',
+      weeb: ':hammer_and_sickle:'
+  },
   go: {
       mark: ':blobimfine:',
       marx: ':blobcommunism:',

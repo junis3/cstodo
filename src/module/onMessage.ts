@@ -1,4 +1,4 @@
-import { csGod } from '../config';
+import { csGod, cstodoTestChannel, isTesting } from '../config';
 import onCstodo from './onCstodo';
 import onYourMark from './onYourMark';
 import { webClient } from '../index';
@@ -6,20 +6,31 @@ import { emoji } from '../etc/cstodoMode';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
-const onMessage = (event: any) => {
+const onMessage = async (event: any) => {
     if (event.ts < turnOnTimestamp) return;
+    if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
+
 
     const text : string = event.text;
     const tokens = text.split(' ');
 
     if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);
-    else if (Math.random() < 0.003 + (event.user === csGod ? 0.007 : 0)) {
-        webClient.chat.postMessage({
+    else if (Math.random() < 0.7 + (event.user === csGod ? 0.007 : 0)) {
+        let profileResult = await webClient.users.profile.get({
+          user: event.user,
+        });
+
+        if (!profileResult.ok) return;
+
+        let profile : any = profileResult.profile;
+
+        await webClient.chat.postMessage({
           text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
           channel: event.channel,
-          icon_emoji: emoji('aww'),
+          icon_url: profile.image_512,
+          username: profile.display_name,
         });
     }
 }

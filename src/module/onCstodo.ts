@@ -42,6 +42,25 @@ const onCstodo = async (event: any) => {
     return;
   }
 
+  if (tokens.length === 2 && tokens[1] === 'pop') {
+    let query = cstodo[cstodo.length-1];
+    cstodo = cstodo.slice(0, cstodo.length-1);
+    setCstodo(cstodo);
+
+    await webClient.chat.postMessage({
+      text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
+      icon_emoji: emoji('remove'),
+      channel: event.channel,
+    });
+
+    webClient.chat.postMessage({
+      text: `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', '),
+      icon_emoji: emoji('remove'),
+      channel: event.channel,
+    });
+    return;
+  }
+
   //cstodo weeb | blob
   if( tokens.length === 2 && (tokens[1] === 'blob' || tokens[1] === 'weeb')){
     setCstodoMode(tokens[1]);

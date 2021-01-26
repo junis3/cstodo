@@ -20,7 +20,7 @@ const onCstodo = async (event: any) => {
   const tokens = text.split(' ')
   const date = new Date(event.ts * 1000);
 
-  if (text.split('').filter((chr) => ['\n', '`'].find((x) => x === chr)).length > 0 || text.length > 2000) {
+  if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 2000) {
     webClient.chat.postMessage({
       text: `${emoji('fuck')}`,
       channel: event.channel,

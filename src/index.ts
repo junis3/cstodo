@@ -2,23 +2,39 @@ import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 import express from "express";
 import schedule from 'node-schedule';
-import { accessToken, cstodoTestChannel, isTesting, logWebhook, signingSecret } from "./config";
+import { accessToken, cstodoTestChannel, isTesting, logWebhook, mongodbUri, signingSecret } from "./config";
 import onMessage from './module/onMessage';
 import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
 import axios from "axios";
+import mongoose from 'mongoose';
+import { getHistory2 } from './database/history';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
-    consoleToSlack.init(logWebhook, 4);
+  //  consoleToSlack.init(logWebhook, 4);
 }
 
 (async () => {
+  return;
     const response = await axios.get('http://ip-api.com/json');
     const data = response.data;
 
     console.log(`${data.country} ${data.regionName}(${data.city})의 IP ${data.query} (위도 ${data.lat}, 경도 ${data.lon})에서 슬랙봇을 실행하고 있습니다.`);
 })();
+
+mongoose.connect(mongodbUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(res => {
+  console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
+  getHistory2().then((res) => {
+    console.log(res);
+  });
+}).catch(err => {
+  console.error(`Failed to connect to ${mongoose.connection.host}`);
+  throw err;
+});
 
 const port = 3000;
 

@@ -12,11 +12,10 @@ import { getHistory2 } from './database/history';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
-  //  consoleToSlack.init(logWebhook, 4);
+    consoleToSlack.init(logWebhook, 4);
 }
 
 (async () => {
-  return;
     const response = await axios.get('http://ip-api.com/json');
     const data = response.data;
 
@@ -28,9 +27,6 @@ mongoose.connect(mongodbUri, {
     useUnifiedTopology: true
 }).then(res => {
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
-  getHistory2().then((res) => {
-    console.log(res);
-  });
 }).catch(err => {
   console.error(`Failed to connect to ${mongoose.connection.host}`);
   throw err;

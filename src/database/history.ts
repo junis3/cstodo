@@ -25,5 +25,4 @@ export const addHistory = async ({id, title, source} : HistoryType) => {
     });
 
     await history.save();
-
 }

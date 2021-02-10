@@ -20,6 +20,8 @@ const onCstodo = async (event: any) => {
   const tokens = text.split(' ').map((token) => token.trim());
   const date = new Date(event.ts * 1000);
 
+  if (tokens.length === 0 || tokens[0] !== 'cstodo') return;
+
   if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 500) {
     webClient.chat.postMessage({
       text: `${emoji('fuck')}`,
@@ -31,18 +33,19 @@ const onCstodo = async (event: any) => {
 
   let cstodo = await getCstodo();
 
-  // cstodo help 커맨드
+  // cstodo help
   if (tokens.length === 2 && tokens[1] === 'help') {
-    webClient.chat.postMessage({
+    await webClient.chat.postMessage({
       text: helpText(),
       channel: event.channel,
       icon_emoji: emoji('help'),
       username: 'cs71107',
     });
+    return;
   }
 
-  //cstodo weeb | blob
-  else if( tokens.length === 2 && (tokens[1] === 'blob' || tokens[1] === 'weeb')){
+  // cstodo weeb | blob
+  if (tokens.length === 2 && (tokens[1] === 'blob' || tokens[1] === 'weeb')){
     setCstodoMode(tokens[1]);
     webClient.chat.postMessage({
       text: `cstodo의 프로필이 ${cstodoMode} 모드로 바뀌었습니다.`,
@@ -53,14 +56,15 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  else if (tokens.length === 2 && tokens[1] === 'fuck') {
+  // cstodo fuck
+  if (tokens.length === 2 && tokens[1] === 'fuck') {
     await webClient.chat.postMessage({
       text: message('fuck'),
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });
     await webClient.chat.postMessage({
-      text: 'ㅂㅇ',
+      text: '나감 ㅅㄱ',
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });
@@ -70,7 +74,7 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  // cstodo length 또는 cstodo size 커맨드
+  // cstodo length 또는 cstodo size
   if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
     webClient.chat.postMessage({
       text: `와... cs님의 할 일은 총 ${cstodo.length} 개가 있어요... ${emoji('cs')}`,
@@ -80,8 +84,8 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  // cstodo add 커맨드
-  else if (tokens[1] === 'add') {
+  // cstodo add
+  if (tokens[1] === 'add') {
     if(tokens.length === 2) {
       webClient.chat.postMessage({
         text: `add를 하면서 추가할 일을 안 주면 똑떨이에요... ${emoji('ddokddul')}`,
@@ -119,8 +123,8 @@ const onCstodo = async (event: any) => {
     }));
   }
 
-  // cstodo remove 커맨드
-  else if (tokens[1] === 'remove') {
+  // cstodo remove
+  if (tokens[1] === 'remove') {
     if (tokens.length === 2) {
       webClient.chat.postMessage({
         text: "빈 remove 쿼리는 똑떨이에요... " + emoji('ddokddul'),
@@ -157,7 +161,7 @@ const onCstodo = async (event: any) => {
   }
   
   // cstodo pop
-  else if (tokens.length === 2 && tokens[1] === 'pop') {
+  if (tokens.length === 2 && tokens[1] === 'pop') {
     let query = cstodo[cstodo.length-1];
     cstodo = cstodo.slice(0, cstodo.length-1);
     setCstodo(cstodo);
@@ -170,7 +174,7 @@ const onCstodo = async (event: any) => {
   }
 
   // cstodo format
-  else if (tokens[1] === 'format') {
+  if (tokens[1] === 'format') {
     let maxPage = Math.ceil(cstodo.length / bulletEmoji.length - 0.001);
     let page_offset = 0;
     let page = 1;
@@ -215,7 +219,7 @@ const onCstodo = async (event: any) => {
   let maxLen = Math.max(...cstodo.map((str) => str.length));
   let sumLen = cstodo.map((str) => str.length).reduce((x, y) => x + y, 0);
 
-  while (cstodo.length > 200 || sumLen > 500) {
+  while (cstodo.length > 200 || sumLen > 400) {
     while (true) {
       let i = Math.floor(Math.random() * cstodo.length);
 
@@ -225,10 +229,10 @@ const onCstodo = async (event: any) => {
         cstodo = cstodo.filter((val, idx) => idx != i);
         await setCstodo(cstodo);
         await webClient.chat.postMessage({
-          text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니까 수고하십시오..`,
+          text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니 수고하십시오..`,
           icon_emoji: emoji('communism'),
           channel: event.channel,
-          username: '당대표',
+          username: 'Влади́мир Пу́тин',
         });
         sumLen -= query.length;
 
@@ -244,7 +248,6 @@ const onCstodo = async (event: any) => {
     channel: event.channel,
     icon_emoji: emoji('default'),
   });
-
 }
 
 export default onCstodo;

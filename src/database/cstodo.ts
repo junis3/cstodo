@@ -24,7 +24,7 @@ export const getCstodoInfo = async (content : string) => {
 }
 
 export const addCstodo = async ({content, status} : CstodoType) => {
-    if (getCstodoInfo(content)) return false;
+    if (await getCstodoInfo(content)) return false;
     
     await new Cstodo({
         content,

@@ -156,6 +156,8 @@ const onCstodo = async (event: any) => {
       }
     }));
   }
+
+  cstodo = await getCstodos();
   
   // cstodo pop
   if (tokens.length === 2 && tokens[1] === 'pop') {
@@ -192,7 +194,7 @@ const onCstodo = async (event: any) => {
 
     let numListedTodos = 0;
     for (let i = 0; i < bulletEmoji.length && page_offset + i < cstodo.length; i++) {
-      fmtText += bulletEmoji[i] + ' ' + cstodo[page_offset + i] + '\n';
+      fmtText += bulletEmoji[i] + ' ' + cstodo[page_offset + i].content + '\n';
       numListedTodos += 1;
     }
     for (let i = 0, j = 0; i < cstodo.length; i += bulletEmoji.length, j++) {
@@ -212,6 +214,8 @@ const onCstodo = async (event: any) => {
     });
     return;
   }
+
+  cstodo = await getCstodos();
 
   let maxLen = Math.max(...cstodo.map((item) => item.content.length));
   let sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
@@ -238,7 +242,7 @@ const onCstodo = async (event: any) => {
     }
   }
   
-  let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.join(', ');
+  let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.map((todo) => todo.content).join(', ');
 
   await webClient.chat.postMessage({
     text: fmtText,

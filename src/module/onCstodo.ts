@@ -1,6 +1,6 @@
-import { getCstodo, setCstodo } from '../etc/filesystem';
 import { cstodoMode, setCstodoMode, emoji, message } from '../etc/cstodoMode';
 import { webClient } from '../index';
+import { addCstodo, getCstodos, removeCstodo } from '../database/cstodo';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = (mode: string = cstodoMode) => {
@@ -31,7 +31,7 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  let cstodo = await getCstodo();
+  let cstodo = await getCstodos();
 
   // cstodo help
   if (tokens.length === 2 && tokens[1] === 'help') {
@@ -103,7 +103,7 @@ const onCstodo = async (event: any) => {
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
       
-      if (cstodo.find((item) => item === nowQuery)) {
+      if (cstodo.find((item) => item.content === nowQuery)) {
         await webClient.chat.postMessage({
           text: `이미 할 일에 있는 ${nowQuery}를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
           channel: event.channel,
@@ -112,8 +112,7 @@ const onCstodo = async (event: any) => {
         });
         return;
       } else {
-        cstodo.push(nowQuery);
-        await setCstodo(cstodo);  
+        await addCstodo({ content: nowQuery });
         await webClient.chat.postMessage({
           text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
           icon_emoji: emoji('add'),
@@ -140,7 +139,7 @@ const onCstodo = async (event: any) => {
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
       
-      if (!cstodo.find((item) => item === nowQuery)) {
+      if (!cstodo.find((item) => item.content === nowQuery)) {
         await webClient.chat.postMessage({
           text: `할 일에 없는 '${nowQuery}'를 빼면 똑떨이에요... ` + emoji('ddokddul'),
           channel: event.channel,
@@ -148,9 +147,7 @@ const onCstodo = async (event: any) => {
           username: "똑떨한 cstodo",
         });
       } else {
-        cstodo = cstodo.filter((value) => value !== nowQuery);
-
-        await setCstodo(cstodo);  
+        await removeCstodo(nowQuery);
         await webClient.chat.postMessage({
           text: `cs님의 할 일에서 '${nowQuery}'를 제거했어요!`,
           icon_emoji: emoji('remove'),
@@ -162,12 +159,12 @@ const onCstodo = async (event: any) => {
   
   // cstodo pop
   if (tokens.length === 2 && tokens[1] === 'pop') {
-    let query = cstodo[cstodo.length-1];
-    cstodo = cstodo.slice(0, cstodo.length-1);
-    setCstodo(cstodo);
+    let nowQuery = cstodo[cstodo.length-1].content;
+    
+    await removeCstodo(nowQuery);
 
     await webClient.chat.postMessage({
-      text: `cs님의 할 일에서 '${query}'를 제거했어요!`,
+      text: `cs님의 할 일에서 '${nowQuery}'를 제거했어요!`,
       icon_emoji: emoji('remove'),
       channel: event.channel,
     });
@@ -216,18 +213,18 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  let maxLen = Math.max(...cstodo.map((str) => str.length));
-  let sumLen = cstodo.map((str) => str.length).reduce((x, y) => x + y, 0);
+  let maxLen = Math.max(...cstodo.map((item) => item.content.length));
+  let sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
 
   while (cstodo.length > 200 || sumLen > 400) {
     while (true) {
       let i = Math.floor(Math.random() * cstodo.length);
 
-      if (Math.random() < cstodo[i].length / maxLen) {
-        let query = cstodo[i];
+      if (Math.random() < cstodo[i].content.length / maxLen) {
+        let query = cstodo[i].content;
 
-        cstodo = cstodo.filter((val, idx) => idx != i);
-        await setCstodo(cstodo);
+        await removeCstodo(query);
+
         await webClient.chat.postMessage({
           text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니 수고하십시오..`,
           icon_emoji: emoji('communism'),

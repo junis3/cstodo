@@ -14,7 +14,7 @@ const getHTML = async () => {
 const getCurrentHistory = async () => {
     const result = await getHTML();
 
-    console.log('Axios returned status ' + result.status);
+    console.log('Loaded currently solved problem with status ' + result.status);
     
     const $ = cheerioModule.load(result.data);
 
@@ -25,7 +25,7 @@ const getCurrentHistory = async () => {
     history = voca.replaceAll(history, '\t', '');
     history = voca.trim(history);
     
-    return history.split('\n');
+    return history.split('\n').map((idString) => Number.parseInt(idString));
 }
 
 export default getCurrentHistory;

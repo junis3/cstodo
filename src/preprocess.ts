@@ -1,6 +1,6 @@
 import fs from "fs";
-import { setHistory } from "./etc/filesystem";
 import getCurrentHistory from "./etc/getCurrentHistory";
+import { addHistory, HistoryType } from './database/history';
 
 // Make empty 'filename' file on project root if it does not exist
 const makeEmptyFile = async (fileName: string) => {
@@ -15,7 +15,9 @@ const makeEmptyFile = async (fileName: string) => {
 }
 
 export const preprocess = async () => {
-    setHistory(await getCurrentHistory());
+    let history = await getCurrentHistory();
+
+    await Promise.all(history.map(async (id) => addHistory({ id })));
 
     await Promise.all([
         makeEmptyFile('cstodo.txt'),

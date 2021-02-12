@@ -1,15 +1,15 @@
-import { getHistory, setHistory } from '../etc/filesystem';
 import getCurrentHistory from '../etc/getCurrentHistory';
 import { webClient } from '../index';
 import getProblemInfo from '../etc/getProblemInfo';
 import { cstodoChannel } from '../config';
 import { emoji } from '../etc/cstodoMode';
+import { addHistory, getHistories, removeHistory } from '../database/history';
 
 const emptyMessage = () => [
     emoji('sob').repeat(23),
     '없었습니다!!!! :tada: :tada: :tada: 오늘 cs님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:',
     `저 오늘 우체국 가서 싸우고 왔어요... cs님의 PS 실력을 박스에 담아서 부치려고 했더니 그렇게 큰 박스는 없다는 거 있죠....... 내일은 실력 보여주실 수 있으시죠? ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
-    'Hello, I am @realPrseidentTrmup. Today\'s BOJ record is a fraud. I know CS has solved 520 diamond today. THEY STOLE THE RECORD. CS WON THE ELECTION!!',
+//    'Hello, I am @realPrseidentTrmup. Today\'s BOJ record is a fraud. I know CS has solved 520 diamond today. THEY STOLE THE RECORD. CS WON THE ELECTION!!',
     'cs님의 PS실력을 구경하다가 여름이 가버렸어요... \'더 위\'가 없어서...... 코로나가 끝날 때쯤이면 cs님의 루비 학살을 볼 수 있겠죠..?',
     '헉대박 .... cs님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????',
 ]
@@ -19,26 +19,32 @@ const diamondEmptyMessage = () => [
 ];
 
 const dailyProblem = async () => {
-    const history = await getHistory();
+    const history = await getHistories();
     const currentHistory = await getCurrentHistory();
 
-    setHistory(currentHistory);
+    const todayRemove = history.filter((history) => !currentHistory.find((id) => history.id === id));
+    const todayAdd = await Promise.all(currentHistory.filter((id) => !history.find((history) => history.id === id)).map((id) => getProblemInfo(id)));
 
-    const today = (await Promise.all(currentHistory.filter((value) => !history.find((item) => item === value)).map(async (id) => await getProblemInfo(Number.parseInt(id))))).filter((item) => !!item);
+    await Promise.all(todayRemove.map(async (history) => await removeHistory(history.id)));
+    await Promise.all(todayAdd.map(async (history) => await addHistory({
+        id: history.id,
+        title: history.title,
+        source: history.source,
+    })));
 
-    const diamonds = today.filter((item) => item.level.includes('dia'));
-    const rubys = today.filter((item) => item.level.includes('ruby'));
+    const diamonds = todayAdd.filter((item) => item.level!.includes('dia'));
+    const rubys = todayAdd.filter((item) => item.level!.includes('ruby'));
 
     const postResult = () => {
-        if (today.length > 0) {
+        if (todayAdd.length > 0) {
             webClient.chat.postMessage({
-                text: `오늘 :god: ${emoji('cs')} :god:님이 푼 문제들입니다!\n` + today.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
+                text: `오늘 :god: ${emoji('cs')} :god:님이 푼 문제들입니다!\n` + todayAdd.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
                 channel: cstodoChannel,
                 icon_emoji: emoji('default'),
             });
         }
         
-        if (today.length === 0) {
+        if (todayAdd.length === 0) {
             webClient.chat.postMessage({
                 text: emptyMessage()[Math.floor(Math.random()*emptyMessage().length)],
                 channel: cstodoChannel,

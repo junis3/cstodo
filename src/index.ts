@@ -8,7 +8,6 @@ import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
 import axios from "axios";
 import mongoose from 'mongoose';
-import { getHistory2 } from './database/history';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');

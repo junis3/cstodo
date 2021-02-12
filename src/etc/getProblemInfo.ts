@@ -1,5 +1,6 @@
 import axios from "axios";
 import cheerioModule from "cheerio";
+import { HistoryType } from "../database/history";
 
 const getProblemInfo = async (id: number) => {
     let [solvedResp, bojResp] = await Promise.all([
@@ -7,8 +8,10 @@ const getProblemInfo = async (id: number) => {
         axios.get(`https://www.acmicpc.net/problem/${id}`),
     ]);
 
-    if (solvedResp.status != 200) throw new Error('Solved.ac api returned non-200.');
-    if (bojResp.status != 200) throw new Error('BOJ returned non-200.');
+    if (solvedResp.status != 200) throw new Error(`Solved.ac api returned non-200 status: ${solvedResp.status} ${solvedResp.statusText}`);
+    if (bojResp.status != 200) throw new Error(`BOJ returned non-200 status: ${bojResp.status} ${bojResp.statusText}`);
+
+    console.log(`Loaded information of problem ${id} with status 200.`);
 
     const title : string = solvedResp.data.result.problems[0].title;
     const levelNum : number = solvedResp.data.result.problems[0].level;
@@ -26,8 +29,8 @@ const getProblemInfo = async (id: number) => {
         id,
         level,
         title,
-        source, // Only accepts first source tree as a string array
-    }
+        source: source.join(' '), // Only accepts first source tree as a string array
+    } as HistoryType;
 }
 
 export default getProblemInfo;

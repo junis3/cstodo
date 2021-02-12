@@ -1,27 +1,30 @@
 import fs from "fs";
 import getCurrentHistory from "./etc/getCurrentHistory";
 import { addHistory, HistoryType } from './database/history';
-
-// Make empty 'filename' file on project root if it does not exist
-const makeEmptyFile = async (fileName: string) => {
-    await new Promise<void>((resolve, reject) => fs.readFile(fileName, 'UTF-8', (err) => {
-        if (err && err.code === 'ENOENT') {
-            fs.writeFile(fileName, '', 'UTF-8', (err) => {
-                if (err) reject(err);
-                resolve();
-            });
-        }
-    }));   
-}
+import mongoose from 'mongoose';
+import { mongodbUri } from "./config";
 
 export const preprocess = async () => {
     let history = await getCurrentHistory();
 
-    await Promise.all(history.map(async (id) => addHistory({ id })));
+    // Intentionally made it synchronous: MongoDB Atlas has a rate limit
+    for (let id of history) {
+        console.log(`Trying adding problem ${id} to history DB....`)
 
-    await Promise.all([
-        makeEmptyFile('cstodo.txt'),
-    ]);
+        const success = await addHistory({ id });
+        
+        if (success) console.log(`Successfully added problem ${id} to history DB.`);
+        else console.log(`Failed adding problem ${id} to history DB.`);
+    }
 }
 
-preprocess();
+mongoose.connect(mongodbUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(res => {
+    console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
+    preprocess();
+}).catch(err => {
+    console.error(`Failed to connect to ${mongoose.connection.host}`);
+    throw err;
+});

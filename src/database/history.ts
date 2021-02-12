@@ -27,9 +27,9 @@ export const getHistoryInfo = async (id : number) => {
 }
 
 export const addHistory = async ({id, title, source} : HistoryType) => {
-    let nowTimestamp = Date.now();
+    const nowTimestamp = Date.now();
 
-    if (getHistoryInfo(id)) return false;
+    if (await getHistoryInfo(id)) return false;
 
     await new History({
         id, 

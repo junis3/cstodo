@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
 type StatusType = 'done' | 'pending' | 'failed';
 
@@ -7,20 +7,20 @@ export interface CstodoType {
     status?: StatusType;
 }
 
+export type CstodoDocument = Document & CstodoType;
+
 const cstodoSchema = new Schema({
     content: String,
     status: { type: String, default: "pending"},
 });
 
-const Cstodo = model('cstodo', cstodoSchema, 'cstodos');
+const Cstodo = model<CstodoDocument>('cstodo', cstodoSchema, 'cstodos');
 export default Cstodo;
 
 export const getCstodos = async () => (await Cstodo.find({ status: 'pending' })).map((doc) => doc.toObject() as CstodoType);
 
 export const getCstodoInfo = async (content : string) => {
-    const result = await Cstodo.find({ content });
-    if (result.length === 0) return undefined;
-    return result[0].toObject() as CstodoType;
+    return await Cstodo.findOne({ content }) as CstodoType | null;
 }
 
 export const addCstodo = async ({content, status} : CstodoType) => {

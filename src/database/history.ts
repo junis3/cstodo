@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
 export interface HistoryType {
     id: number;
@@ -8,7 +8,9 @@ export interface HistoryType {
     level?: string;
 }
 
-const historySchema = new Schema({
+export type HistoryDocument = Document & HistoryType;
+
+const historySchema = new Schema<HistoryDocument>({
     id: Number,
     title: { type: String, default: "" },
     source: { type: String, default: "" },
@@ -21,9 +23,7 @@ export default History;
 export const getHistories = async () => (await History.find()).map((doc) => doc.toObject() as HistoryType);
 
 export const getHistoryInfo = async (id : number) => {
-    const result = await History.find({ id });
-    if (result.length === 0) return undefined;
-    return result[0].toObject() as HistoryType;
+    return await History.findOne({ id }) as HistoryType | null;
 }
 
 export const addHistory = async ({id, title, source} : HistoryType) => {

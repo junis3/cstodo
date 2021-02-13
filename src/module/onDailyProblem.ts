@@ -7,16 +7,21 @@ import { addHistory, getHistories, removeHistory } from '../database/history';
 
 const emptyMessage = () => [
     emoji('sob').repeat(23),
-    '없었습니다!!!! :tada: :tada: :tada: 오늘 cs님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:',
+    `없었습니다!!!! :tada: :tada: :tada: 오늘 cs님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:`,
     `저 오늘 우체국 가서 싸우고 왔어요... cs님의 PS 실력을 박스에 담아서 부치려고 했더니 그렇게 큰 박스는 없다는 거 있죠....... 내일은 실력 보여주실 수 있으시죠? ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
-//    'Hello, I am @realPrseidentTrmup. Today\'s BOJ record is a fraud. I know CS has solved 520 diamond today. THEY STOLE THE RECORD. CS WON THE ELECTION!!',
-    'cs님의 PS실력을 구경하다가 여름이 가버렸어요... \'더 위\'가 없어서...... 코로나가 끝날 때쯤이면 cs님의 루비 학살을 볼 수 있겠죠..?',
-    '헉대박 .... cs님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????',
+//    `Hello, I am @realPrseidentTrmup. Today's BOJ record is a fraud. I know CS has solved 520 diamonds today. THEY STOLE THE RECORD. CS WON THE ELECTION!!`,
 ]
 
 const diamondEmptyMessage = () => [
     `히잉.... cs님이 오늘 다이아를 안 푸셔서 슬랙봇 마음이 너무 아파요... 내일은 꼭 다이아 풀어주시는 거죠? ${emoji('sob')} ${emoji('sob')} ${emoji('sob')} ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
+    `cs님은 유모차세요? 어쩜 오늘도 다이아를 안 풀어서 저를 이렇게 '애타게' 만드세요..`,
+    `cs님의 PS실력을 구경하다가 여름이 가버렸어요... '더 위'가 없어서...... 코로나가 끝날 때쯤이면 cs님의 루비 학살을 볼 수 있겠죠..?`,
+//    `헉.. 대박.... cs님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????`,
 ];
+
+const randomChoice = (array: string[]) => {
+    return array[Math.random() * array.length];
+}
 
 const dailyProblem = async () => {
     const history = await getHistories();
@@ -34,7 +39,7 @@ const dailyProblem = async () => {
 
     const diamonds = todayAdd.filter((item) => item.level!.includes('dia'));
     const rubys = todayAdd.filter((item) => item.level!.includes('ruby'));
-
+    
     const postResult = () => {
         if (todayAdd.length > 0) {
             webClient.chat.postMessage({
@@ -46,13 +51,13 @@ const dailyProblem = async () => {
         
         if (todayAdd.length === 0) {
             webClient.chat.postMessage({
-                text: emptyMessage()[Math.floor(Math.random()*emptyMessage().length)],
+                text: randomChoice(emptyMessage().concat(diamondEmptyMessage())),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
         } else if (diamonds.length === 0 && rubys.length === 0) {
             webClient.chat.postMessage({
-                text: diamondEmptyMessage()[Math.floor(Math.random()*diamondEmptyMessage().length)],
+                text: randomChoice(diamondEmptyMessage()),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
@@ -62,7 +67,7 @@ const dailyProblem = async () => {
             webClient.chat.postMessage({
                 text: `:tada: cs신님께 새로 학살당한 루비! <http://icpc.me/${problem.id}|:${problem.level}:${problem.title}> 입니다! ${emoji('cs')} :tada:`,
                 channel: cstodoChannel,
-                icon_emoji: emoji('default'),
+                icon_emoji: `:${problem.level}:`,
             });
         });
     };

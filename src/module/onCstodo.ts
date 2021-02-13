@@ -24,7 +24,7 @@ const onCstodo = async (event: any) => {
 
   if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 500) {
     webClient.chat.postMessage({
-      text: `${emoji('fuck')}`,
+      text: emoji('fuck'),
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });
@@ -59,7 +59,7 @@ const onCstodo = async (event: any) => {
   // cstodo fuck
   if (tokens.length === 2 && tokens[1] === 'fuck') {
     await webClient.chat.postMessage({
-      text: message('fuck'),
+      text: emoji('fuck').repeat(23),
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });

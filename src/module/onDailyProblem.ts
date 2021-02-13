@@ -19,8 +19,8 @@ const diamondEmptyMessage = () => [
 //    `헉.. 대박.... cs님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????`,
 ];
 
-const randomChoice = (array: string[]) => {
-    return array[Math.random() * array.length];
+function randomChoice<Type>(array: Type[]) {
+    return array[Math.floor(Math.random() * array.length)];
 }
 
 const dailyProblem = async () => {

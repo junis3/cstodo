@@ -11,9 +11,9 @@ export interface HistoryType {
 export type HistoryDocument = Document & HistoryType;
 
 const historySchema = new Schema<HistoryDocument>({
-    id: Number,
-    title: { type: String, default: "" },
-    source: { type: String, default: "" },
+    id: { type: Number, required: true, unique: true },
+    title: { type: String },
+    source: { type: String },
     solveDate: { type: Number, default: Date.now }
 });
 

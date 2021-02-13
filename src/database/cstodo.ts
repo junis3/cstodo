@@ -10,7 +10,7 @@ export interface CstodoType {
 export type CstodoDocument = Document & CstodoType;
 
 const cstodoSchema = new Schema({
-    content: String,
+    content: { type: String, unique: true, required: true },
     status: { type: String, default: "pending"},
 });
 

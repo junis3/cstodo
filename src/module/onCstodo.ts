@@ -34,7 +34,7 @@ const onCstodo = async (event: any) => {
   let cstodo = await getCstodos();
 
   // cstodo help
-  if (tokens.length === 2 && tokens[1] === 'help') {
+  if (tokens[1] === 'help') {
     await webClient.chat.postMessage({
       text: helpText(),
       channel: event.channel,
@@ -45,7 +45,7 @@ const onCstodo = async (event: any) => {
   }
 
   // cstodo weeb | blob
-  if (tokens.length === 2 && (tokens[1] === 'blob' || tokens[1] === 'weeb')){
+  if (tokens[1] === 'blob' || tokens[1] === 'weeb') {
     setCstodoMode(tokens[1]);
     webClient.chat.postMessage({
       text: `cstodo의 프로필이 ${cstodoMode} 모드로 바뀌었습니다.`,
@@ -57,7 +57,7 @@ const onCstodo = async (event: any) => {
   }
 
   // cstodo fuck
-  if (tokens.length === 2 && tokens[1] === 'fuck') {
+  if (tokens[1] === 'fuck' || tokens[1] === 'fu') {
     await webClient.chat.postMessage({
       text: emoji('fuck').repeat(23),
       channel: event.channel,
@@ -75,8 +75,8 @@ const onCstodo = async (event: any) => {
   }
 
   // cstodo length 또는 cstodo size
-  if (tokens.length === 2 && (tokens[1] === 'length' || tokens[1] === 'size')) {
-    webClient.chat.postMessage({
+  if (tokens[1] === 'length' || tokens[1] === 'size') {
+    await webClient.chat.postMessage({
       text: `와... cs님의 할 일은 총 ${cstodo.length} 개가 있어요... ${emoji('cs')}`,
       channel: event.channel,
       icon_emoji: emoji('default'),
@@ -84,10 +84,34 @@ const onCstodo = async (event: any) => {
     return;
   }
 
+  // cstodo search
+  if (tokens[1] === 'search') {
+    let query = tokens.slice(2).join(' ').trim();
+
+    let result = (await getCstodos()).filter((todo) => {
+      return todo.content.search(new RegExp(String.raw`${query}`)) !== -1;
+    })
+
+    let message = `${emoji('cs')}님의 할 일에서 ${query}를 검색한 결과입니다:`;
+
+    message += result.map((value) => `\n- ${value.content}`);
+
+    await webClient.chat.postMessage({
+      text: message,
+      channel: event.channel,
+      icon_emoji: emoji('default'),
+      username: 'cstodo',
+    })
+    return;
+  }
+
   // cstodo add
   if (tokens[1] === 'add') {
-    if(tokens.length === 2) {
-      webClient.chat.postMessage({
+    
+    let query = tokens.slice(2).join(' ').trim();
+
+    if(query === '') {
+      await webClient.chat.postMessage({
         text: `add를 하면서 추가할 일을 안 주면 똑떨이에요... ${emoji('ddokddul')}`,
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
@@ -95,10 +119,6 @@ const onCstodo = async (event: any) => {
       });
       return;
     } 
-    
-    let query = tokens.slice(2).join(' ').trim();
-
-    
 
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
@@ -124,7 +144,9 @@ const onCstodo = async (event: any) => {
 
   // cstodo remove
   if (tokens[1] === 'remove') {
-    if (tokens.length === 2) {
+    let query = tokens.slice(2).join(' ').trim();
+    
+    if (query === '') {
       webClient.chat.postMessage({
         text: "빈 remove 쿼리는 똑떨이에요... " + emoji('ddokddul'),
         channel: event.channel,
@@ -134,8 +156,6 @@ const onCstodo = async (event: any) => {
       return;
     } 
 
-    let query = tokens.slice(2).join(' ').trim();
-    
     await Promise.all(query.split(',').map(async (nowQuery) => {
       nowQuery = nowQuery.trim();
       

@@ -1,15 +1,16 @@
 import { cstodoMode, setCstodoMode, emoji, message } from '../etc/cstodoMode';
 import { webClient } from '../index';
-import { addCstodo, getCstodos, removeCstodo } from '../database/cstodo';
+import { addCstodo, CstodoType, getCstodos, removeCstodo } from '../database/cstodo';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = (mode: string = cstodoMode) => {
   const cs = emoji('cs', mode);
   return `:god: ${cs} cstodo봇 ${cs} :god:
 \`cstodo\`: ${cs}의 할 일 목록을 볼 수 있습니다.
-\`cstodo blob|weeb\`: cstodo의 프로필을 바꿀 수 있습니다.
+\`cstodo blob\` 또는 \`cstodo weeb\`: cstodo의 프로필을 바꿀 수 있습니다.
 \`cstodo format (페이지번호)\`: ${cs}의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
-\`cstodo size\` 또는 \`cstodo length\`: ${cs}의 할 일의 개수를 볼 수 있습니다.
+\`cstodo size\`: ${cs}의 할 일의 개수를 볼 수 있습니다.
+\`cstodo search\`: ${cs}의 할 일에 들어있는 항목을 정규표현식으로 검색할 수 있습니다.
 \`cstodo add [내용]\`: ${cs}의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
 \`cstodo remove [내용]\`: ${cs}의 할 일 목록에 항목을 뺄 수 있습니다.
 \`cstodo pop\`: ${cs}의 마지막 할 일을 뺍니다.`
@@ -88,25 +89,45 @@ const onCstodo = async (event: any) => {
   if (tokens[1] === 'search') {
     let query = tokens.slice(2).join(' ').trim();
 
-    let result = (await getCstodos()).filter((todo) => {
-      return todo.content.search(new RegExp(String.raw`${query}`)) !== -1;
-    })
+    
+    let resultPromise = new Promise<CstodoType[]>(async (resolve, reject) => {
+      getCstodos().then((cstodo) => {
+        resolve(cstodo.filter((todo) => {
+          return todo.content.search(new RegExp(String.raw`${query}`)) !== -1;
+        }));
+      });
+    });
 
-    let message = `${emoji('cs')}님의 할 일에서 ${query}를 검색한 결과입니다:`;
+    let timeoutPromise = new Promise<null>((resolve, reject) => setTimeout(() => resolve(null), 2000));
 
-    message += result.map((value) => `\n- ${value.content}`);
+    let result = await Promise.race([resultPromise, timeoutPromise]);
 
+    let message: string;
+    let icon_emoji = emoji('default');
+    let username = 'cstodo';
+
+    if (result === null) {
+      message = '무슨 검색어를 넣었길래 이렇게 오래 걸려요?;;;';
+      icon_emoji = emoji('ddokddul');
+      username = '똑떨한 cstodo'
+    } else {
+      message = `${emoji('cs')}님의 할 일에서 ${query}를 검색한 결과입니다:`;
+
+      message += result.map((value) => `\n- ${value.content}`);  
+    }
+
+    
     await webClient.chat.postMessage({
       text: message,
       channel: event.channel,
-      icon_emoji: emoji('default'),
-      username: 'cstodo',
+      icon_emoji,
+      username,
     })
     return;
   }
 
   // cstodo add
-  if (tokens[1] === 'add') {
+  if (tokens[1] === 'add' || tokens[1] === 'push' || tokens[1] === 'append') {
     
     let query = tokens.slice(2).join(' ').trim();
 
@@ -143,7 +164,7 @@ const onCstodo = async (event: any) => {
   }
 
   // cstodo remove
-  if (tokens[1] === 'remove') {
+  if (tokens[1] === 'remove' || tokens[1] === 'delete') {
     let query = tokens.slice(2).join(' ').trim();
     
     if (query === '') {

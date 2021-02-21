@@ -1,6 +1,6 @@
 import { cstodoMode, setCstodoMode, emoji, message } from '../etc/cstodoMode';
 import { webClient } from '../index';
-import { addCstodo, CstodoType, getCstodos, removeCstodo } from '../database/cstodo';
+import { addCstodo, CstodoType, getCstodos, removeCstodo, shuffleCstodo } from '../database/cstodo';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 const helpText = (mode: string = cstodoMode) => {
@@ -13,7 +13,8 @@ const helpText = (mode: string = cstodoMode) => {
 \`cstodo search\`: ${cs}의 할 일에 들어있는 항목을 정규표현식으로 검색할 수 있습니다.
 \`cstodo add [내용]\`: ${cs}의 할 일 목록에 새로운 항목을 넣을 수 있습니다.
 \`cstodo remove [내용]\`: ${cs}의 할 일 목록에 항목을 뺄 수 있습니다.
-\`cstodo pop\`: ${cs}의 마지막 할 일을 뺍니다.`
+\`cstodo pop\`: ${cs}의 마지막 할 일을 뺍니다.
+\`cstodo shuffle\`: ${cs}의 할 일을 무작위로 섞습니다.`
 }
 
 const onCstodo = async (event: any) => {
@@ -90,29 +91,33 @@ const onCstodo = async (event: any) => {
     let query = tokens.slice(2).join(' ').trim();
 
     
-    let resultPromise = new Promise<CstodoType[]>(async (resolve, reject) => {
+    let result = await new Promise<CstodoType[] | null>(async (resolve, reject) => {
+      setTimeout(() => {
+        resolve(null);
+      }, 3000);
+
       getCstodos().then((cstodo) => {
-        resolve(cstodo.filter((todo) => {
+        const result = cstodo.filter((todo) => {
           return todo.content.search(new RegExp(String.raw`${query}`)) !== -1;
-        }));
+        });
+        resolve(result);
       });
     });
-
-    let timeoutPromise = new Promise<null>((resolve, reject) => setTimeout(() => resolve(null), 2000));
-
-    let result = await Promise.race([resultPromise, timeoutPromise]);
 
     let message: string;
     let icon_emoji = emoji('default');
     let username = 'cstodo';
 
+    console.log(result);
     if (result === null) {
       message = '무슨 검색어를 넣었길래 이렇게 오래 걸려요?;;;';
       icon_emoji = emoji('ddokddul');
       username = '똑떨한 cstodo'
+    } else if (result.length === 0) {
+      message = `${emoji('cs')}님의 할 일에 찾으시는 ${query}가 없습니다..ㅠㅠ`;
     } else {
-      message = `${emoji('cs')}님의 할 일에서 ${query}를 검색한 결과입니다:`;
 
+      message = `${emoji('cs')}님의 할 일에서 ${query}를 검색한 결과입니다:`;
       message += result.map((value) => `\n- ${value.content}`);  
     }
 
@@ -124,6 +129,19 @@ const onCstodo = async (event: any) => {
       username,
     })
     return;
+  }
+
+  // cstodo shuffle
+  if (tokens[1] === 'shuffle') {
+    await shuffleCstodo();
+
+    await webClient.chat.postMessage({
+      text: `cs님의 할 일들을 모두 섞어두었어요!`,
+      icon_emoji: emoji('hug'),
+      channel: event.channel,
+    });
+
+    cstodo = await getCstodos();
   }
 
   // cstodo add
@@ -161,6 +179,8 @@ const onCstodo = async (event: any) => {
         });
       }
     }));
+
+    cstodo = await getCstodos();
   }
 
   // cstodo remove
@@ -196,12 +216,22 @@ const onCstodo = async (event: any) => {
         });
       }
     }));
-  }
 
-  cstodo = await getCstodos();
+    cstodo = await getCstodos();
+  }
   
   // cstodo pop
   if (tokens.length === 2 && tokens[1] === 'pop') {
+    if (cstodo.length === 1) {
+      await webClient.chat.postMessage({
+        text: `할 일이 없는데 제거하면 똑떨이에요... ${emoji('ddokddul')}`,
+        channel: event.channel,
+        icon_emoji: emoji('ddokddul'),
+        username: '똑떨한 cstodo',
+      });
+      return;
+    }
+
     let nowQuery = cstodo[cstodo.length-1].content;
     
     await removeCstodo(nowQuery);
@@ -211,6 +241,8 @@ const onCstodo = async (event: any) => {
       icon_emoji: emoji('remove'),
       channel: event.channel,
     });
+
+    cstodo = await getCstodos();
   }
 
   // cstodo format
@@ -256,12 +288,11 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  cstodo = await getCstodos();
 
   let maxLen = Math.max(...cstodo.map((item) => item.content.length));
   let sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
 
-  while (cstodo.length > 200 || sumLen > 400) {
+  while (cstodo.length > 25 || sumLen > 300) {
     while (true) {
       let i = Math.floor(Math.random() * cstodo.length);
 
@@ -276,6 +307,8 @@ const onCstodo = async (event: any) => {
           channel: event.channel,
           username: 'Влади́мир Пу́тин',
         });
+
+        cstodo = await getCstodos();
         sumLen -= query.length;
 
         break;

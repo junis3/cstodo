@@ -40,6 +40,19 @@ export const removeCstodo = async (content : string) => {
     await Cstodo.deleteOne({ content });
 }
 
+export const shuffleCstodo = async () => {
+    let cstodo = await getCstodos();
+    let halfPoint = Math.floor(cstodo.length / 2);
+
+    let cstodoLeft = cstodo.slice(0, halfPoint).map(x => ({key: Math.random(), value: x})).sort((a, b) => a.key - b.key).map(p => p.value);
+    let cstodoRight = cstodo.slice(halfPoint).map(x => ({key: Math.random(), value: x})).sort((a, b) => a.key - b.key).map(p => p.value);
+
+    await Cstodo.deleteMany({ status: 'pending' });
+
+    await Promise.all(cstodoLeft.map((value) => new Cstodo(value).save()));
+    await Promise.all(cstodoRight.map((value) => new Cstodo(value).save()));
+}
+
 export const changeCstodoStatus = async (content : string, status: StatusType) => {
     if (!content) return;
     

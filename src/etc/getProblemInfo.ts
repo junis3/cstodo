@@ -15,7 +15,10 @@ const getProblemInfo = async (id: number) => {
 
     const title : string = solvedResp.data.result.problems[0].title;
     const levelNum : number = solvedResp.data.result.problems[0].level;
-    const level = ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum-1)/5+0.000001)] + `${5 - (levelNum-1)%5}`;
+    const level = (() => {
+        if (levelNum > 0) return ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum-1)/5+0.000001)] + `${5 - (levelNum-1)%5}`;
+        else return 'unranked';
+    })();
 
     const $ = cheerioModule.load(bojResp.data);
     const $source = $('p', 'section#source').eq(0).children('a');

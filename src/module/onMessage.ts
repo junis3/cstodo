@@ -14,8 +14,10 @@ const onMessage = async (event: any) => {
     if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
 
-    lastUser = nowUser;
-    nowUser = event.user;
+    if (nowUser != event.user) {
+      lastUser = nowUser;
+      nowUser = event.user;
+    }
 
 
     const text : string = event.text;

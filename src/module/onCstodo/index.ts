@@ -71,7 +71,7 @@ const onCstodo = async (event: any) => {
   if (tokens.length === 2 && tokens[1] === 'pop') 
     await onCstodoPop(event);
 
-  while (onCstodoOverflow(event));
+  while (await onCstodoOverflow(event));
 
   const cstodo = await getCstodos();
   

@@ -6,10 +6,16 @@ import { emoji } from '../etc/cstodoMode';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
+let lastUser: string;
+let nowUser: string;
+
 const onMessage = async (event: any) => {
     if (event.ts < turnOnTimestamp) return;
     if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
+
+    lastUser = nowUser;
+    nowUser = event.user;
 
 
     const text : string = event.text;
@@ -17,9 +23,9 @@ const onMessage = async (event: any) => {
 
     if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);
-    else if (Math.random() < 0.003 + (event.user === csGod ? 0.007 : 0)) {
+    else if (Math.random() < 0.0025 + (event.user === csGod ? 0.005 : 0)) {
         let profileResult = await webClient.users.profile.get({
-          user: event.user,
+          user: lastUser || event.user,
         });
 
         if (!profileResult.ok) return;

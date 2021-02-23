@@ -1,0 +1,31 @@
+import { getCstodos, removeCstodo } from '../../database/cstodo';
+import { emoji } from '../../etc/cstodoMode';
+import { webClient } from '../../index';
+
+const onCstodoPop = async (event: any) => {
+    const text : string = event.text;
+
+    const cstodo = await getCstodos();
+
+    if (cstodo.length === 1) {
+        await webClient.chat.postMessage({
+          text: `할 일이 없는데 제거하면 똑떨이에요... ${emoji('ddokddul')}`,
+          channel: event.channel,
+          icon_emoji: emoji('ddokddul'),
+          username: '똑떨한 cstodo',
+        });
+        return;
+      }
+  
+      let nowQuery = cstodo[cstodo.length-1].content;
+      
+      await removeCstodo(nowQuery);
+  
+      await webClient.chat.postMessage({
+        text: `cs님의 할 일에서 '${nowQuery}'를 제거했어요!`,
+        icon_emoji: emoji('remove'),
+        channel: event.channel,
+      });  
+}
+
+export default onCstodoPop;

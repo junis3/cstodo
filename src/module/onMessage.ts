@@ -1,5 +1,5 @@
 import { csGod, cstodoTestChannel, isTesting } from '../config';
-import onCstodo from './onCstodo';
+import onCstodo from './onCstodo/';
 import onYourMark from './onYourMark';
 import { webClient } from '../index';
 import { emoji } from '../etc/cstodoMode';

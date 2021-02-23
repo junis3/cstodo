@@ -30,6 +30,8 @@ const onMessage = async (event: any) => {
           user: lastUser || event.user,
         });
 
+        
+
         if (!profileResult.ok) return;
 
         let profile : any = profileResult.profile;
@@ -38,7 +40,7 @@ const onMessage = async (event: any) => {
           text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
           channel: event.channel,
           icon_url: profile.image_512,
-          username: profile.display_name,
+          username: profile.display_name || profile.full_name,
         });
     }
 }

@@ -25,12 +25,20 @@ const onMessage = async (event: any) => {
 
     if (tokens.length < 1) return;
     else if (tokens[0] === 'echo') {
-      let raw = tokens.length > 2 && tokens[1] === 'raw';
       await webClient.chat.postMessage({
-        text: `${tokens.slice(raw ? 2 : 1).join(' ')}`,
-        mrkdwn: !raw,
+        text: `${tokens.slice(1).join(' ')}`,
         channel: event.channel,
       });
+    }
+    else if (tokens[0] === 'code') {
+      let message = tokens.slice(1).join(' ');
+      let left = message.indexOf('<'), right = message.indexOf('>');
+      if (left < right) {
+        await webClient.chat.postMessage({
+          text: message.slice(left+1, right-1),
+          channel: event.channel,
+        });
+      }
     }
     else if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);

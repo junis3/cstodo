@@ -38,7 +38,7 @@ const onMessage = async (event: any) => {
       let right = right1 == -1 ? right2 : Math.min(right1, right2);
       if (right != -1) {
         await webClient.chat.postMessage({
-          text: message.slice(left+1, left+1+right),
+          text: message.slice(left+1, left+right),
           channel: event.channel,
         });
       }

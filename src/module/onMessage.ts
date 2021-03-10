@@ -33,11 +33,12 @@ const onMessage = async (event: any) => {
     else if (tokens[0] === 'code' && tokens.length > 1) {
       let message = tokens.slice(1).join(' ');
       let left = message.indexOf('<');
-      let right1 = message.slice(left).indexOf('>');
-      let right = right1 == -1 ? message.slice(left).indexOf('|') : right1;
-      if (right) {
+      let right1 = message.slice(left).indexOf('|');
+      let right2 = message.slice(left).indexOf('>');
+      let right = right1 == -1 ? right2 : Math.min(right1, right2);
+      if (right != -1) {
         await webClient.chat.postMessage({
-          text: message.slice(left+1, left+2+right),
+          text: message.slice(left+1, left+1+right),
           channel: event.channel,
         });
       }

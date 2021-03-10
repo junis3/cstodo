@@ -23,7 +23,13 @@ const onMessage = async (event: any) => {
     const text : string = event.text;
     const tokens = text.split(' ');
 
-    if (tokens[0] === 'cstodo') onCstodo(event);
+    if (tokens[0] === 'echo') {
+      await webClient.chat.postMessage({
+        text: `\`${tokens.slice(1).join(' ')}\``,
+        channel: event.channel,
+      });
+    }
+    else if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);
     else if (Math.random() < 0.0025 + (event.user === csGod ? 0.005 : 0)) {
         let profileResult = await webClient.users.profile.get({

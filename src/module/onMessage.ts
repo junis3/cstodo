@@ -23,9 +23,12 @@ const onMessage = async (event: any) => {
     const text : string = event.text;
     const tokens = text.split(' ');
 
-    if (tokens[0] === 'echo') {
+    if (tokens.length < 1) return;
+    else if (tokens[0] === 'echo') {
+      let raw = tokens.length > 2 && tokens[1] === 'raw';
       await webClient.chat.postMessage({
-        text: `\`${tokens.slice(1).join(' ')}\``,
+        text: `${tokens.slice(raw ? 2 : 1).join(' ')}`,
+        mrkdwn: !raw,
         channel: event.channel,
       });
     }

@@ -24,18 +24,20 @@ const onMessage = async (event: any) => {
     const tokens = text.split(' ');
 
     if (tokens.length < 1) return;
-    else if (tokens[0] === 'echo') {
+    else if (tokens[0] === 'echo' && tokens.length > 1) {
       await webClient.chat.postMessage({
         text: `${tokens.slice(1).join(' ')}`,
         channel: event.channel,
       });
     }
-    else if (tokens[0] === 'code') {
+    else if (tokens[0] === 'code' && tokens.length > 1) {
       let message = tokens.slice(1).join(' ');
-      let left = message.indexOf('<'), right = message.indexOf('>');
-      if (left < right) {
+      let left = message.indexOf('<');
+      let right1 = message.slice(left).indexOf('>');
+      let right = right1 == -1 ? message.slice(left).indexOf('|') : right1;
+      if (right) {
         await webClient.chat.postMessage({
-          text: message.slice(left+1, right-1),
+          text: message.slice(left+1, left+2+right),
           channel: event.channel,
         });
       }

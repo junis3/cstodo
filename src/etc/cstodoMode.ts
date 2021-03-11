@@ -66,7 +66,7 @@ export const emoji = (name: string = '', mode: string = cstodoMode) => {
 
 const MessageMap : NestedStringMap = {
   go: {
-    mark: 'and <https://youtu.be/1RRStUaTZZk|go...>',
+    mark: 'and <https://youtu.be/gUYdph3a3lA|go...>',
     marx: 'and <https://youtu.be/YZuAf7VAeKg|go...>',
   },
 };

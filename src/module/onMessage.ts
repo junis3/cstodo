@@ -1,4 +1,4 @@
-import { csGod, cstodoTestChannel, isTesting } from '../config';
+import { csGod, cstodoChannel, cstodoTestChannel, isTesting } from '../config';
 import onCstodo from './onCstodo/';
 import onYourMark from './onYourMark';
 import { webClient } from '../index';
@@ -45,23 +45,26 @@ const onMessage = async (event: any) => {
     }
     else if (tokens[0] === 'cstodo') onCstodo(event);
     else if (tokens[0].toLowerCase() === 'on') onYourMark(event);
-    else if (Math.random() < 0.0025 + (event.user === csGod ? 0.005 : 0)) {
-        let profileResult = await webClient.users.profile.get({
-          user: lastUser || event.user,
-        });
+    
+    let percentage = 0.0010;
+    if (event.channel === cstodoChannel || event.channel === cstodoTestChannel) percentage *= 2.0;
+    if (event.user === csGod) percentage *= 3.0;
 
-        
+    if (Math.random() < percentage) {
+      let profileResult = await webClient.users.profile.get({
+        user: lastUser || event.user,
+      });
 
-        if (!profileResult.ok) return;
+      if (!profileResult.ok) return;
 
-        let profile : any = profileResult.profile;
+      let profile : any = profileResult.profile;
 
-        await webClient.chat.postMessage({
-          text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
-          channel: event.channel,
-          icon_url: profile.image_512,
-          username: profile.display_name || profile.full_name,
-        });
+      await webClient.chat.postMessage({
+        text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
+        channel: event.channel,
+        icon_url: profile.image_512,
+        username: profile.display_name || profile.full_name,
+      });
     }
 }
 

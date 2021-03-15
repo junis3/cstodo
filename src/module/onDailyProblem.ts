@@ -40,9 +40,9 @@ const dailyProblem = async () => {
     const diamonds = todayAdd.filter((item) => item.level!.includes('dia'));
     const rubys = todayAdd.filter((item) => item.level!.includes('ruby'));
     
-    const postResult = () => {
+    const postResult = async () => {
         if (todayAdd.length > 0) {
-            webClient.chat.postMessage({
+            await webClient.chat.postMessage({
                 text: `오늘 :god: ${emoji('cs')} :god:님이 푼 문제들입니다!\n` + todayAdd.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
                 channel: cstodoChannel,
                 icon_emoji: emoji('default'),
@@ -50,26 +50,26 @@ const dailyProblem = async () => {
         }
         
         if (todayAdd.length === 0) {
-            webClient.chat.postMessage({
+            await webClient.chat.postMessage({
                 text: randomChoice(emptyMessage().concat(diamondEmptyMessage())),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
         } else if (diamonds.length === 0 && rubys.length === 0) {
-            webClient.chat.postMessage({
+            await webClient.chat.postMessage({
                 text: randomChoice(diamondEmptyMessage()),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
         }
 
-        rubys.forEach((problem) => {
-            webClient.chat.postMessage({
+        await Promise.all(rubys.map(async (problem) => {
+            await webClient.chat.postMessage({
                 text: `:tada: cs신님께 새로 학살당한 루비! <http://icpc.me/${problem.id}|:${problem.level}:${problem.title}> 입니다! ${emoji('cs')} :tada:`,
                 channel: cstodoChannel,
                 icon_emoji: `:${problem.level}:`,
             });
-        });
+        }));
     };
 
     if (Math.random() < 0.15 || (diamonds.length === 0 && rubys.length === 0) || rubys.length > 0) {
@@ -79,10 +79,21 @@ const dailyProblem = async () => {
             icon_emoji: emoji('default'),
         });
 
-        setTimeout(postResult, 60000);
+        await new Promise<void>((resolve) => {
+            setTimeout(() => {
+                postResult();
+                resolve();
+            }, 60000);
+        });
     } else {
         postResult();
     }
+
+    // Remove manually after the shot
+    await webClient.chat.postMessage({
+        text: '그런데, 오늘 cs님이 토끼귀 실사 착용 인증샷은 올렸을까요??????',
+        channel: cstodoChannel,
+    })
 }
 
 export default dailyProblem;

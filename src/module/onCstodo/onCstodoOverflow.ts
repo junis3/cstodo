@@ -9,7 +9,7 @@ const onCstodoOverflow = async (event: any) => {
     const maxLen = Math.max(...cstodo.map((item) => item.content.length));
     const sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
 
-    if (sumLen <= 320 || cstodo.length <= 25) return false;
+    if (sumLen <= 400 || cstodo.length <= 30) return false;
 
     while (true) {
         let i = Math.floor(Math.random() * cstodo.length);

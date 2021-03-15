@@ -88,12 +88,6 @@ const dailyProblem = async () => {
     } else {
         postResult();
     }
-
-    // Remove manually after the shot
-    await webClient.chat.postMessage({
-        text: '그런데, 오늘 cs님이 토끼귀 실사 착용 인증샷은 올렸을까요??????',
-        channel: cstodoChannel,
-    })
 }
 
 export default dailyProblem;

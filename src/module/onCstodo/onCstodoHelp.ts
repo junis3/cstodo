@@ -7,6 +7,7 @@ const helpText = () => {
     return `:god: ${cs} cstodo봇 ${cs} :god:
 \`cstodo\`: ${cs}의 할 일 목록을 볼 수 있습니다.
 \`cstodo blob\` 또는 \`cstodo weeb\`: cstodo의 프로필을 바꿀 수 있습니다.
+\`cstodo mute\` 또는 \`cstodo unmute\`: cstodo가 시끄러울 때에, 응답을 조용히 전달하게 할 수 있습니다.
 \`cstodo format (페이지번호)\`: ${cs}의 할 일 목록을 보다 예쁘게 볼 수 있습니다.
 \`cstodo size\`: ${cs}의 할 일의 개수를 볼 수 있습니다.
 \`cstodo search\`: ${cs}의 할 일에 들어있는 항목을 정규표현식으로 검색할 수 있습니다.

@@ -3,6 +3,7 @@ import { getCstodos } from '../../database/cstodo';
 import onCstodoAdd from './onCstodoAdd';
 import onCstodoFormat from './onCstodoFormat';
 import onCstodoFuck from './onCstodoFuck';
+import onCstodoMute from './onCstodoMute';
 import onCstodoHelp from './onCstodoHelp';
 import onCstodoLength from './onCstodoLength';
 import onCstodoMode from './onCstodoMode';
@@ -36,6 +37,11 @@ const onCstodo = async (event: any) => {
 
   if (tokens[1] === 'blob' || tokens[1] === 'weeb') {
     await onCstodoMode(event);
+    return;
+  }
+
+  if (tokens[1] === 'mute' || tokens[1] === 'unmute') {
+    await onCstodoMute(event);
     return;
   }
 

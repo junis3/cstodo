@@ -9,5 +9,9 @@ export const postMessage = async (props: ChatPostMessageArguments) => {
 
 
 export const replyMessage = async (event: any, props: ChatPostMessageArguments) => {    
-    await webClient.chat.postMessage(props);
+    await webClient.chat.postMessage({
+        ...props,
+        thread_ts: event.ts,
+        reply_broadcast: true,
+    });
 }

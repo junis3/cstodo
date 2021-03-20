@@ -1,5 +1,5 @@
 import { cstodoMode, emoji, setCstodoMode } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
+import { replyMessage } from '../../etc/postMessage';
 
   
 const onCstodoPop = async (event: any) => {
@@ -8,7 +8,7 @@ const onCstodoPop = async (event: any) => {
     
     setCstodoMode(tokens[1]);
     
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: `cstodo의 프로필이 ${cstodoMode} 모드로 바뀌었습니다.`,
       channel: event.channel,
       icon_emoji: emoji('default'),

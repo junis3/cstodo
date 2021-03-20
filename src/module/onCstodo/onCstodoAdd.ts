@@ -1,6 +1,6 @@
 import { addCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
+import { replyMessage } from '../../etc/postMessage';
 
 const onCstodoAdd = async (event: any) => {
   const text : string = event.text;
@@ -11,7 +11,7 @@ const onCstodoAdd = async (event: any) => {
     let query = tokens.slice(2).join(' ').trim();
 
     if(query === '') {
-      await webClient.chat.postMessage({
+      await replyMessage(event, {
         text: `add를 하면서 추가할 일을 안 주면 똑떨이에요... ${emoji('ddokddul')}`,
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
@@ -24,7 +24,7 @@ const onCstodoAdd = async (event: any) => {
       nowQuery = nowQuery.trim();
       
       if (cstodo.find((item) => item.content === nowQuery)) {
-        await webClient.chat.postMessage({
+        await replyMessage(event, {
           text: `이미 할 일에 있는 ${nowQuery}를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
           channel: event.channel,
           icon_emoji: emoji('ddokddul'),
@@ -33,7 +33,7 @@ const onCstodoAdd = async (event: any) => {
         return;
       } else {
         await addCstodo({ content: nowQuery });
-        await webClient.chat.postMessage({
+        await replyMessage(event, {
           text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
           icon_emoji: emoji('add'),
           channel: event.channel,

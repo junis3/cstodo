@@ -1,6 +1,5 @@
 import { emoji } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
-import { getCstodos, removeCstodo } from '../../database/cstodo';
+import { getCstodos } from '../../database/cstodo';
 import onCstodoAdd from './onCstodoAdd';
 import onCstodoFormat from './onCstodoFormat';
 import onCstodoFuck from './onCstodoFuck';
@@ -12,6 +11,7 @@ import onCstodoRemove from './onCstodoRemove';
 import onCstodoSearch from './onCstodoSearch';
 import onCstodoShuffle from './onCstodoShuffle';
 import onCstodoOverflow from './onCstodoOverflow';
+import { replyMessage } from '../../etc/postMessage';
 
 const onCstodo = async (event: any) => {
   const text : string = event.text;
@@ -20,7 +20,7 @@ const onCstodo = async (event: any) => {
 
   // Assert inappropriate characters in message
   if (text.split('').filter((chr) => ['\n', '`', '\u202e', '\u202d'].find((x) => x === chr)).length > 0 || text.length > 500) {
-    webClient.chat.postMessage({
+    await replyMessage(event, {
       text: emoji('fuck'),
       channel: event.channel,
       icon_emoji: emoji('fuck'),
@@ -77,7 +77,7 @@ const onCstodo = async (event: any) => {
   
   let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.map((todo) => todo.content).join(', ');
 
-  await webClient.chat.postMessage({
+  await replyMessage(event, {
     text: fmtText,
     channel: event.channel,
     icon_emoji: emoji('default'),

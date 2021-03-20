@@ -1,5 +1,6 @@
 import { CstodoType, getCstodos, removeCstodo } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
+import { replyMessage } from '../../etc/postMessage';
 import { webClient } from '../../index';
 
 const onCstodoSearch = async (event: any) => {
@@ -35,7 +36,7 @@ const onCstodoSearch = async (event: any) => {
     }
 
     
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: message,
       channel: event.channel,
       icon_emoji,

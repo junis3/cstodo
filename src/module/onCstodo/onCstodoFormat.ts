@@ -1,6 +1,6 @@
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
+import { replyMessage } from '../../etc/postMessage';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 
@@ -42,7 +42,7 @@ const onCstodoFormat = async (event: any) => {
     if (cstodo.length > numListedTodos) {
       fmtText += `*이밖에도 할 일이 ${cstodo.length - numListedTodos}개나 더 있어요...* ${emoji('add')}\n`
     }
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: fmtText,
       channel: event.channel,
       icon_emoji: emoji('default'),

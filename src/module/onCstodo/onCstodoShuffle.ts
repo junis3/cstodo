@@ -1,11 +1,11 @@
 import { shuffleCstodo } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
+import { replyMessage } from '../../etc/postMessage';
 
 const onCstodoShuffle = async (event: any) => {
     await shuffleCstodo();
 
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: `cs님의 할 일들을 모두 섞어두었어요!`,
       icon_emoji: emoji('hug'),
       channel: event.channel,

@@ -1,4 +1,5 @@
 import { emoji } from '../../etc/cstodoMode';
+import { replyMessage } from '../../etc/postMessage';
 import { webClient } from '../../index';
 
 const helpText = () => {
@@ -16,7 +17,7 @@ const helpText = () => {
 }
   
 const onCstodoPop = async (event: any) => {
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: helpText(),
       channel: event.channel,
       icon_emoji: emoji('help'),

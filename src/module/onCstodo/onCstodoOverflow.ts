@@ -1,6 +1,6 @@
 import { getCstodos, removeCstodo } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
-import { webClient } from '../../index';
+import { replyMessage } from '../../etc/postMessage';
 
   
 const onCstodoOverflow = async (event: any) => {
@@ -19,9 +19,9 @@ const onCstodoOverflow = async (event: any) => {
   
           await removeCstodo(query);
   
-          await webClient.chat.postMessage({
+          await replyMessage(event, {
             text: `cs님의 할 일이 너무 많습니다.. cs님의 할 일에서 무작위로 '${query}'를 골라서 제거했으니 수고하십시오..`,
-            icon_emoji: emoji('communism'),
+            icon_emoji: ':putin:',
             channel: event.channel,
             username: 'Влади́мир Пу́тин',
           });

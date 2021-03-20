@@ -1,9 +1,9 @@
 import getCurrentHistory from '../etc/getCurrentHistory';
-import { webClient } from '../index';
 import getProblemInfo from '../etc/getProblemInfo';
 import { cstodoChannel } from '../config';
 import { emoji } from '../etc/cstodoMode';
 import { addHistory, getHistories, removeHistory } from '../database/history';
+import { postMessage } from '../etc/postMessage';
 
 const emptyMessage = () => [
     emoji('sob').repeat(23),
@@ -42,7 +42,7 @@ const dailyProblem = async () => {
     
     const postResult = async () => {
         if (todayAdd.length > 0) {
-            await webClient.chat.postMessage({
+            await postMessage({
                 text: `오늘 :god: ${emoji('cs')} :god:님이 푼 문제들입니다!\n` + todayAdd.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
                 channel: cstodoChannel,
                 icon_emoji: emoji('default'),
@@ -50,13 +50,13 @@ const dailyProblem = async () => {
         }
         
         if (todayAdd.length === 0) {
-            await webClient.chat.postMessage({
+            await postMessage({
                 text: randomChoice(emptyMessage().concat(diamondEmptyMessage())),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
             });
         } else if (diamonds.length === 0 && rubys.length === 0) {
-            await webClient.chat.postMessage({
+            await postMessage({
                 text: randomChoice(diamondEmptyMessage()),
                 channel: cstodoChannel,
                 icon_emoji: emoji('sob'),
@@ -64,7 +64,7 @@ const dailyProblem = async () => {
         }
 
         await Promise.all(rubys.map(async (problem) => {
-            await webClient.chat.postMessage({
+            await postMessage({
                 text: `:tada: cs신님께 새로 학살당한 루비! <http://icpc.me/${problem.id}|:${problem.level}:${problem.title}> 입니다! ${emoji('cs')} :tada:`,
                 channel: cstodoChannel,
                 icon_emoji: `:${problem.level}:`,
@@ -73,7 +73,7 @@ const dailyProblem = async () => {
     };
 
     if (Math.random() < 0.15 || (diamonds.length === 0 && rubys.length === 0) || rubys.length > 0) {
-        webClient.chat.postMessage({
+        await postMessage({
             text: '오늘 cs님은 몇 문제를 풀었을까요..? 60초 후에 공개합니다!!!',
             channel: cstodoChannel,
             icon_emoji: emoji('default'),

@@ -3,6 +3,7 @@ import onCstodo from './onCstodo/';
 import onYourMark from './onYourMark';
 import { webClient } from '../index';
 import { emoji } from '../etc/cstodoMode';
+import { replyMessage } from '../etc/postMessage';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -25,7 +26,7 @@ const onMessage = async (event: any) => {
 
     if (tokens.length < 1) return;
     else if (tokens[0] === 'echo' && tokens.length > 1) {
-      await webClient.chat.postMessage({
+      await replyMessage(event, {
         text: `${tokens.slice(1).join(' ')}`,
         channel: event.channel,
       });
@@ -37,7 +38,7 @@ const onMessage = async (event: any) => {
       let right2 = message.slice(left).indexOf('>');
       let right = right1 == -1 ? right2 : Math.min(right1, right2);
       if (right != -1) {
-        await webClient.chat.postMessage({
+        await replyMessage(event, {
           text: message.slice(left+1, left+right),
           channel: event.channel,
         });
@@ -52,14 +53,14 @@ const onMessage = async (event: any) => {
 
     if (Math.random() < percentage) {
       let profileResult = await webClient.users.profile.get({
-        user: lastUser || event.user,
+        user: csGod,
       });
 
       if (!profileResult.ok) return;
 
       let profile : any = profileResult.profile;
 
-      await webClient.chat.postMessage({
+      await replyMessage(event, {
         text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
         channel: event.channel,
         icon_url: profile.image_512,

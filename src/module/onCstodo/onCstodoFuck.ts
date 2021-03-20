@@ -1,23 +1,28 @@
 import { emoji } from '../../etc/cstodoMode';
+import { replyMessage } from '../../etc/postMessage';
 import { webClient } from '../../index';
 
   
 const onCstodoFuck = async (event: any) => {
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: emoji('fuck').repeat(23),
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });
 
-    await webClient.chat.postMessage({
+    await replyMessage(event, {
       text: '나감 ㅅㄱ',
       channel: event.channel,
       icon_emoji: emoji('fuck'),
     });
 
-    await webClient.conversations.leave({
-      channel: event.channel,
-    });
+    try {
+      await webClient.conversations.leave({
+        channel: event.channel,
+      });
+    } catch (e) {
+      console.log(e);
+    }
 }
 
 export default onCstodoFuck;

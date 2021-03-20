@@ -1,6 +1,5 @@
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
-import { webClient } from '../../index';
 
 const helpText = () => {
     const cs = emoji('cs');

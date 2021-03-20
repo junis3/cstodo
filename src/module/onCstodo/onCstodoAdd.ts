@@ -37,6 +37,8 @@ const onCstodoAdd = async (event: any) => {
           text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
           icon_emoji: emoji('add'),
           channel: event.channel,
+        }, {
+          forceUnmute: true,
         });
       }
     }));

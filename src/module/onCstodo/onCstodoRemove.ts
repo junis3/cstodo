@@ -36,6 +36,8 @@ const onCstodoRemove = async (event: any) => {
           text: `cs님의 할 일에서 '${nowQuery}'를 제거했어요!`,
           icon_emoji: emoji('remove'),
           channel: event.channel,
+        }, {
+          forceUnmute: true,
         });
       }
     }));

@@ -21,7 +21,9 @@ const onCstodoFuck = async (event: any) => {
         channel: event.channel,
       });
     } catch (e) {
-      console.log(e);
+      if (typeof e === 'string' && e.endsWith('method_not_supported_for_channel_type')) return;
+      console.log(typeof e);
+      throw e;
     }
 }
 

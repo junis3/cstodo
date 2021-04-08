@@ -1,7 +1,6 @@
-import { CstodoType, getCstodos, removeCstodo } from '../../database/cstodo';
+import { CstodoType, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
-import { webClient } from '../../index';
 
 const onCstodoSearch = async (event: any) => {
     const text : string = event.text;
@@ -14,7 +13,7 @@ const onCstodoSearch = async (event: any) => {
         setTimeout(() => resolve(null), 3000);
 
         const result = cstodos.filter((todo) => {
-          return todo.content.search(new RegExp(String.raw`${query}`)) !== -1;
+          return todo.content.toLowerCase().search(new RegExp(String.raw`${query.toLowerCase()}`)) !== -1;
         });
         resolve(result);
     });

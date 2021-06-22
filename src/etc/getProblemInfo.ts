@@ -4,7 +4,7 @@ import { HistoryType } from "../database/history";
 
 const getProblemInfo = async (id: number) => {
     let [solvedResp, bojResp] = await Promise.all([
-        axios.get(`https://api.solved.ac/v2/problems/show.json?id=${id}`),
+        axios.get(`https://solved.ac/api/v3/problem/show?problemId=${id}`),
         axios.get(`https://www.acmicpc.net/problem/${id}`),
     ]);
 

@@ -13,8 +13,8 @@ const getProblemInfo = async (id: number) => {
 
     console.log(`Loaded information of problem ${id} with status 200.`);
 
-    const title : string = solvedResp.data.result.problems[0].title;
-    const levelNum : number = solvedResp.data.result.problems[0].level;
+    const title : string = solvedResp.data.titleKo;
+    const levelNum : number = solvedResp.data.level;
     const level = (() => {
         if (levelNum > 0) return ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum-1)/5+0.000001)] + `${5 - (levelNum-1)%5}`;
         else return 'unranked';

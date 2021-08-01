@@ -11,7 +11,8 @@ import mongoose from 'mongoose';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
-    consoleToSlack.init(logWebhook, 4);
+    consoleToSlack.init(logWebhook, 2);
+    consoleToSlack.init(logWebhook, 3);
 }
 
 (async () => {

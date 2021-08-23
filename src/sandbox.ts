@@ -12,9 +12,9 @@ const cstodoChannel = 'C01H4RY69CL';
 const postMessage = async (text: string) => await webClient.chat.postMessage({
     text,
 //    icon_url: 'https://ca.slack-edge.com/TURU8C6P3-UV0NU58SD-7842b2be1e23-512',
-//    icon_emoji: ':cs71107:', // emoji('angry')
-    channel: cstodoChannel,
+    icon_emoji: ':cs71107:', // emoji('angry')
+    channel: cstodoTestChannel,
     username: 'cs71107',
 });
 
-postMessage(`제가 죄송합니다... 총대매고 제가 토끼귀에 토끼 코스튬 풀셋 인증하겠습니다...`);
+// postMessage('씨갤러들 안뇽 ㅋ');

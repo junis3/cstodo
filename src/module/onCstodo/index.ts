@@ -1,16 +1,14 @@
 import { emoji } from '../../etc/cstodoMode';
-import { getCstodos } from '../../database/cstodo';
+import onCstodoDefault from './onCstodoDefault';
 import onCstodoAdd from './onCstodoAdd';
-import onCstodoFormat from './onCstodoFormat';
+import onCstodoAll from './onCstodoAll';
 import onCstodoFuck from './onCstodoFuck';
 import onCstodoMute from './onCstodoMute';
 import onCstodoHelp from './onCstodoHelp';
 import onCstodoLength from './onCstodoLength';
 import onCstodoMode from './onCstodoMode';
-import onCstodoPop from './onCstodoPop';
 import onCstodoRemove from './onCstodoRemove';
 import onCstodoSearch from './onCstodoSearch';
-import onCstodoShuffle from './onCstodoShuffle';
 import onCstodoOverflow from './onCstodoOverflow';
 import { replyMessage } from '../../etc/postMessage';
 
@@ -60,34 +58,20 @@ const onCstodo = async (event: any) => {
     return;
   }
 
-  if (tokens[1] === 'format') {
-    await onCstodoFormat(event);
+  if (tokens[1] === 'all') {
+    await onCstodoAll(event);
     return;
   }
   
-  if (tokens[1] === 'shuffle') 
-    await onCstodoShuffle(event);
-
   if (tokens[1] === 'add' || tokens[1] === 'push' || tokens[1] === 'append') 
     await onCstodoAdd(event);
 
   if (tokens[1] === 'remove' || tokens[1] === 'delete') 
     await onCstodoRemove(event);
-  
-  if (tokens.length === 2 && tokens[1] === 'pop') 
-    await onCstodoPop(event);
 
-  while (await onCstodoOverflow(event));
+//  while (await onCstodoOverflow(event));
 
-  const cstodo = await getCstodos();
-  
-  let fmtText = `:god: ${emoji('cs')} 할 일 목록 :god: (Request time: ${date.getHours()}시 ${date.getMinutes()}분 ${date.getSeconds()}초)\n` + cstodo.map((todo) => todo.content).join(', ');
-
-  await replyMessage(event, {
-    text: fmtText,
-    channel: event.channel,
-    icon_emoji: emoji('default'),
-  });
+  await onCstodoDefault(event);
 }
 
 export default onCstodo;

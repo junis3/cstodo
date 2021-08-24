@@ -30,10 +30,10 @@ const onCstodoAdd = async (event: any, user: UserType) => {
       
       if (cstodo.find((item) => item.content === nowQuery)) {
         await replyMessage(event, {
+          username: `${user.name}님의 똑떨한 비서`,
           text: `이미 할 일에 있는 *${nowQuery}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
           channel: event.channel,
           icon_emoji: emoji('ddokddul'),
-          username: "똑떨한 cstodo",
         });
         return;
       } else {
@@ -42,6 +42,7 @@ const onCstodoAdd = async (event: any, user: UserType) => {
           owner: user.id,
         });
         await replyMessage(event, {
+          username: `${user.name}님의 비서`,
           text: `${user.name}님의 할 일에 *${nowQuery}* 를 추가했어요!`,
           icon_emoji: emoji('add'),
           channel: event.channel,

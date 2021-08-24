@@ -36,10 +36,10 @@ const onCstodoRemove = async (event: any, user: UserType) => {
       if (!isInteger(nowQuery)) {
         if (!todo.find((item) => item.content === nowQuery)) {
           await replyMessage(event, {
+            username: `${user.name}님의 똑떨한 비서`,
             text: `할 일에 없는 *${nowQuery}* 를 빼면 똑떨이에요... ` + emoji('ddokddul'),
             channel: event.channel,
             icon_emoji: emoji('ddokddul'),
-            username: "똑떨한 cstodo",
           });
           return;
         }
@@ -49,10 +49,10 @@ const onCstodoRemove = async (event: any, user: UserType) => {
 
         if (x <= 0 || x > todo.length) {
           await replyMessage(event, {
+            username: `${user.name}님의 똑떨한 비서`,
             text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요... ` + emoji('ddokddul'),
             channel: event.channel,
             icon_emoji: emoji('ddokddul'),
-            username: '똑떨한 cstodo'
           });
           return;
         }
@@ -61,6 +61,7 @@ const onCstodoRemove = async (event: any, user: UserType) => {
 
       await removeCstodo({ owner: user.id, content });
       await replyMessage(event, {
+        username: `${user.name}님의 비서`,
         text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
         icon_emoji: emoji('remove'),
         channel: event.channel,

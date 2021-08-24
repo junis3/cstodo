@@ -22,6 +22,7 @@ const onCstodoDefault = async (event: any, user: UserType) => {
         message += `\n이 밖에도 ${user.name}님의 할 일이 ${allCstodo.length - cstodo.length}개나 더 있어요... ${emoji('add')}`;
 
     await replyMessage(event, {
+      username: `${user.name}님의 비서`,
       text: message,
       channel: event.channel,
       icon_emoji: emoji('default'),

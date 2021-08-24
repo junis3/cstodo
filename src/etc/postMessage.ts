@@ -16,11 +16,12 @@ export const setMute = (newMuted: boolean) => {
 
 interface Options {
     forceUnmute?: boolean;
+    forceMute?: boolean;
 };
 
 export const replyMessage = async (event: any, props: ChatPostMessageArguments, options?: Options) => {   
     let allProps = props;
-    if (isMuted && !(options && options.forceUnmute)) allProps = {
+    if (isMuted && !(options && options.forceUnmute) || options?.forceMute) allProps = {
         ...allProps,
         thread_ts: event.ts,
     };

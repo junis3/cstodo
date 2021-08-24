@@ -2,7 +2,7 @@ import { createEventAdapter } from "@slack/events-api";
 import { WebClient } from "@slack/web-api";
 import express from "express";
 import schedule from 'node-schedule';
-import { accessToken, cstodoTestChannel, isTesting, logWebhook, mongodbUri, signingSecret } from "./config";
+import { accessToken, cstodoTestChannel, isTesting, logWebhook, mongodbUri, port, signingSecret } from "./config";
 import onMessage from './module/onMessage';
 import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
@@ -31,8 +31,6 @@ mongoose.connect(mongodbUri, {
   console.error(`Failed to connect to ${mongoose.connection.host}`);
   throw err;
 });
-
-const port = 3000;
 
 export const slackEvents = createEventAdapter(signingSecret);
 export const webClient = new WebClient(accessToken);

@@ -32,7 +32,9 @@ const isQualified = (event: any, user: UserType) => {
 }
 
 const onTodo = async (event: any, user: UserType) => {
-  if (!isQualified(event, user)) return;
+  if (!isQualified(event, user)) {
+      return;
+  }
   if (await isAttack(event)) return;
 
   const text : string = event.text;

@@ -16,7 +16,7 @@ let nowUser: string;
 
 const onMessage = async (event: any) => {
     if (event.ts < turnOnTimestamp) return;
-    if (isTesting && event.channel !== cstodoTestChannel) return;
+//    if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
 
     if (nowUser != event.user) {

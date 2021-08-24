@@ -21,12 +21,16 @@ const onCstodoAdd = async (event: any, user: UserType) => {
       return;
     } 
 
+    let preprocessQuery = (text: string) => {
+      return text.trim().split('').filter((chr) => ['\n', '`', '\u202e', '\u202d', '*'].find((x) => x === chr) === undefined).join('');
+    }
+
     await Promise.all(query.split(',').map(async (nowQuery) => {
-      nowQuery = nowQuery.trim();
+      nowQuery = preprocessQuery(nowQuery);
       
       if (cstodo.find((item) => item.content === nowQuery)) {
         await replyMessage(event, {
-          text: `이미 할 일에 있는 ${nowQuery}를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
+          text: `이미 할 일에 있는 *${nowQuery}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
           channel: event.channel,
           icon_emoji: emoji('ddokddul'),
           username: "똑떨한 cstodo",
@@ -38,7 +42,7 @@ const onCstodoAdd = async (event: any, user: UserType) => {
           owner: user.id,
         });
         await replyMessage(event, {
-          text: `${user.name}님의 할 일에 '${nowQuery}'를 추가했어요!`,
+          text: `${user.name}님의 할 일에 *${nowQuery}* 를 추가했어요!`,
           icon_emoji: emoji('add'),
           channel: event.channel,
         }, {

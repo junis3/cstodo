@@ -21,7 +21,7 @@ const onCstodoOverflow = async (event: any, user: UserType) => {
           await removeCstodo({ owner: user.id, content });
   
           await replyMessage(event, {
-            text: `${user.name}님의 할 일이 너무 많습니다.. ${user.name}님의 할 일에서 무작위로 '${content}'를 골라서 제거했으니 수고하십시오..`,
+            text: `${user.name}님의 할 일이 너무 많습니다.. ${user.name}님의 할 일에서 무작위로 *${content}* 를 골라서 제거했으니 수고하십시오..`,
             icon_emoji: ':putin:',
             channel: event.channel,
             username: 'Влади́мир Пу́тин',

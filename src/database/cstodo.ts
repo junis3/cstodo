@@ -17,13 +17,15 @@ export type CstodoDocument = Document & CstodoType;
 
 const cstodoSchema = new Schema({
     owner: { type: String, default: csGod },
-    content: { type: String, unique: true, required: true },
+    content: { type: String, required: true },
     status: { type: String, default: "pending"},
     due: { type: Number, default: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 2).getTime() },
     isPublic: { type: Boolean, default: true },
     createdAt: { type: Number, default: new Date().getTime() },
     updatedAt: { type: Number, default: new Date().getTime() }
 });
+
+cstodoSchema.index({ owner: true, content: true }, { unique: true });
 
 const Cstodo = model<CstodoDocument>('cstodo', cstodoSchema, 'cstodos');
 export default Cstodo;
@@ -40,11 +42,9 @@ export const addCstodo = async (cstodo : Partial<CstodoType>) => {
     delete cstodo.createdAt;
     delete cstodo.updatedAt;
 
-    if (await getCstodoInfo(cstodo.content)) return false;
+//    if (await getCstodoInfo(cstodo.content)) return false;
     
-    await new Cstodo(cstodo).save();
-
-    return true;
+    return !!await new Cstodo(cstodo).save();
 }
 
 export const removeCstodo = async (cstodo: Partial<CstodoType>) => {

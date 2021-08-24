@@ -35,8 +35,9 @@ const onMessage = async (event: any) => {
     // Special commands
     if (command === 'echo' && tokens.length > 1) await onEcho(event);
     else if (command === 'code' && tokens.length > 1) await onCode(event);
-    else if (command === 'cstodo') await onCstodo(event);
-    else if (command === 'on') await onYourMark(event);
+    else if (command === 'cstodo') {
+      if (await onCstodo(event)) return;
+    } else if (command === 'on') await onYourMark(event);
 
     // Todo commands
     let user = await getUser(command);

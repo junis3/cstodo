@@ -11,9 +11,12 @@ const onCstodoDefault = async (event: any, user: UserType) => {
     const tokens = text.split(' ').map((token) => token.trim());
 
     const allCstodo = await getCstodos(user.id);
-    const cstodo = allCstodo.slice(0, 5);
+    const cstodo = allCstodo.slice(0, 10);
 
-    let message = cstodo.map((todo, k) => `${bulletEmoji[k]} *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
+    let message = `${user.name}님의 할 일이 없습니다! ${emoji('add')}`
+    
+    if (cstodo.length > 0)
+        message = cstodo.map((todo, k) => `${bulletEmoji[k]} *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
 
     if (cstodo.length < allCstodo.length)
         message += `\n이 밖에도 ${user.name}님의 할 일이 ${allCstodo.length - cstodo.length}개나 더 있어요... ${emoji('add')}`;

@@ -5,7 +5,7 @@ import onCstodoMode from './onCstodoMode';
 import isAttack from '../isAttack';
 
 const onCstodo = async (event: any) => {
-  if (await isAttack(event)) return;
+  if (await isAttack(event)) return false;
 
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());

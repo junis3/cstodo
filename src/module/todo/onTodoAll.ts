@@ -1,15 +1,16 @@
 
 
+import { UserType } from '../../database/user';
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 
-const onCstodoAll = async (event: any) => {
+const onCstodoAll = async (event: any, user: UserType) => {
     const text : string = event.text;
     const tokens = text.split(' ').map((token) => token.trim());
 
-    const cstodo = await getCstodos();
+    const cstodo = await getCstodos(user.id);
 
     let message = cstodo.map((todo, k) => `${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
 

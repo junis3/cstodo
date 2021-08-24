@@ -28,14 +28,14 @@ const cstodoSchema = new Schema({
 const Cstodo = model<CstodoDocument>('cstodo', cstodoSchema, 'cstodos');
 export default Cstodo;
 
-export const getCstodos = async () => (await Cstodo.find({ status: 'pending' })).sort((a, b) => a.due - b.due).map((doc) => doc.toObject() as CstodoType);
+export const getCstodos = async (owner: string) => (await Cstodo.find({ owner, status: 'pending' })).sort((a, b) => a.due - b.due).map((doc) => doc.toObject() as CstodoType);
 
 export const getCstodoInfo = async (content : string) => {
     return await Cstodo.findOne({ content }) as CstodoType | null;
 }
 
 export const addCstodo = async (cstodo : Partial<CstodoType>) => {
-    if (!cstodo.content) return false;
+    if (!cstodo.content || !cstodo.owner) return false;
 
     delete cstodo.createdAt;
     delete cstodo.updatedAt;
@@ -47,13 +47,13 @@ export const addCstodo = async (cstodo : Partial<CstodoType>) => {
     return true;
 }
 
-export const removeCstodo = async (content : string) => {
-    if (!content) return;
+export const removeCstodo = async (cstodo: Partial<CstodoType>) => {
+    if (!cstodo.owner || !cstodo.content) return false;
     
-    await Cstodo.deleteOne({ content });
+    return !!await Cstodo.deleteOne(cstodo);
 }
 
-export const shuffleCstodo = async () => {
+/*export const shuffleCstodo = async () => {
     let cstodo = await getCstodos();
 
     let newCstodo = cstodo.map(x => ({key: Math.random(), value: x})).sort((a, b) => a.key - b.key).map(p => p.value);
@@ -61,7 +61,7 @@ export const shuffleCstodo = async () => {
     await Cstodo.deleteMany({ status: 'pending' });
 
     await Promise.all(newCstodo.map((value) => new Cstodo(value).save()));
-}
+}*/
 
 export const updateCstodo = async (content : string, cstodo: Partial<CstodoType>) => {
     if (!content) return;

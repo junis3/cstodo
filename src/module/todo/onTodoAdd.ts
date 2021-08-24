@@ -1,12 +1,13 @@
+import { UserType } from '../../database/user';
 import { addCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 
-const onCstodoAdd = async (event: any) => {
+const onCstodoAdd = async (event: any, user: UserType) => {
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());
   
-    let cstodo = await getCstodos();
+    let cstodo = await getCstodos(user.id);
 
     let query = tokens.slice(2).join(' ').trim();
 
@@ -32,9 +33,12 @@ const onCstodoAdd = async (event: any) => {
         });
         return;
       } else {
-        await addCstodo({ content: nowQuery });
+        await addCstodo({
+          content: nowQuery,
+          owner: user.id,
+        });
         await replyMessage(event, {
-          text: `cs님의 할 일에 '${nowQuery}'를 추가했어요!`,
+          text: `${user.name}님의 할 일에 '${nowQuery}'를 추가했어요!`,
           icon_emoji: emoji('add'),
           channel: event.channel,
         }, {

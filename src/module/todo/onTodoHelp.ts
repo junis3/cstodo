@@ -5,7 +5,7 @@ import { replyMessage } from '../../etc/postMessage';
 const helpText = (user: UserType) => {
     const name = user.name;
     const command = user.command;
-    return `${name} ${command} 봇 사용설명서 ${name}
+    return `${name}님의 비서 - ${command} 봇 사용설명서
 \`${command}\`: ${name}님의 할 일 목록 일부를 볼 수 있습니다.
 \`${command} all\`: ${name}님의 할 일 목록 전체를 볼 수 있습니다.
 \`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.

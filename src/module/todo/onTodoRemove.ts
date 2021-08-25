@@ -16,7 +16,7 @@ const onCstodoRemove = async (event: any, user: UserType) => {
         text: "빈 remove 쿼리는 똑떨이에요... " + emoji('ddokddul'),
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
-        username: "똑떨한 cstodo",
+        username: `${user.name}님의 똑떨한 비서`,
       });
       return;
     } 
@@ -27,6 +27,8 @@ const onCstodoRemove = async (event: any, user: UserType) => {
       }
       return true;
     }
+
+    let contents = new Set<string>();
 
     for (let s of query.split(',')) {
       const nowQuery = s.trim();
@@ -58,7 +60,10 @@ const onCstodoRemove = async (event: any, user: UserType) => {
         }
         content = todo[x-1].content;
       }
+      contents.add(content);
+    }
 
+    for(let content of Array.from(contents)) {
       await removeCstodo({ owner: user.id, content });
       await replyMessage(event, {
         username: `${user.name}님의 비서`,

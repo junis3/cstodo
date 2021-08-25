@@ -16,7 +16,7 @@ const onCstodoAdd = async (event: any, user: UserType) => {
         text: `add를 하면서 추가할 일을 안 주면 똑떨이에요... ${emoji('ddokddul')}`,
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
-        username: "똑떨한 cstodo",
+        username: `${user.name}님의 똑떨한 비서`,
       });
       return;
     } 

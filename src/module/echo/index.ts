@@ -8,8 +8,14 @@ const onEcho = async (event: any) => {
     const tokens = text.split(' ').map((token) => token.trim());
 
 
+    let preprocessQuery = (text: string) => {
+        return text.trim().split('').filter((chr) => ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined).join('').slice(0, 100);
+    }  
+
+    const query = preprocessQuery(tokens.slice(1).join(' '));
+
     await replyMessage(event, {
-        text: `${tokens.slice(1).join(' ')}`,
+        text: query,
         channel: event.channel,
     });
 }

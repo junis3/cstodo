@@ -9,11 +9,21 @@ const onCstodoAdd = async (event: any, user: UserType) => {
   
     let cstodo = await getCstodos(user.id);
 
-    let query = tokens.slice(2).join(' ').trim();
+    let preprocessQuery = (text: string) => {
+      return text.trim().split('').filter((chr) => ['\n', '`', '\u202e', '\u202d', '*'].find((x) => x === chr) === undefined).join('');
+    }
 
-    if(query === '') {
+    let isQueryValid = (text: string) => {
+      return text.length > 0 && text.length <= 100;
+    }
+
+    let query = tokens.slice(2).join(' ').trim().split(',').map(preprocessQuery);
+
+    query = Array.from(new Set<string>(query));
+
+    if (query.length === 0 || query.length > 25 || !query.every(isQueryValid)) {
       await replyMessage(event, {
-        text: `add를 하면서 추가할 일을 안 주면 똑떨이에요... ${emoji('ddokddul')}`,
+        text: `이상한 쿼리를 주시면 저는 똑떨이에요... ${emoji('ddokddul')}`,
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
         username: `${user.name}님의 똑떨한 비서`,
@@ -21,11 +31,7 @@ const onCstodoAdd = async (event: any, user: UserType) => {
       return;
     } 
 
-    let preprocessQuery = (text: string) => {
-      return text.trim().split('').filter((chr) => ['\n', '`', '\u202e', '\u202d', '*'].find((x) => x === chr) === undefined).join('');
-    }
-
-    await Promise.all(query.split(',').map(async (nowQuery) => {
+    await Promise.all(query.map(async (nowQuery) => {
       nowQuery = preprocessQuery(nowQuery);
       
       if (cstodo.find((item) => item.content === nowQuery)) {

@@ -16,7 +16,7 @@ const onCstodoRemove = async (event: any, user: UserType) => {
         text: "빈 remove 쿼리는 똑떨이에요... " + emoji('ddokddul'),
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
-        username: "똑떨한 cstodo",
+        username: `${user.name}님의 똑떨한 비서`,
       });
       return;
     } 

@@ -92,7 +92,7 @@ const stringToTime = (str: string) => {
         });
     });
 
-    if (year < 1900 || year > 2100 || month < 1 || month > 12 || date < -9 || date > 39 || hour < 0 || hour > 24 || minute < 0 || minute > 60 || second < 0 || second > 60) {
+    if (year < 1900 || year > 2100 || month < 0 || month > 11 || date < -9 || date > 39 || hour < 0 || hour > 24 || minute < 0 || minute > 60 || second < 0 || second > 60) {
         return undefined;
     }
 

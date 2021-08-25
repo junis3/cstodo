@@ -2,9 +2,10 @@ import { UserType } from '../../database/user';
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
+import { QueryType } from '../../etc/parseQuery';
 
   
-const onCstodoLength = async (event: any, user: UserType) => {
+const onTodoLength = async (query: QueryType, event: any, user: UserType) => {
     const cstodo = await getCstodos(user.id);
 
     await replyMessage(event, {
@@ -15,4 +16,4 @@ const onCstodoLength = async (event: any, user: UserType) => {
     });
 }
 
-export default onCstodoLength;
+export default onTodoLength;

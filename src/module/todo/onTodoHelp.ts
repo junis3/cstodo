@@ -1,5 +1,6 @@
 import { UserType } from '../../database/user';
 import { emoji } from '../../etc/cstodoMode';
+import { QueryType } from '../../etc/parseQuery';
 import { replyMessage } from '../../etc/postMessage';
 
 const helpText = (user: UserType) => {
@@ -16,7 +17,7 @@ ${command === 'cstodo' ? `\`${command} mute\` 또는 \`${command} unmute\`: ${co
 ${command === 'cstodo' ? `\`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.` : ''}`
 }
   
-const onCstodoHelp = async (event: any, user: UserType) => {
+const onTodoHelp = async (query: QueryType, event: any, user: UserType) => {
     await replyMessage(event, {
       text: helpText(user),
       channel: event.channel,
@@ -25,4 +26,4 @@ const onCstodoHelp = async (event: any, user: UserType) => {
     });
 }
 
-export default onCstodoHelp;
+export default onTodoHelp;

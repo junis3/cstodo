@@ -2,8 +2,10 @@ import { UserType } from '../../database/user';
 import { CstodoType, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
+import { QueryType } from '../../etc/parseQuery';
 
-const onCstodoSearch = async (event: any, user: UserType) => {
+// Needs refactor......
+const onTodoSearch = async (rawQuery: QueryType, event: any, user: UserType) => {
     const text : string = event.text;
     const tokens = text.split(' ').map((token) => token.trim());
     const query = tokens.slice(2).join(' ').trim();
@@ -30,9 +32,8 @@ const onCstodoSearch = async (event: any, user: UserType) => {
     } else if (result.length === 0) {
       message = `${user.name}님의 할 일에 찾으시는 '${query}'가 없습니다..ㅠㅠ`;
     } else {
-
       message = `${user.name}님의 할 일에서 '${query}'를 검색한 결과입니다:`;
-      message += result.map((value) => `\n- ${value.content}`);  
+      message += result.map((value) => `\n*${value.content}*`);  
     }
 
     
@@ -45,4 +46,4 @@ const onCstodoSearch = async (event: any, user: UserType) => {
     return;
 }
 
-export default onCstodoSearch;
+export default onTodoSearch;

@@ -2,9 +2,10 @@ import { UserType } from '../../database/user';
 import { getCstodos, removeCstodo } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
+import { QueryType } from '../../etc/parseQuery';
 
   
-const onCstodoOverflow = async (event: any, user: UserType) => {
+const onTodoOverflow = async (query: QueryType, event: any, user: UserType) => {
     const cstodo = await getCstodos(user.id);
 
     const maxLen = Math.max(...cstodo.map((item) => item.content.length));
@@ -34,4 +35,4 @@ const onCstodoOverflow = async (event: any, user: UserType) => {
     return true;
 }
 
-export default onCstodoOverflow;
+export default onTodoOverflow;

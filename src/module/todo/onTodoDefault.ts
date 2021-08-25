@@ -3,13 +3,11 @@ import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
+import { QueryType } from '../../etc/parseQuery';
 
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 
-const onCstodoDefault = async (event: any, user: UserType) => {
-    const text : string = event.text;
-    const tokens = text.split(' ').map((token) => token.trim());
-
+const onTodoDefault = async (query: QueryType, event: any, user: UserType) => {
     const allCstodo = await getCstodos(user.id);
     const cstodo = allCstodo.slice(0, 10);
 
@@ -30,4 +28,4 @@ const onCstodoDefault = async (event: any, user: UserType) => {
     return;
 }
 
-export default onCstodoDefault;
+export default onTodoDefault;

@@ -5,11 +5,9 @@ import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
+import { QueryType } from '../../etc/parseQuery';
 
-const onCstodoAll = async (event: any, user: UserType) => {
-    const text : string = event.text;
-    const tokens = text.split(' ').map((token) => token.trim());
-
+const onTodoAll = async (query: QueryType, event: any, user: UserType) => {
     const cstodo = await getCstodos(user.id);
 
     let message = `${user.name}님의 할 일이 없습니다! ${emoji('add')}`;
@@ -25,4 +23,4 @@ const onCstodoAll = async (event: any, user: UserType) => {
     return;
 }
 
-export default onCstodoAll;
+export default onTodoAll;

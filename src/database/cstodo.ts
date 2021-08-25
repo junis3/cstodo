@@ -19,7 +19,7 @@ const cstodoSchema = new Schema({
     owner: { type: String, default: csGod },
     content: { type: String, required: true },
     status: { type: String, default: "pending"},
-    due: { type: Number, default: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 6).getTime() },
+    due: { type: Number, default: new Date().getTime() },
     isPublic: { type: Boolean, default: true },
     createdAt: { type: Number, default: new Date().getTime() },
     updatedAt: { type: Number, default: new Date().getTime() }

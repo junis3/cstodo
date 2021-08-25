@@ -5,6 +5,7 @@ import onTodoAll from './onTodoAll';
 import onTodoLength from './onTodoLength';
 import onTodoRemove from './onTodoRemove';
 import onTodoSearch from './onTodoSearch';
+import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
 import { UserType } from '../../database/user';
 
@@ -33,44 +34,42 @@ const isQualified = (event: any, user: UserType) => {
 }
 
 const onTodo = async (event: any, user: UserType) => {
-  if (!isQualified(event, user)) {
-      return;
-  }
+  if (!isQualified(event, user)) return;
   if (await isAttack(event)) return;
 
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());
-  const date = new Date(event.ts * 1000);
+  const query = parseQuery(tokens.slice(1).join(' '));
 
-  if (tokens[1] === 'help') {
-    await onTodoHelp(event, user);
+  if (query.command[0] === 'help') {
+    await onTodoHelp(query, event, user);
     return true;
   }
 
-  if (tokens[1] === 'length' || tokens[1] === 'size') {
-    await onTodoLength(event, user);
+  if (query.command[0] === 'length' || query.command[0] === 'size') {
+    await onTodoLength(query, event, user);
     return;
   }
 
-  if (tokens[1] === 'search') {
-    await onTodoSearch(event, user);
+  if (query.command[0] === 'search') {
+    await onTodoSearch(query, event, user);
     return;
   }
 
-  if (tokens[1] === 'all') {
-    await onTodoAll(event, user);
+  if (query.command[0] === 'all') {
+    await onTodoAll(query, event, user);
     return;
   }
   
-  if (tokens[1] === 'add' || tokens[1] === 'push' || tokens[1] === 'append') 
-    await onTodoAdd(event, user);
+  if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') 
+    await onTodoAdd(query, event, user);
 
-  if (tokens[1] === 'remove' || tokens[1] === 'delete') 
-    await onTodoRemove(event, user);
+  if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') 
+    await onTodoRemove(query, event, user);
 
 //  while (await onCstodoOverflow(event));
 
-  await onTodoDefault(event, user);
+  await onTodoDefault(query, event, user);
 }
 
 export default onTodo;

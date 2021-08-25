@@ -1,6 +1,7 @@
 import onTodoDefault from './onTodoDefault';
 import onTodoAdd from './onTodoAdd';
 import onTodoHelp from './onTodoHelp';
+import onTodoEdit from './onTodoEdit';
 import onTodoAll from './onTodoAll';
 import onTodoLength from './onTodoLength';
 import onTodoRemove from './onTodoRemove';
@@ -60,6 +61,9 @@ const onTodo = async (event: any, user: UserType) => {
     await onTodoAll(query, event, user);
     return;
   }
+
+  if (query.command[0] === 'edit' || query.command[0] === 'update')
+    await onTodoEdit(query, event, user);
   
   if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') 
     await onTodoAdd(query, event, user);

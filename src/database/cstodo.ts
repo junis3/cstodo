@@ -47,6 +47,10 @@ export const addCstodo = async (cstodo : Partial<CstodoType>) => {
     return !!await new Cstodo(cstodo).save();
 }
 
+export const editCstodo = async (content: string, change: Partial<CstodoType>) => {
+    return !!await Cstodo.findOneAndUpdate({ content }, change, { useFindAndModify: true });
+}
+
 export const removeCstodo = async (cstodo: Partial<CstodoType>) => {
     if (!cstodo.owner || !cstodo.content) return false;
     

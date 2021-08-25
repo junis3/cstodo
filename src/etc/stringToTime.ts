@@ -50,6 +50,8 @@ const matchInfo: MatchInfo[] = [{
         args: ['year', 'month', 'date'],
 }]
 
+const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
 const stringToTime = (str: string) => {
     let now = new Date();
     let year = now.getFullYear(), month = now.getMonth(), date = 1, hour = 0, minute = 0, second = 0;
@@ -61,14 +63,21 @@ const stringToTime = (str: string) => {
         else if (token === '오늘' || token.toLowerCase() === 'today') date = now.getDate();
         else if (token === '내일' || token.toLowerCase() === 'tomorrow') date = now.getDate() + 1;
         else if (token === '모레') date = now.getDate() + 2;
+        else if (token === '자정') hour = 0;
+        else if (token === '정오') hour = 12;
+        else if (weekdays.find((x) => x === token) !== undefined) {
+            const nowDay = now.getDay();
+            const tokenDay = weekdays.indexOf(token);
+
+            if (nowDay < tokenDay) date = now.getDate() + tokenDay - nowDay;
+            else date = now.getDate() + 7 + tokenDay - nowDay;
+        }
         else if (token === '오후') isAfternoon = true;
         else if (token === '오전') isAfternoon = false;
 
         matchInfo.forEach(({re, args}) => {
             const result = re.exec(token);
             if (!result || result[0] !== token) return;
-
-            console.log(re, args, result);
 
             args.map((arg, k) => {
                 const value = Number.parseInt(result[k+1]);
@@ -83,7 +92,7 @@ const stringToTime = (str: string) => {
         });
     });
 
-    if (year < 1900 || year > 2100 || month < 1 || month > 12 || date < -1 || date > 33 || hour < 0 || hour > 24 || minute < 0 || minute > 60 || second < 0 || second > 60) {
+    if (year < 1900 || year > 2100 || month < 1 || month > 12 || date < -9 || date > 39 || hour < 0 || hour > 24 || minute < 0 || minute > 60 || second < 0 || second > 60) {
         return undefined;
     }
 

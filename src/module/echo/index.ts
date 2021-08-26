@@ -10,7 +10,7 @@ const onEcho = async (event: any) => {
 
 
     let preprocessQuery = (text: string) => {
-        return text.trim().split('').filter((chr) => ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined).join('').slice(0, 100);
+        return text.trim().split('').filter((chr) => ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined).join('').slice(0, 600);
     }  
 
     const query = preprocessQuery(tokens.slice(1).join(' '));

@@ -4,13 +4,22 @@ import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
+import { reduceEachTrailingCommentRange } from 'typescript';
+import preprocessContent from '../../etc/preprocessContent';
 
-let preprocess = (text: string) => {
-  return text.trim().split('').filter((chr) => ['\n', '`', '\u202e', '\u202d', '*'].find((x) => x === chr) === undefined).join('');
-}
 
 let isQueryValid = (text: string) => {
   return text.length > 0 && text.length <= 100;
+}
+
+let isContentValid = (content: string[]) => {
+  if(content.length === 0 || content.length > 25) {
+    return `${content.length}개의 쿼리를 넣으시면 저는 똑떨이에요...`;
+  }
+  if(!content.every(isQueryValid)) {
+    return `${content.length}개의 쿼리 중에 이상한 게 있으면 저는 똑떨이에요...`;
+  }
+  return "";
 }
 
 function makeUnique<T>(arr: T[]) {
@@ -49,8 +58,19 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   const due = _due;
 
-  const contents = makeUnique(command.slice(1).join(' ').trim().split(',').map(preprocess));
+  const contents = makeUnique(command.slice(1).join(' ').trim().split(',').map(preprocessContent)).filter(x => {return x.length > 0;});
 
+  const contentValidateErrMsg = isContentValid(contents);
+  if (contentValidateErrMsg !== "") {
+    await replyMessage(event, {
+      text: `${contentValidateErrMsg} ${emoji('ddokddul')}`,
+      channel: event.channel,
+      icon_emoji: emoji(`ddokddul`),
+      username: `${user.name}님의 똑떨한 비서`,
+    })
+    return;
+  }
+  /*
   if (contents.length === 0 || contents.length > 25 || !contents.every(isQueryValid)) {
     await replyMessage(event, {
       text: `이상한 쿼리를 주시면 저는 똑떨이에요... ${emoji('ddokddul')}`,
@@ -59,7 +79,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
-  } 
+  } */
 
   await Promise.all(contents.map(async (content) => {
     if (todo.find((item) => item.content === content)) {

@@ -5,6 +5,7 @@ import { replyMessage } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
+import preprocessContent from '../../etc/preprocessContent';
 
 const isInteger = (s: string) => {
   for (let c of s.split('')) {
@@ -50,7 +51,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   if (!contentArg) {
     newContent = undefined;
   } else if (typeof contentArg === 'string') {
-    newContent = contentArg;
+    newContent = preprocessContent(contentArg);
   } else {
     await replyMessage(event, {
       text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${contentArg.message}`,

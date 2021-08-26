@@ -16,7 +16,7 @@ const isInteger = (s: string) => {
 const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserType) => {
   let todo = await getCstodos(user.id);
 
-  const dueArg = getArg(['--due', '-d'], args);
+  const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
   let newDue: number | undefined;
   if (!dueArg) {

@@ -20,7 +20,7 @@ function makeUnique<T>(arr: T[]) {
 const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
   let todo = await getCstodos(user.id);
 
-  const dueArg = getArg(['--due', '-d'], args);
+  const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
   let _due = 0;
   if (!dueArg) {

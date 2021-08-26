@@ -31,14 +31,17 @@ const matchInfo: MatchInfo[] = [{
         re: /([0-9]{1,2}):([0-9]{2}):([0-9]{2})/,
         args: ['hour', 'minute', 'second']
     }, {
+        re: /([0-9]{1,2})\/([0-9]{1,2})/,
+        args: ['month', 'date'],
+    }, {
         re: /([0-9]{1,2})\.([0-9]{1,2})\./,
         args: ['month', 'date'],
     }, {
         re: /([0-9]{1,2})\.([0-9]{1,2})/,
         args: ['month', 'date'],
     }, {
-        re: /([0-9]{1,2})\/([0-9]{1,2})/,
-        args: ['month', 'date'],
+        re: /([0-9]{4})\/([0-9]{1,2})\/([0-9]{1,2})/,
+        args: ['year', 'month', 'date'],
     }, {
         re: /([0-9]{4})\.([0-9]{1,2})\.([0-9]{1,2})\./,
         args: ['year', 'month', 'date'],
@@ -49,8 +52,11 @@ const matchInfo: MatchInfo[] = [{
         re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/,
         args: ['year', 'month', 'date'],
     }, {
-        re: /([0-9]{4})\/([0-9]{1,2})\/([0-9]{1,2})/,
-        args: ['year', 'month', 'date'],
+        re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{1,2}):([0-9]{2})/,
+        args: ['year', 'month', 'date', 'hour', 'minute'],
+    }, {
+        re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{1,2}):([0-9]{2}):([0-9]{2})/,
+        args: ['year', 'month', 'date', 'hour', 'minute', 'second'],
 }]
 
 const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
@@ -78,8 +84,8 @@ const stringToTime = (str: string) => {
             if (nowDay < tokenDay) date = now.getDate() + tokenDay - nowDay;
             else date = now.getDate() + 7 + tokenDay - nowDay;
         }
-        else if (token === '오후') isAfternoon = true;
-        else if (token === '오전') isAfternoon = false;
+        else if (token === '오후' || token.toLowerCase() === 'am') isAfternoon = true;
+        else if (token === '오전' || token.toLowerCase() === 'pm') isAfternoon = false;
 
         matchInfo.forEach(({re, args}) => {
             const result = re.exec(token);

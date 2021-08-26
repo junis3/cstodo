@@ -25,10 +25,10 @@ const matchInfo: MatchInfo[] = [{
         re: /([0-9]{1,2})초/,
         args: ['second']
     }, {
-        re: /([0-9]{1,2}):([0-9]{1,2})/,
+        re: /([0-9]{1,2}):([0-9]{2})/,
         args: ['hour', 'minute']
     }, {
-        re: /([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/,
+        re: /([0-9]{1,2}):([0-9]{2}):([0-9]{2})/,
         args: ['hour', 'minute', 'second']
     }, {
         re: /([0-9]{1,2})\.([0-9]{1,2})\./,
@@ -46,6 +46,9 @@ const matchInfo: MatchInfo[] = [{
         re: /([0-9]{4})\.([0-9]{1,2})\.([0-9]{1,2})/,
         args: ['year', 'month', 'date'],
     }, {
+        re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/,
+        args: ['year', 'month', 'date'],
+    }, {
         re: /([0-9]{4})\/([0-9]{1,2})\/([0-9]{1,2})/,
         args: ['year', 'month', 'date'],
 }]
@@ -57,7 +60,10 @@ const stringToTime = (str: string) => {
     let year = now.getFullYear(), month = now.getMonth(), date = 1, hour = 0, minute = 0, second = 0;
     let isAfternoon: boolean | undefined = undefined;
 
-    str.split(' ').forEach((token) => {
+    const tokens = str.split(' ');
+    tokens.forEach((token, k) => {
+        if (token.endsWith('까지') && k === tokens.length - 1) token = token.replace('까지', '');
+
         if (token === '그제' || token === '그저께') date = now.getDate() - 2;
         else if (token === '어제' || token.toLowerCase() === 'yesterday') date = now.getDate() - 1;
         else if (token === '오늘' || token.toLowerCase() === 'today') date = now.getDate();

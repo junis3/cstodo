@@ -7,9 +7,13 @@ import stringToTime from '../../etc/stringToTime';
 import { reduceEachTrailingCommentRange } from 'typescript';
 import preprocessContent from '../../etc/preprocessContent';
 
+let isSlackDecoration = (text: string) => {
+  let match = text.match(/[~_]+/);
+  return match !== null && text === match[0];
+}
 
 let isQueryValid = (text: string) => {
-  return text.length > 0 && text.length <= 100;
+  return text.length > 0 && text.length <= 100 && !isSlackDecoration(text);
 }
 
 let isContentValid = (content: string[]) => {
@@ -17,7 +21,7 @@ let isContentValid = (content: string[]) => {
     return `${content.length}개의 쿼리를 넣으시면 저는 똑떨이에요...`;
   }
   if(!content.every(isQueryValid)) {
-    return `${content.length}개의 쿼리 중에 이상한 게 있으면 저는 똑떨이에요...`;
+    return `${content.length}개의 쿼리 중에 다음과 같이 이상한 게 있으면 저는 똑떨이에요...\n:one: 텍스트의 길이가 [1, 100]을 벗어나는 경우\n:two: 텍스트가 underscore(_)나 물결(~)로만 구성된 경우\n:three: 개발자가 잘못 짠 경우`;
   }
   return "";
 }

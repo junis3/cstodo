@@ -4,6 +4,7 @@ import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import { Query } from 'mongoose';
 import { QueryType } from '../../etc/parseQuery';
+import preprocessContent from '../../etc/preprocessContent';
 
 const isInteger = (s: string) => {
   for (let c of s.split('')) {
@@ -29,7 +30,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
     let contents = new Set<string>();
 
     for (let s of command.slice(1).join(' ').split(',')) {
-      let content = s.trim();
+      let content = preprocessContent(s);
 
       if (!isInteger(content)) {
         if (!todo.find((item) => item.content === content)) {

@@ -26,11 +26,15 @@ export const replyMessage = async (event: any, user: UserType | undefined, props
             user: event.user,
         });
 
-        await webClient.reactions.add({
-            name: 'blobokhand',
-            timestamp: event.ts,
-            channel: event.channel,
-        })
+        try {
+            await webClient.reactions.add({
+                name: 'blobokhand',
+                timestamp: event.ts,
+                channel: event.channel,
+            });
+        } catch (e) {
+
+        }
     }
     else await webClient.chat.postMessage(props);
 }

@@ -1,5 +1,5 @@
 import { UserType } from '../../database/user';
-import { emoji } from '../../etc/cstodoMode';
+import { emoji } from '../../etc/theme';
 import { QueryType } from '../../etc/parseQuery';
 import { replyMessage } from '../../etc/postMessage';
 
@@ -18,10 +18,10 @@ ${command === 'cstodo' ? `\`${command} blob\` 또는 \`${command} weeb\`: ${comm
 }
   
 const onTodoHelp = async (query: QueryType, event: any, user: UserType) => {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: helpText(user),
       channel: event.channel,
-      icon_emoji: emoji('help'),
+      icon_emoji: emoji('help', user.theme),
       username: '친절한 cs71107',
     });
 }

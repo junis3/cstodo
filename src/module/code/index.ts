@@ -13,7 +13,7 @@ const onCode = async (event: any) => {
     let right2 = message.slice(left).indexOf('>');
     let right = right1 == -1 ? right2 : Math.min(right1, right2);
     if (right != -1) {
-        await replyMessage(event, {
+        await replyMessage(event, undefined, {
             text: message.slice(left+1, left+right),
             channel: event.channel,
         });

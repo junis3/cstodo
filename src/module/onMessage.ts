@@ -1,12 +1,11 @@
 import { csGod, cstodoChannel, cstodoTestChannel, isTesting } from '../config';
 import onEcho from './echo';
 import onCode from './code';
-import onCstodo from './cstodo';
 import onTodo from './todo';
 import onYourMark from './yourMark';
 import { getUser } from '../database/user';
 import { webClient } from '../index';
-import { emoji } from '../etc/cstodoMode';
+import { emoji } from '../etc/theme';
 import { replyMessage } from '../etc/postMessage';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
@@ -35,9 +34,7 @@ const onMessage = async (event: any) => {
     // Special commands
     if (command === 'echo' && tokens.length > 1) await onEcho(event);
     else if (command === 'code' && tokens.length > 1) await onCode(event);
-    else if (command === 'cstodo') {
-      if (await onCstodo(event)) return;
-    } else if (command === 'on') await onYourMark(event);
+    else if (command === 'on') await onYourMark(event);
 
     // Todo commands
     let user = await getUser(command);
@@ -58,7 +55,7 @@ const onMessage = async (event: any) => {
 
       let profile : any = profileResult.profile;
 
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
         channel: event.channel,
         icon_url: profile.image_512,

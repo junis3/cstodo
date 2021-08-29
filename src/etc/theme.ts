@@ -1,3 +1,5 @@
+import { ThemeType } from "../database/user";
+
 interface StringMap {
   [key: string]: string;
 }
@@ -60,8 +62,8 @@ const EmojiMap: NestedStringMap = {
   },
 };
 
-export const emoji = (name: string = '', mode: string = cstodoMode) => {
-  return EmojiMap[name][mode] || ':시신:';
+export const emoji = (name: string = '', theme = 'blob') => {
+  return EmojiMap[name][theme] || ':시신:';
 }
 
 const MessageMap : NestedStringMap = {
@@ -71,12 +73,6 @@ const MessageMap : NestedStringMap = {
   },
 };
 
-export const message = (name: string = '', mode: string = cstodoMode) => {
-  return MessageMap[name][mode] || ':시신:';
-}
-
-export let cstodoMode : string = 'blob';
-export function setCstodoMode(mode: string) {
-  cstodoMode = mode;
-  return;
+export const message = (name: string = '', theme: string) => {
+  return MessageMap[name][theme] || ':시신:';
 }

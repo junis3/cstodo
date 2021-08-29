@@ -1,6 +1,5 @@
 import { UserType } from '../../database/user';
 import { getCstodos, removeCstodo } from '../../database/cstodo';
-import { emoji } from '../../etc/cstodoMode';
 import { replyMessage } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 
@@ -21,7 +20,7 @@ const onTodoOverflow = async (query: QueryType, event: any, user: UserType) => {
   
           await removeCstodo({ owner: user.id, content });
   
-          await replyMessage(event, {
+          await replyMessage(event, user, {
             text: `${user.name}님의 할 일이 너무 많습니다.. ${user.name}님의 할 일에서 무작위로 *${content}* 를 골라서 제거했으니 수고하십시오..`,
             icon_emoji: ':putin:',
             channel: event.channel,

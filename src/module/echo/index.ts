@@ -15,7 +15,7 @@ const onEcho = async (event: any) => {
 
     const query = preprocessQuery(tokens.slice(1).join(' '));
 
-    await replyMessage(event, {
+    await replyMessage(event, undefined, {
         text: query,
         channel: event.channel,
     });

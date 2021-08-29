@@ -1,6 +1,6 @@
 import { UserType } from '../../database/user';
 import { addCstodo, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/cstodoMode';
+import { emoji } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
@@ -41,20 +41,20 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyMessage(event, {
-        text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
+      await replyMessage(event, user, {
+        text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul', user.theme)}`,
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
         username: `${user.name}님의 똑떨한 비서`,
       });
       return;
     }
     _due = time;
   } else {
-    await replyMessage(event, {
-      text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
+    await replyMessage(event, user, {
+      text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul', user.theme)}\n${dueArg.message}`,
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -66,17 +66,17 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   const contentValidateErrMsg = isContentValid(contents);
   if (contentValidateErrMsg !== "") {
-    await replyMessage(event, {
-      text: `${contentValidateErrMsg} ${emoji('ddokddul')}`,
+    await replyMessage(event, user, {
+      text: `${contentValidateErrMsg} ${emoji('ddokddul', user.theme)}`,
       channel: event.channel,
-      icon_emoji: emoji(`ddokddul`),
+      icon_emoji: emoji(`ddokddul`, user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     })
     return;
   }
   /*
   if (contents.length === 0 || contents.length > 25 || !contents.every(isQueryValid)) {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: `이상한 쿼리를 주시면 저는 똑떨이에요... ${emoji('ddokddul')}`,
       channel: event.channel,
       icon_emoji: emoji('ddokddul'),
@@ -87,11 +87,11 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   await Promise.all(contents.map(async (content) => {
     if (todo.find((item) => item.content === content)) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         username: `${user.name}님의 똑떨한 비서`,
-        text: `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
+        text: `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul', user.theme)}`,
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
       });
       return;
     } 
@@ -102,10 +102,10 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         due,
       });
       
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         username: `${user.name}님의 비서`,
         text: `${user.name}님의 할 일에 *${content}* 를 추가했어요!`,
-        icon_emoji: emoji('add'),
+        icon_emoji: emoji('add', user.theme),
         channel: event.channel,
       }, {
         forceUnmute: true,

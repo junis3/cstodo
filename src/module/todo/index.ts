@@ -6,9 +6,12 @@ import onTodoAll from './onTodoAll';
 import onTodoLength from './onTodoLength';
 import onTodoRemove from './onTodoRemove';
 import onTodoSearch from './onTodoSearch';
+import onTodoTheme from './onTodoTheme';
+import onTodoMute from './onTodoMute';
+import onTodoFuck from './onTodoFuck';
 import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
-import { UserType } from '../../database/user';
+import { isThemeType, UserType } from '../../database/user';
 
 const isQualified = (event: any, user: UserType) => {
     const isUserQualified = (() => {
@@ -42,9 +45,24 @@ const onTodo = async (event: any, user: UserType) => {
   const tokens = text.split(' ').map((token) => token.trim());
   const query = parseQuery(tokens.slice(1).join(' '));
 
+  if (query.command[0] === 'fuck') {
+    await onTodoFuck(query, event, user);
+    return;
+  }
+
+  if (query.command[0] === 'mute' || query.command[0] === 'unmute') {
+    await onTodoMute(query, event, user);
+    return;
+  }
+
+  if (isThemeType(query.command[0])) {
+    await onTodoTheme(query, event, user);
+    return;
+  }
+
   if (query.command[0] === 'help') {
     await onTodoHelp(query, event, user);
-    return true;
+    return;
   }
 
   if (query.command[0] === 'length' || query.command[0] === 'size') {

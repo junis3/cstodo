@@ -68,7 +68,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
           icon_emoji: emoji('remove', user.theme),
           channel: event.channel,
         }, {
-          forceUnmute: true,
+          forceUnmute: (user.userControl === 'blacklist'),
         });
       } else {
         await replyMessage(event, user, {

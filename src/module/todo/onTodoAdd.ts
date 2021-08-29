@@ -108,7 +108,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         icon_emoji: emoji('add', user.theme),
         channel: event.channel,
       }, {
-        forceUnmute: true,
+        forceUnmute: (user.userControl === 'blacklist'),
       });
 
     }

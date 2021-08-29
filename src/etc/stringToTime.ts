@@ -1,5 +1,5 @@
 
-type TimeToken = 'year' | 'month' | 'date' | 'hour' | 'minute' | 'second';
+type TimeToken = 'year' | 'month' | 'date' | 'hour' | 'hourAM' | 'hourPM' | 'minute' | 'second';
 
 interface MatchInfo {
     re: RegExp;
@@ -18,6 +18,21 @@ const matchInfo: MatchInfo[] = [{
     }, {
         re: /([0-9]{1,2})시/,
         args: ['hour']
+    }, {
+        re: /([0-9]{1,2})/,
+        args: ['hour']
+    }, {
+        re: /([0-9]{1,2})(?:AM|am)/,
+        args: ['hourAM']
+    }, {
+        re: /([0-9]{1,2})(?:PM|pm)/,
+        args: ['hourPM']
+    }, {
+        re: /(?:AM|am)([0-9]{1,2})/,
+        args: ['hourAM']
+    }, {
+        re: /(?:PM|pm)([0-9]{1,2})/,
+        args: ['hourPM']
     }, {
         re: /([0-9]{1,2})분/,
         args: ['minute']
@@ -52,7 +67,7 @@ const matchInfo: MatchInfo[] = [{
         re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/,
         args: ['year', 'month', 'date'],
     }, {
-        re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{1,2}):([0-9]{2})/,
+        re: /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})/,
         args: ['year', 'month', 'date', 'hour', 'minute'],
     }, {
         re: /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})T([0-9]{1,2}):([0-9]{2}):([0-9]{2})/,
@@ -63,7 +78,7 @@ const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일
 
 const stringToTime = (str: string) => {
     let now = new Date();
-    let year = now.getFullYear(), month = now.getMonth(), date = 1, hour = 0, minute = 0, second = 0;
+    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = 0, minute = 0, second = 0;
     let isAfternoon: boolean | undefined = undefined;
 
     const tokens = str.split(' ');
@@ -98,6 +113,8 @@ const stringToTime = (str: string) => {
                 else if (arg === 'month') month = value-1;
                 else if (arg === 'date') date = value;
                 else if (arg === 'hour') hour = value;
+                else if (arg === 'hourAM') hour = value, isAfternoon = false;
+                else if (arg === 'hourPM') hour = value, isAfternoon = true;
                 else if (arg === 'minute') minute = value;
                 else second = value;
             });
@@ -115,6 +132,12 @@ const stringToTime = (str: string) => {
         } else {
             if (hour == 12) hour = 0;
             else hour = hour % 12;
+        }
+    }
+
+    if (year === now.getFullYear() && month === now.getMonth() && date === now.getDate()) {
+        if (isAfternoon === undefined && 0 < hour && hour < 12 && hour <= now.getHours() && minute === 0 && second === 0) {
+            hour += 12;
         }
     }
 

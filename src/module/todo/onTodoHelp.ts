@@ -22,7 +22,7 @@ const onTodoHelp = async (query: QueryType, event: any, user: UserType) => {
       text: helpText(user),
       channel: event.channel,
       icon_emoji: emoji('help', user.theme),
-      username: '친절한 cs71107',
+      username: `친절한 ${user.name}님의 비서`,
     });
 }
 

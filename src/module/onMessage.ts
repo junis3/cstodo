@@ -42,8 +42,8 @@ const onMessage = async (event: any) => {
     if (user) await onTodo(event, user);
 
     // Random blobaww
-    let percentage = 0.0010;
-    if (event.channel === cstodoChannel || event.channel === cstodoTestChannel) percentage *= 2.0;
+    let percentage = 0.0006;
+    if (event.channel === cstodoChannel) percentage *= 3.0;
     if (event.user === csGod) percentage *= 3.0;
 
     if (Math.random() < percentage) {

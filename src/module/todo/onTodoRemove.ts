@@ -18,7 +18,11 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
     
     if (command.length === 1) {
       await replyMessage(event, {
-        text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
+        text: "",
+        attachments: [{
+          text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
+          color: "warning",
+        }],
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
         username: `${user.name}님의 똑떨한 비서`,
@@ -36,7 +40,11 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
         if (!todo.find((item) => item.content === content)) {
           await replyMessage(event, {
             username: `${user.name}님의 똑떨한 비서`,
-            text: `할 일에 없는 *${content}* 를 빼면 똑떨이에요... ` + emoji('ddokddul'),
+            text: "",
+            attachments: [{
+              text: `할 일에 없는 *${content}* 를 빼면 똑떨이에요... ` + emoji('ddokddul'),
+              color: 'warning',
+            }],
             channel: event.channel,
             icon_emoji: emoji('ddokddul'),
           });
@@ -48,7 +56,11 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
         if (x <= 0 || x > todo.length) {
           await replyMessage(event, {
             username: `${user.name}님의 똑떨한 비서`,
-            text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요... ` + emoji('ddokddul'),
+            text: "",
+            attachments: [{
+              text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요... ` + emoji('ddokddul'),
+              color: "warning",
+            }],
             channel: event.channel,
             icon_emoji: emoji('ddokddul'),
           });
@@ -64,7 +76,11 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
       if (await removeCstodo({ owner: user.id, content })) {
         await replyMessage(event, {
           username: `${user.name}님의 비서`,
-          text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
+          text: "",
+          attachments: [{
+            text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
+            color: 'good',
+          }],
           icon_emoji: emoji('remove'),
           channel: event.channel,
         }, {
@@ -73,7 +89,11 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
       } else {
         await replyMessage(event, {
           username: `${user.name}님의 똑떨한 비서`,
-          text: `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
+          text: "",
+          attachments: [{
+            text: `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
+            color: 'danger',
+          }],
           icon_emoji: emoji('ddokddul'),
           channel: event.channel,
         })

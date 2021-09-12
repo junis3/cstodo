@@ -21,7 +21,8 @@ const onTodoDefault = async (query: QueryType, event: any, user: UserType) => {
 
     await replyMessage(event, {
       username: `${user.name}님의 비서`,
-      text: message,
+      text: "",
+      attachments: [{text: message, color: 'good'}],
       channel: event.channel,
       icon_emoji: emoji('default'),
     });

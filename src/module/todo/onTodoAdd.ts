@@ -42,7 +42,11 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
     const time = stringToTime(dueArg);
     if (!time) {
       await replyMessage(event, {
-        text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
+        text: "",
+        attachments: [{
+          text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
+          color: "warning",
+        }],
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
         username: `${user.name}님의 똑떨한 비서`,
@@ -52,7 +56,11 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
     _due = time;
   } else {
     await replyMessage(event, {
-      text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
+      text: "",
+      attachments: [{
+        text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
+        color: "warning",
+      }],
       channel: event.channel,
       icon_emoji: emoji('ddokddul'),
       username: `${user.name}님의 똑떨한 비서`,
@@ -67,7 +75,11 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
   const contentValidateErrMsg = isContentValid(contents);
   if (contentValidateErrMsg !== "") {
     await replyMessage(event, {
-      text: `${contentValidateErrMsg} ${emoji('ddokddul')}`,
+      text: "",
+      attachments: [{
+        text: `${contentValidateErrMsg} ${emoji('ddokddul')}`,
+        color: "warning",
+      }],
       channel: event.channel,
       icon_emoji: emoji(`ddokddul`),
       username: `${user.name}님의 똑떨한 비서`,
@@ -88,8 +100,12 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
   await Promise.all(contents.map(async (content) => {
     if (todo.find((item) => item.content === content)) {
       await replyMessage(event, {
+        text: "",
         username: `${user.name}님의 똑떨한 비서`,
-        text: `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
+        attachments: [{
+          text: `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요... ${emoji('ddokddul')}`,
+          color: "warning",
+        }],
         channel: event.channel,
         icon_emoji: emoji('ddokddul'),
       });
@@ -104,7 +120,11 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
       
       await replyMessage(event, {
         username: `${user.name}님의 비서`,
+        text: "",
+        attachments: [{
         text: `${user.name}님의 할 일에 *${content}* 를 추가했어요!`,
+        color: "good",
+        }],
         icon_emoji: emoji('add'),
         channel: event.channel,
       }, {

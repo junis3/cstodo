@@ -1,7 +1,7 @@
 import getCurrentHistory from '../etc/getCurrentHistory';
 import getProblemInfo from '../etc/getProblemInfo';
 import { cstodoChannel } from '../config';
-import { emoji } from '../etc/cstodoMode';
+import { emoji } from '../etc/theme';
 import { addHistory, getHistories, removeHistory } from '../database/history';
 import { postMessage } from '../etc/postMessage';
 

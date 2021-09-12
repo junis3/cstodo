@@ -1,6 +1,6 @@
 import { UserType } from '../../database/user';
 import { addCstodo, CstodoType, editCstodo, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/cstodoMode';
+import { emoji } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
@@ -32,7 +32,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
         color: 'warning',
         }],
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
         username: `${user.name}님의 똑떨한 비서`,
       });
       return;
@@ -46,7 +46,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
       color: 'warning',
       }],
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -68,7 +68,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
       color: 'warning',
       }],
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -92,7 +92,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
       color: "warning",
       }],
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -108,7 +108,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
       color: 'warning',
       }],
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -122,7 +122,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
     if (!isInteger(content)) {
       if (!todo.find((item) => item.content === content)) {
-        await replyMessage(event, {
+        await replyMessage(event, user, {
           username: `${user.name}님의 똑떨한 비서`,
           text: "",
           attachments: [{
@@ -130,7 +130,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
           color: 'warning',
           }],
           channel: event.channel,
-          icon_emoji: emoji('ddokddul'),
+          icon_emoji: emoji('ddokddul', user.theme),
         });
         return;
       }
@@ -138,7 +138,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
       let x = Number.parseInt(content);
 
       if (x <= 0 || x > todo.length) {
-        await replyMessage(event, {
+        await replyMessage(event, user, {
           username: `${user.name}님의 똑떨한 비서`,
           text: '',
           attachments: [{
@@ -146,7 +146,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
           color: 'warning',
           }],
           channel: event.channel,
-          icon_emoji: emoji('ddokddul'),
+          icon_emoji: emoji('ddokddul', user.theme),
         });
         return;
       }
@@ -158,7 +158,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   for(let content of Array.from(contents)) {
     if (await editCstodo(content, change)) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         username: `${user.name}님의 비서`,
         text: "",
         attachments: [{
@@ -171,7 +171,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
         forceUnmute: true,
       });
     } else {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         username: `${user.name}님의 똑떨한 비서`,
         text: "",
         attachments: [{

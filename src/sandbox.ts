@@ -1,6 +1,6 @@
 import { webClient } from ".";
 import { getHistories } from "./database/history";
-import { emoji } from "./etc/cstodoMode";
+import { emoji } from "./etc/theme";
 
 // You can post message as a bot in the code
 // Type <@usercode> or <@channelcode> to mention a person or channel

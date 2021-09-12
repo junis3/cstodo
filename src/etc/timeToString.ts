@@ -1,5 +1,9 @@
 
 
+const weekdayString = (date: Date) => {
+    return ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][date.getDay()];
+}
+
 const timeToString = (timestamp: number) => {
     let time = new Date(timestamp), now = new Date();
 
@@ -12,7 +16,7 @@ const timeToString = (timestamp: number) => {
         if (timeDay === nowDay) return '오늘';
         if (timeDay === nowDay + 1) return '내일';
         if (timeDay === nowDay + 2) return '모레';
-        if (nowDay <= timeDay && timeDay < nowDay + 7) return ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][time.getDay()];
+        if (nowDay <= timeDay && timeDay < nowDay + 7) return weekdayString(time);
         if (time.getFullYear() === now.getFullYear()) {
             if (time.getMonth() === now.getMonth()) return `이번 달 ${time.getDate()}일`;
             else return `올해 ${time.getMonth()+1}월 ${time.getDate()}일`;
@@ -43,6 +47,18 @@ const timeToString = (timestamp: number) => {
             else return `${hourToString(time.getHours())}:${format(time.getMinutes())}`;
         } else return `${hourToString(time.getHours())}:${format(time.getMinutes())}:${format(time.getSeconds())}`
     })();
+
+    if (dateResult === '오늘' && timeResult === '자정') {
+        dateResult = '지난';
+    }
+
+    if (dateResult === '내일' && timeResult === '자정') {
+        dateResult = '다가오는';
+    }
+
+    if (dateResult === '모레' && timeResult === '자정') {
+        dateResult = weekdayString(time);
+    }
 
     return `${dateResult} ${timeResult}`;
 }

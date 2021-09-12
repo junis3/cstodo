@@ -1,6 +1,6 @@
 import { UserType } from '../../database/user';
 import { addCstodo, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/cstodoMode';
+import { emoji } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
@@ -48,7 +48,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
           color: "warning",
         }],
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
         username: `${user.name}님의 똑떨한 비서`,
       });
       return;
@@ -62,7 +62,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         color: "warning",
       }],
       channel: event.channel,
-      icon_emoji: emoji('ddokddul'),
+      icon_emoji: emoji('ddokddul', user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     });
     return;
@@ -81,14 +81,14 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         color: "warning",
       }],
       channel: event.channel,
-      icon_emoji: emoji(`ddokddul`),
+      icon_emoji: emoji(`ddokddul`, user.theme),
       username: `${user.name}님의 똑떨한 비서`,
     })
     return;
   }
   /*
   if (contents.length === 0 || contents.length > 25 || !contents.every(isQueryValid)) {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: `이상한 쿼리를 주시면 저는 똑떨이에요... ${emoji('ddokddul')}`,
       channel: event.channel,
       icon_emoji: emoji('ddokddul'),
@@ -107,7 +107,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
           color: "warning",
         }],
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
       });
       return;
     } 
@@ -118,7 +118,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         due,
       });
       
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         username: `${user.name}님의 비서`,
         text: "",
         attachments: [{
@@ -128,7 +128,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         icon_emoji: emoji('add'),
         channel: event.channel,
       }, {
-        forceUnmute: true,
+        forceUnmute: (user.userControl === 'blacklist'),
       });
 
     }

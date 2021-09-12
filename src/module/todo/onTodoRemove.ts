@@ -1,6 +1,6 @@
 import { UserType } from '../../database/user';
 import { getCstodos, removeCstodo } from '../../database/cstodo';
-import { emoji } from '../../etc/cstodoMode';
+import { emoji } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
 import { Query } from 'mongoose';
 import { QueryType } from '../../etc/parseQuery';
@@ -24,7 +24,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
           color: "warning",
         }],
         channel: event.channel,
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
         username: `${user.name}님의 똑떨한 비서`,
       });
       return;
@@ -38,7 +38,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
 
       if (!isInteger(content)) {
         if (!todo.find((item) => item.content === content)) {
-          await replyMessage(event, {
+          await replyMessage(event, user, {
             username: `${user.name}님의 똑떨한 비서`,
             text: "",
             attachments: [{
@@ -46,7 +46,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
               color: 'warning',
             }],
             channel: event.channel,
-            icon_emoji: emoji('ddokddul'),
+            icon_emoji: emoji('ddokddul', user.theme),
           });
           return;
         }
@@ -54,7 +54,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
         let x = Number.parseInt(content);
 
         if (x <= 0 || x > todo.length) {
-          await replyMessage(event, {
+          await replyMessage(event, user, {
             username: `${user.name}님의 똑떨한 비서`,
             text: "",
             attachments: [{
@@ -62,7 +62,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
               color: "warning",
             }],
             channel: event.channel,
-            icon_emoji: emoji('ddokddul'),
+            icon_emoji: emoji('ddokddul', user.theme),
           });
           return;
         }
@@ -74,7 +74,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
 
     for(let content of Array.from(contents)) {
       if (await removeCstodo({ owner: user.id, content })) {
-        await replyMessage(event, {
+        await replyMessage(event, user, {
           username: `${user.name}님의 비서`,
           text: "",
           attachments: [{
@@ -84,10 +84,10 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
           icon_emoji: emoji('remove'),
           channel: event.channel,
         }, {
-          forceUnmute: true,
+          forceUnmute: (user.userControl === 'blacklist'),
         });
       } else {
-        await replyMessage(event, {
+        await replyMessage(event, user, {
           username: `${user.name}님의 똑떨한 비서`,
           text: "",
           attachments: [{

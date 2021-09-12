@@ -17,10 +17,10 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
     const todo = await getCstodos(user.id);
     
     if (command.length === 1) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         text: "",
         attachments: [{
-          text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
+          text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul', user.theme),
           color: "warning",
         }],
         channel: event.channel,
@@ -81,7 +81,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
             text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
             color: 'good',
           }],
-          icon_emoji: emoji('remove'),
+          icon_emoji: emoji('remove', user.theme),
           channel: event.channel,
         }, {
           forceUnmute: (user.userControl === 'blacklist'),
@@ -94,7 +94,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
             text: `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
             color: 'danger',
           }],
-          icon_emoji: emoji('ddokddul'),
+          icon_emoji: emoji('ddokddul', user.theme),
           channel: event.channel,
         })
       }

@@ -25,7 +25,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         text: "",
         attachments: [{
         text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
@@ -39,7 +39,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
     }
     newDue = time;
   } else {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
       text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
@@ -61,7 +61,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
       text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${contentArg.message}`,
@@ -85,7 +85,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   if (newContent) changeString += `내용을 *${newContent}* 로, `;
 
   if (changeString.length === 0) {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
       text: "바꿀 게 없어서 똑떨이에요... " + emoji('ddokddul'),
@@ -101,7 +101,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   changeString = changeString.slice(0, changeString.length - 2);
 
   if (command.length === 1) {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
       text: "edit 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
@@ -126,8 +126,8 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
           username: `${user.name}님의 똑떨한 비서`,
           text: "",
           attachments: [{
-          text: `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
-          color: 'warning',
+            text: `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
+            color: 'warning',
           }],
           channel: event.channel,
           icon_emoji: emoji('ddokddul', user.theme),
@@ -142,8 +142,8 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
           username: `${user.name}님의 똑떨한 비서`,
           text: '',
           attachments: [{
-          text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
-          color: 'warning',
+            text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
+            color: 'warning',
           }],
           channel: event.channel,
           icon_emoji: emoji('ddokddul', user.theme),
@@ -165,7 +165,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
         text: `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`,
         color: 'good',
         }],
-        icon_emoji: emoji('remove'),
+        icon_emoji: emoji('remove', user.theme),
         channel: event.channel,
       }, {
         forceUnmute: true,
@@ -178,7 +178,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
         text: `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`,
         color: 'danger',
         }],
-        icon_emoji: emoji('ddokddul'),
+        icon_emoji: emoji('ddokddul', user.theme),
         channel: event.channel,
       })
     }

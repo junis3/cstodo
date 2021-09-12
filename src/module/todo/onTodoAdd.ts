@@ -41,10 +41,10 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         text: "",
         attachments: [{
-          text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
+          text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul', user.theme)}`,
           color: "warning",
         }],
         channel: event.channel,
@@ -55,7 +55,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
     }
     _due = time;
   } else {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
         text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
@@ -74,7 +74,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   const contentValidateErrMsg = isContentValid(contents);
   if (contentValidateErrMsg !== "") {
-    await replyMessage(event, {
+    await replyMessage(event, user, {
       text: "",
       attachments: [{
         text: `${contentValidateErrMsg} ${emoji('ddokddul')}`,
@@ -99,7 +99,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   await Promise.all(contents.map(async (content) => {
     if (todo.find((item) => item.content === content)) {
-      await replyMessage(event, {
+      await replyMessage(event, user, {
         text: "",
         username: `${user.name}님의 똑떨한 비서`,
         attachments: [{
@@ -125,7 +125,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
         text: `${user.name}님의 할 일에 *${content}* 를 추가했어요!`,
         color: "good",
         }],
-        icon_emoji: emoji('add'),
+        icon_emoji: emoji('add', user.theme),
         channel: event.channel,
       }, {
         forceUnmute: (user.userControl === 'blacklist'),

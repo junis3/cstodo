@@ -30,10 +30,24 @@ const onTodoSearch = async (rawQuery: QueryType, event: any, user: UserType) => 
       icon_emoji = emoji('ddokddul', user.theme);
       username = `${user.name}님의 똑떨한 비서`
     } else if (result.length === 0) {
+<<<<<<< HEAD
       message = `> ${user.name}님의 할 일에 찾으시는 '${query}'가 없습니다..ㅠㅠ`;
     } else {
       message = `${user.name}님의 할 일에서 '${query}'를 검색한 결과입니다:`;
       message += result.map((value) => `\n> *${value.content}*`);  
+=======
+<<<<<<< HEAD
+      message = `${user.name}님의 할 일에 찾으시는 *${query}* 가 없습니다..ㅠㅠ`;
+    } else {
+      message = `${user.name}님의 할 일에서 *${query}* 를 검색한 결과입니다:`;
+      message += result.map((value) => `\n*${value.content}*`);  
+=======
+      message = `> ${user.name}님의 할 일에 찾으시는 '${query}'가 없습니다..ㅠㅠ`;
+    } else {
+      message = `${user.name}님의 할 일에서 '${query}'를 검색한 결과입니다:`;
+      message += result.map((value) => `\n> *${value.content}*`);  
+>>>>>>> link preview prevention & rich text
+>>>>>>> link preview prevention & rich text
     }
 
     

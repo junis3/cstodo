@@ -17,12 +17,23 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
     const todo = await getCstodos(user.id);
     
     if (command.length === 1) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      await replyMessage(event, user, {
+        text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
+=======
+>>>>>>> link preview prevention & rich text
       await replyMessage(event, {
         text: "",
         attachments: [{
           text: "remove 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
           color: "warning",
         }],
+<<<<<<< HEAD
+=======
+>>>>>>> link preview prevention & rich text
+>>>>>>> link preview prevention & rich text
         channel: event.channel,
         icon_emoji: emoji('ddokddul', user.theme),
         username: `${user.name}님의 똑떨한 비서`,
@@ -76,12 +87,23 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
       if (await removeCstodo({ owner: user.id, content })) {
         await replyMessage(event, user, {
           username: `${user.name}님의 비서`,
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+          text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
+          icon_emoji: emoji('remove', user.theme),
+=======
+>>>>>>> link preview prevention & rich text
           text: "",
           attachments: [{
             text: `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`,
             color: 'good',
           }],
           icon_emoji: emoji('remove'),
+<<<<<<< HEAD
+=======
+>>>>>>> link preview prevention & rich text
+>>>>>>> link preview prevention & rich text
           channel: event.channel,
         }, {
           forceUnmute: (user.userControl === 'blacklist'),
@@ -89,12 +111,23 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
       } else {
         await replyMessage(event, user, {
           username: `${user.name}님의 똑떨한 비서`,
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+          text: `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
+          icon_emoji: emoji('ddokddul', user.theme),
+=======
+>>>>>>> link preview prevention & rich text
           text: "",
           attachments: [{
             text: `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
             color: 'danger',
           }],
           icon_emoji: emoji('ddokddul'),
+<<<<<<< HEAD
+=======
+>>>>>>> link preview prevention & rich text
+>>>>>>> link preview prevention & rich text
           channel: event.channel,
         })
       }

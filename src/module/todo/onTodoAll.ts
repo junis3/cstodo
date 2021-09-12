@@ -12,11 +12,12 @@ const onTodoAll = async (query: QueryType, event: any, user: UserType) => {
 
     let message = `${user.name}님의 할 일이 없습니다! ${emoji('add', user.theme)}`;
     
-    if (cstodo.length > 0) message = cstodo.map((todo, k) => `${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
+    if (cstodo.length > 0) message = cstodo.map((todo, k) => `> ${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
 
     await replyMessage(event, user, {
         username: `${user.name}님의 비서`,
-        text: message,
+        text: "",
+        attachments: [{text: message, color: 'good'}],
         channel: event.channel,
         icon_emoji: emoji('default', user.theme),
     });

@@ -28,9 +28,17 @@ const EmojiMap: NestedStringMap = {
     blob: ':blobaww:',
     weeb: ':weebwoah:',
   },
+  edit: {
+    blob: ':blobworker:',
+    weeb: ':weebcoding:',
+  },
   remove: {
     blob: ':blobfingerguns:',
     weeb: ':weebdab:',
+  },
+  search: {
+    blob: ':blobsmilehappyeyes:',
+    weeb: ':weebsanta:',
   },
   help: {
     blob: ':blobok:',

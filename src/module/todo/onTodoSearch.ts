@@ -1,7 +1,7 @@
 import { UserType } from '../../database/user';
 import { CstodoType, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replyMessage } from '../../etc/postMessage';
+import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 
 // Needs refactor......
@@ -22,27 +22,23 @@ const onTodoSearch = async (rawQuery: QueryType, event: any, user: UserType) => 
     });
 
     let message: string;
-    let icon_emoji = emoji('default', user.theme);
-    let username = `${user.name}님의 비서`;
+    let isDdokddul = false;
 
     if (result === null) {
       message = '무슨 검색어를 넣었길래 이렇게 오래 걸려요?;;;';
-      icon_emoji = emoji('ddokddul', user.theme);
-      username = `${user.name}님의 똑떨한 비서`
+      isDdokddul = true;
     } else if (result.length === 0) {
-      message = `> ${user.name}님의 할 일에 찾으시는 '${query}'가 없습니다..ㅠㅠ`;
+      message = `${user.name}님의 할 일에 찾으시는 '${query}'가 없습니다..ㅠㅠ`;
     } else {
       message = `${user.name}님의 할 일에서 '${query}'를 검색한 결과입니다:`;
-      message += result.map((value) => `\n> *${value.content}*`);
+      message += result.map((value) => `\n*${value.content}*`);
     }
 
-    
-    await replyMessage(event, user, {
-      text: message,
-      channel: event.channel,
-      icon_emoji,
-      username,
-    })
+    if (isDdokddul) {
+      await replyDdokddul(event, user, message);
+      return;
+    }
+    await replySuccess(event, user, message, 'search');
     return;
 }
 

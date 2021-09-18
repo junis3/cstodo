@@ -28,7 +28,7 @@ barSchema.index({ owner: true, content: true }, { unique: true });
 const BarModel = model<BarDocument>('bar', barSchema, 'bars');
 export default BarModel;
 
-export const getBars = async (owner: string) => (await BarModel.find({ owner, status: 'pending' })).map((doc) => doc.toObject() as BarType);
+export const getBars = async (owner: string) => (await BarModel.find({ owner })).map((doc) => doc.toObject() as BarType);
 
 export const getBarInfo = async (content : string) => {
     return await BarModel.findOne({ content }) as BarType | null;

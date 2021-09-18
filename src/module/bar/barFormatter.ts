@@ -13,7 +13,7 @@ export const formatBar = (bar: BarType, user: UserType) => {
         console.log(`bar: progress (=${progress}) violates the range [0, ${goal}]. owner: ${bar.owner}, content: ${bar.content}`);
         progress = 0;
     }
-    let dones = Math.ceil(10 * progress / goal);
+    let dones = Math.floor(10 * progress / goal);
     let wips = (10 * progress % goal === 0 ? 0 : 1);
     let readies = 10 - dones - wips;
     let emos = emoji('bar_done', user.theme).repeat(dones) + 

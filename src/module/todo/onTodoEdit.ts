@@ -1,7 +1,7 @@
 import { UserType } from '../../database/user';
 import { addCstodo, CstodoType, editCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replyMessage } from '../../etc/postMessage';
+import { replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
@@ -25,30 +25,12 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyMessage(event, user, {
-        text: "",
-        attachments: [{
-        text: `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다... ${emoji('ddokddul')}`,
-        color: 'warning',
-        }],
-        channel: event.channel,
-        icon_emoji: emoji('ddokddul', user.theme),
-        username: `${user.name}님의 똑떨한 비서`,
-      });
+      await replyDdokddul(event, user, `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...`);
       return;
     }
     newDue = time;
   } else {
-    await replyMessage(event, user, {
-      text: "",
-      attachments: [{
-      text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${dueArg.message}`,
-      color: 'warning',
-      }],
-      channel: event.channel,
-      icon_emoji: emoji('ddokddul', user.theme),
-      username: `${user.name}님의 똑떨한 비서`,
-    });
+    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
     return;
   }
 
@@ -61,16 +43,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyMessage(event, user, {
-      text: "",
-      attachments: [{
-      text: `이런 이유로 저는 똑떨이에요... ${emoji('ddokddul')}\n${contentArg.message}`,
-      color: 'warning',
-      }],
-      channel: event.channel,
-      icon_emoji: emoji('ddokddul', user.theme),
-      username: `${user.name}님의 똑떨한 비서`,
-    });
+    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`)
     return;
   }
 
@@ -85,32 +58,14 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
   if (newContent) changeString += `내용을 *${newContent}* 로, `;
 
   if (changeString.length === 0) {
-    await replyMessage(event, user, {
-      text: "",
-      attachments: [{
-      text: "바꿀 게 없어서 똑떨이에요... " + emoji('ddokddul'),
-      color: "warning",
-      }],
-      channel: event.channel,
-      icon_emoji: emoji('ddokddul', user.theme),
-      username: `${user.name}님의 똑떨한 비서`,
-    });
+    await replyDdokddul(event, user, `바꿀 게 없어서 똑떨이에요...`);
     return;
   }
 
   changeString = changeString.slice(0, changeString.length - 2);
 
   if (command.length === 1) {
-    await replyMessage(event, user, {
-      text: "",
-      attachments: [{
-      text: "edit 쿼리에 인자를 주지 않으면 똑떨이에요... " + emoji('ddokddul'),
-      color: 'warning',
-      }],
-      channel: event.channel,
-      icon_emoji: emoji('ddokddul', user.theme),
-      username: `${user.name}님의 똑떨한 비서`,
-    });
+    await replyDdokddul(event, user, `edit 쿼리에 인자가 없으면 똑떨이에요...`)
     return;
   } 
 
@@ -122,32 +77,14 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
     if (!isInteger(content)) {
       if (!todo.find((item) => item.content === content)) {
-        await replyMessage(event, user, {
-          username: `${user.name}님의 똑떨한 비서`,
-          text: "",
-          attachments: [{
-            text: `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
-            color: 'warning',
-          }],
-          channel: event.channel,
-          icon_emoji: emoji('ddokddul', user.theme),
-        });
+        await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`)
         return;
       }
     } else {
       let x = Number.parseInt(content);
 
       if (x <= 0 || x > todo.length) {
-        await replyMessage(event, user, {
-          username: `${user.name}님의 똑떨한 비서`,
-          text: '',
-          attachments: [{
-            text: `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 바꾸면 똑떨이에요... ` + emoji('ddokddul'),
-            color: 'warning',
-          }],
-          channel: event.channel,
-          icon_emoji: emoji('ddokddul', user.theme),
-        });
+        await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`)
         return;
       }
       
@@ -158,29 +95,9 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   for(let content of Array.from(contents)) {
     if (await editCstodo(content, change)) {
-      await replyMessage(event, user, {
-        username: `${user.name}님의 비서`,
-        text: "",
-        attachments: [{
-        text: `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`,
-        color: 'good',
-        }],
-        icon_emoji: emoji('remove', user.theme),
-        channel: event.channel,
-      }, {
-        forceUnmute: true,
-      });
+      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', {forceUnmute: true});
     } else {
-      await replyMessage(event, user, {
-        username: `${user.name}님의 똑떨한 비서`,
-        text: "",
-        attachments: [{
-        text: `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`,
-        color: 'danger',
-        }],
-        icon_emoji: emoji('ddokddul', user.theme),
-        channel: event.channel,
-      })
+      await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
     }
   }
 }

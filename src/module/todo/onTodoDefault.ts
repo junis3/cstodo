@@ -1,7 +1,7 @@
 import { UserType } from '../../database/user';
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replyMessage } from '../../etc/postMessage';
+import { replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 import { QueryType } from '../../etc/parseQuery';
 
@@ -19,13 +19,7 @@ const onTodoDefault = async (query: QueryType, event: any, user: UserType) => {
     if (cstodo.length < allCstodo.length)
         message += `\n이 밖에도 ${user.name}님의 할 일이 ${allCstodo.length - cstodo.length}개나 더 있어요... ${emoji('add', user.theme)}`;
 
-    await replyMessage(event, user, {
-      username: `${user.name}님의 비서`,
-      text: "",
-      attachments: [{text: message, color: 'good'}],
-      channel: event.channel,
-      icon_emoji: emoji('default', user.theme),
-    });
+    await replySuccess(event, user, message, 'default');
     return;
 }
 

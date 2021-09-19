@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "start": "npx ts-node ./src/index.ts",
-    "watch": "nodemon --exec ts-node ./src/index.ts",
-    "preprocess": "npx ts-node ./src/preprocess.ts"
+    "watch": "nodemon --exec ts-node ./src/index.ts"
   },
   "author": "",
   "license": "ISC",

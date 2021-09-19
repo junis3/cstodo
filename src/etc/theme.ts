@@ -68,6 +68,19 @@ const EmojiMap: NestedStringMap = {
       mark: ':blobimfine:',
       marx: ':blobcommunism:',
   },
+
+  bar_ready: {
+    blob: ':sad:',
+    weeb: ':weebdancered:',
+  },
+  bar_wip: {
+    blob: ':blobgreensad:',
+    weeb: ':weebdanceyellow:',
+  },
+  bar_done: {
+    blob: ':blobgreen:',
+    weeb: ':weebdancegreen:',
+  },
 };
 
 export const emoji = (name: string = '', theme = 'blob') => {

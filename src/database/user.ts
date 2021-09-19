@@ -11,6 +11,7 @@ export interface UserType {
     id: string;
     name: string;
     command: string;
+    taskType: 'todo' | 'bar';
     userControl: 'whitelist' | 'blacklist';
     userWhitelist?: string[];
     userBlacklist?: string[];
@@ -28,6 +29,7 @@ const userSchema = new Schema<UserDocument>({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     command: { type: String, required: true, unique: true },
+    taskType: { type: String, required: true, default: 'todo' },
     userControl: { type: String, default: 'blacklist' },
     userWhitelist: Array,
     userBlacklist: Array,

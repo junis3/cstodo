@@ -2,6 +2,7 @@ import { csGod, cstodoChannel, cstodoTestChannel, isTesting } from '../config';
 import onEcho from './echo';
 import onCode from './code';
 import onTodo from './todo';
+import onBar from './bar';
 import onYourMark from './yourMark';
 import { getUser } from '../database/user';
 import { webClient } from '../index';
@@ -39,7 +40,10 @@ const onMessage = async (event: any) => {
     // Todo commands
     let user = await getUser(command);
 
-    if (user) await onTodo(event, user);
+    if (user) {
+      if (user.taskType === "todo") await onTodo(event, user);
+      else if (user.taskType === "bar") await onBar(event, user);
+    }
 
     // Random blobaww
     let percentage = 0.0006;

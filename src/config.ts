@@ -13,3 +13,5 @@ export const isTesting = !process.env.IS_PRODUCTION;
 export const csGod = 'UV78YL6TW';
 export const cstodoTestChannel = 'C01JER4T7AN';
 export const cstodoChannel = isTesting ? cstodoTestChannel : 'C01H4RY69CL';
+
+export const defaultBarOwner = 'testbar';

@@ -91,7 +91,7 @@ const onTodo = async (event: any, user: UserType) => {
 
 //  while (await onCstodoOverflow(event));
 
-  await onTodoDefault(query, event, user);
+  await onTodoAll(query, event, user);
 }
 
 export default onTodo;

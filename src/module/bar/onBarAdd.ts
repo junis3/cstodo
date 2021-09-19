@@ -1,17 +1,15 @@
 import { UserType } from '../../database/user';
-import { addCstodo, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
 import { replySuccess, replyDdokddul } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
-import stringToTime from '../../etc/stringToTime';
-import { reduceEachTrailingCommentRange } from 'typescript';
+import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
+import { addBar, getBars } from '../../database/bar';
+import { validateBar } from '../../etc/validateBar';
 
 let isSlackDecoration = (text: string) => {
   let match = text.match(/[~_]+/);
   return match !== null && text === match[0];
 }
-
 let isQueryValid = (text: string) => {
   return text.length > 0 && text.length <= 100 && !isSlackDecoration(text);
 }
@@ -30,27 +28,46 @@ function makeUnique<T>(arr: T[]) {
   return Array.from(new Set<T>(arr));
 }
 
-const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
-  let todo = await getCstodos(user.id);
+const onBarAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
+  let bars = await getBars(user.id);
 
-  const dueArg = getArg(['--goal', '-g', '--progress', '-p'], args);
+  const progArg = getArg(['--progress', '--prog', '-p'], args);
+  const goalArg = getArg(['--goal', '-g'], args);
 
-  let _due = 0;
-  if (!dueArg) {
-    _due = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 6).getTime();
-  } else if (typeof dueArg === 'string') {
-    const time = stringToTime(dueArg);
-    if (!time) {
-      await replyDdokddul(event, user, `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...`);
+  let _prog = 0;
+  if(progArg) {
+    if(typeof progArg === 'string') {
+      if(!isInteger(progArg)) {
+        await replyDdokddul(event, user, `제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...`);
+        return;
+      }
+      _prog = Number.parseInt(progArg);
+    }else{
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${progArg.message}`);
       return;
     }
-    _due = time;
-  } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`)
+  }
+  let _goal = 100;
+  if(goalArg) {
+    if(typeof goalArg === 'string') {
+      if(!isInteger(goalArg)) {
+        await replyDdokddul(event, user, `제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...`);
+        return;
+      }
+      _goal = Number.parseInt(goalArg);
+    }else{
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${goalArg.message}`);
+      return;
+    }
+  }
+  const prog = _prog;
+  const goal = _goal;
+
+  let validationFailMsg = validateBar(prog, goal)
+  if(validationFailMsg) {
+    await replyDdokddul(event, user, validationFailMsg);
     return;
   }
-
-  const due = _due;
 
   const contents = makeUnique(command.slice(1).join(' ').trim().split(',').map(preprocessContent)).filter(x => {return x.length > 0;});
 
@@ -61,20 +78,21 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
   }
 
   await Promise.all(contents.map(async (content) => {
-    if (todo.find((item) => item.content === content)) {
-      await replyDdokddul(event, user, `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`)
+    if (bars.find((item) => item.content === content)) {
+      await replyDdokddul(event, user, `이미 진행중인 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`)
     } 
     else {
-      await addCstodo({
+      await addBar({
         content,
         owner: user.id,
-        due,
+        progress: prog,
+        goal: goal,
       });
 
-      await replySuccess(event, user, `${user.name}님의 할 일에 *${content}* 를 추가했어요!`, 'add', 
+      await replySuccess(event, user, `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`, 'add', 
       {forceUnmute: (user.userControl === 'blacklist')});
     }
   }));
 }
 
-export default onTodoAdd;
+export default onBarAdd;

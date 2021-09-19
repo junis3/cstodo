@@ -9,11 +9,11 @@ const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", "
 
 const onBarDefault = async (query: QueryType, event: any, user: UserType) => {
     const allBars = await getBars(user.id);
-    const bars = allBars.slice(0, 5);
+    const bars = allBars;
 
     if (bars.length > 0) {
         let blocks = bars.map((bar, k) => (
-            {"type" : "section", "fields": [{"type": "mrkdwn", "text": `${bulletEmoji[k]} *${bar.content}*`},
+            {"type" : "section", "fields": [{"type": "mrkdwn", "text": `*${k+1}. ${bar.content}*`},
                                             {"type": "mrkdwn", "text": `${formatBar(bar, user)}`}]
             }
         ));

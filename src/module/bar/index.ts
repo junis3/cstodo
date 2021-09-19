@@ -4,6 +4,7 @@ import { isThemeType, UserType } from '../../database/user';
 import onBarDefault from './onBarDefault';
 import onBarAdd from './onBarAdd';
 import onBarEdit from './onBarEdit';
+import onBarRemove from './onBarRemove';
 
 const isQualified = (event: any, user: UserType) => {
     const isUserQualified = (() => {
@@ -43,6 +44,8 @@ const onBar = async (event: any, user: UserType) => {
   if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') 
     await onBarAdd(query, event, user);
 
+  if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') 
+    await onBarRemove(query, event, user);
   await onBarDefault(query, event, user);
 }
 

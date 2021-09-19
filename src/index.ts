@@ -15,16 +15,10 @@ if (logWebhook) {
     consoleToSlack.init(logWebhook, 3);
 }
 
-(async () => {
-    const response = await axios.get('http://ip-api.com/json');
-    const data = response.data;
-
-    console.log(`${data.country} ${data.regionName}(${data.city})의 IP ${data.query} (위도 ${data.lat}, 경도 ${data.lon})에서 슬랙봇을 실행하고 있습니다.`);
-})();
-
 mongoose.connect(mongodbUri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }).then(res => {
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
 }).catch(err => {
@@ -34,6 +28,18 @@ mongoose.connect(mongodbUri, {
 
 export const slackEvents = createEventAdapter(signingSecret);
 export const webClient = new WebClient(accessToken);
+
+(async () => {
+  const response = await axios.get('http://ip-api.com/json');
+  const data = response.data;
+
+  const date = new Date();
+
+  await webClient.chat.postMessage({
+    text: `[${date.toString()}] IP ${data.query} (${data.regionName}) 에서 cstodo가 실행됩니다!`,
+    channel: cstodoTestChannel,
+  });
+})();
 
 slackEvents.on('message', onMessage);
 

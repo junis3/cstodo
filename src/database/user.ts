@@ -52,15 +52,15 @@ export const getUser = async (command: string) => {
 }
 
 export const setTheme = async (command: string, theme: ThemeType) => {
-    await User.findOneAndUpdate({ command }, { theme });
+    await User.findOneAndUpdate({ command }, { theme }, { useFindAndModify: true });
 }  
 
 export const setMuted = async (command: string, muted: boolean) => {
-    await User.findOneAndUpdate({ command }, { muted });
+    await User.findOneAndUpdate({ command }, { muted }, { useFindAndModify: true });
 }
 
 export const setAutoRemove = async (command: string, autoRemove: boolean) => {
-    await User.findOneAndUpdate({ command }, { autoRemove });
+    await User.findOneAndUpdate({ command }, { autoRemove }, { useFindAndModify: true });
 }
 
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.

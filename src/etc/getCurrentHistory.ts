@@ -25,7 +25,11 @@ const getCurrentHistory = async () => {
     history = voca.replaceAll(history, '\t', '');
     history = voca.trim(history);
     
-    return history.split('\n').map((idString) => Number.parseInt(idString));
+    return history.split(' ').map((idString) => Number.parseInt(idString));
 }
+
+getCurrentHistory().then((history) => {
+    console.log(history);
+})
 
 export default getCurrentHistory;

@@ -3,7 +3,7 @@ import getProblemInfo from '../etc/getProblemInfo';
 import { cstodoChannel } from '../config';
 import { emoji } from '../etc/theme';
 import { addHistory, getHistories, removeHistory } from '../database/history';
-import { postMessage } from '../etc/postMessage';
+import { postMessage, replyDdokddul } from '../etc/postMessage';
 
 const emptyMessage = () => [
     emoji('sob').repeat(23),
@@ -42,6 +42,14 @@ const dailyProblem = async () => {
     
     const postResult = async () => {
         if (todayAdd.length > 0) {
+            if (todayAdd.length > 100) {
+                await postMessage({
+                    text: `오늘 ${emoji('cs')}님이 푸신 문제가 ${todayAdd.length}개나 된다고 해요... 이걸 다 말하다가는 채널이 망할 것 같아요 ${emoji('ddokddul')}`,
+                    channel: cstodoChannel,
+                    icon_emoji: emoji('ddokddul')
+                });
+                return;
+            }
             await postMessage({
                 text: `오늘 :god: ${emoji('cs')} :god:님이 푼 문제들입니다!\n` + todayAdd.map((problem) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`).join(', '),
                 channel: cstodoChannel,

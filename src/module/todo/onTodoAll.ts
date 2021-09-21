@@ -12,7 +12,7 @@ const onTodoAll = async (query: QueryType, event: any, user: UserType) => {
 
     let message = `${user.name}님의 할 일이 없습니다! ${emoji('add', user.theme)}`;
     
-    if (cstodo.length > 0) message = cstodo.map((todo, k) => `> ${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
+    if (cstodo.length > 0) message = cstodo.map((todo, k) => `${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
 
     await replySuccess(event, user, message, 'default');
     return;

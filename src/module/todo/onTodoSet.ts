@@ -19,21 +19,22 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
 
     if (typeof rawOwner === 'string' && (rawOwner.startsWith('<@') && rawOwner.endsWith('>'))) {
         const owner = rawOwner.slice(2, -1);
-        await setOwner(user.command, owner);
         if (user.owner) {
             await replyDdokddul(event, user, `저의 주인이 이미 <@${user.owner}>님으로 설정되어 있습니다!! 꼭 바꾸어야 한다면 <#${cstodoTestChannel}>에 말씀해주세요..`)
         } else {
+            await setOwner(user.command, owner);
             await replySuccess(event, user, `저의 주인이 <@${owner}>님으로 설정되었습니다!`);
         }
     }
 
     if (typeof rawHome === 'string' && (rawHome.startsWith('<#') && rawHome.endsWith('>'))) {
         const home = rawHome.slice(2, -1);
-        await setHome(user.command, home);
         if (event.channel !== home)
-            await replyDdokddul(event, user, `이 명령어를 <#${event.channel}>에서 직접 실행시켜주세요.. ㅠㅠ`);
-        else 
-            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! 추후 봇 관련 큰 변화가 있을 때 이 채널로 전달될 예정입니다..`);
+            await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
+        else {
+            await setHome(user.command, home);
+            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! 추후 봇 관련 큰 변화가 있을 때 이 채널로 전달될 예정입니다..`);            
+        }
     }
     
 //    await replySuccess(event, user, message, 'default');

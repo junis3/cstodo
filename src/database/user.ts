@@ -41,6 +41,7 @@ const userSchema = new Schema<UserDocument>({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     command: { type: String, required: true, unique: true },
+    owner: { type: String, default: 'UV6HYQD3J'},
     taskType: { type: String, required: true, default: 'todo' },
     userControl: { type: String, default: 'blacklist' },
     userWhitelist: Array,
@@ -64,6 +65,14 @@ export const getUser = async (command: string) => {
     
     if (user) return user.toObject() as UserType;
     else return undefined;
+}
+
+export const setOwner = async (command: string, owner: string) => {
+    await User.findOneAndUpdate({ command }, { owner }, { useFindAndModify: true });
+}
+
+export const setHome = async (command: string, home: string) => {
+    await User.findOneAndUpdate({ command }, { home }, { useFindAndModify: true });
 }
 
 export const setTheme = async (command: string, theme: ThemeType) => {

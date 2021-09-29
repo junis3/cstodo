@@ -12,7 +12,7 @@ export interface QueryType {
 export const getArg = (names: string[], args: Arg[]) => {
     const existNames = names.filter((name) => args.find((arg) => arg.key === name) !== undefined);
 
-    if (existNames.length === 0) return undefined;
+    if (existNames.length === 0) return null;
     if (existNames.length > 1) return new Error(`같은 인자들 ${names}들이 여러 개 동시에 주어졌습니다.`);
     
     const name = existNames[0];

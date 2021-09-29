@@ -24,7 +24,7 @@ const onTodoFuck = async ({ command, args }: QueryType, event: any, user: UserTy
       await webClient.conversations.leave({
         channel: event.channel,
       });
-    } catch (e) {
+    } catch (e: any) {
       if (e.data.error.endsWith('method_not_supported_for_channel_type')) {
         return;
       }

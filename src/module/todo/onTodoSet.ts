@@ -30,7 +30,10 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
     if (typeof rawHome === 'string' && (rawHome.startsWith('<#') && rawHome.endsWith('>'))) {
         const home = rawHome.slice(2, -1);
         await setHome(user.command, home);
-        await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! 추후 봇 관련 큰 변화가 있을 때 이 채널로 전달될 예정입니다..`);
+        if (event.channel !== home)
+            await replyDdokddul(event, user, `이 명령어를 <#${event.channel}>에서 직접 실행시켜주세요.. ㅠㅠ`);
+        else 
+            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! 추후 봇 관련 큰 변화가 있을 때 이 채널로 전달될 예정입니다..`);
     }
     
 //    await replySuccess(event, user, message, 'default');

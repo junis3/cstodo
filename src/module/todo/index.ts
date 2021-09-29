@@ -18,7 +18,6 @@ import { addEmoji } from '../../etc/postMessage';
 const isQualified = (event: any, user: UserType) => {
   
     const isUserQualified = (() => {
-        if (event.user === 'UV6HYQD3J') return true;
         if (user.userControl === 'whitelist') {
             if (!user.userWhitelist) return false;
             else return user.userWhitelist.find((user) => user === event.user) !== undefined;
@@ -29,7 +28,6 @@ const isQualified = (event: any, user: UserType) => {
     })();
 
     const isChannelQualified = (() => {
-        if (event.user === 'UV6HYQD3J') return true;
         if (user.channelControl === 'whitelist') {
             if (!user.channelWhitelist) return false;
             else return user.channelWhitelist.find((channel) => channel === event.channel) !== undefined;

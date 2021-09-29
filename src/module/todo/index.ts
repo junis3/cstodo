@@ -1,17 +1,19 @@
-import onTodoDefault from './onTodoDefault';
 import onTodoAdd from './onTodoAdd';
 import onTodoHelp from './onTodoHelp';
 import onTodoEdit from './onTodoEdit';
 import onTodoAll from './onTodoAll';
 import onTodoLength from './onTodoLength';
 import onTodoRemove from './onTodoRemove';
+import onTodoOverflow from './onTodoOverflow';
 import onTodoSearch from './onTodoSearch';
+import onTodoSet from './onTodoSet';
 import onTodoTheme from './onTodoTheme';
 import onTodoMute from './onTodoMute';
 import onTodoFuck from './onTodoFuck';
 import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
 import { isThemeType, UserType } from '../../database/user';
+import { addEmoji } from '../../etc/postMessage';
 
 const isQualified = (event: any, user: UserType) => {
     const isUserQualified = (() => {
@@ -38,12 +40,23 @@ const isQualified = (event: any, user: UserType) => {
 }
 
 const onTodo = async (event: any, user: UserType) => {
-  if (!isQualified(event, user)) return;
   if (await isAttack(event)) return;
 
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());
   const query = parseQuery(tokens.slice(1).join(' '));
+
+
+  
+  if (!isQualified(event, user)) {
+    await addEmoji(event, 'sad');
+    return;
+  }
+
+  if (query.command.length === 0) {
+    await onTodoAll(query, event, user);
+  }
+
 
   if (query.command[0] === 'fuck') {
     await onTodoFuck(query, event, user);
@@ -80,18 +93,35 @@ const onTodo = async (event: any, user: UserType) => {
     return;
   }
 
-  if (query.command[0] === 'edit' || query.command[0] === 'update')
+  if (query.command[0] === 'set') {
+    await onTodoSet(query, event, user);
+    return;
+  }
+
+  // CRUD operations
+
+  if (query.command[0] === 'edit' || query.command[0] === 'update') {
     await onTodoEdit(query, event, user);
+    await onTodoAll(query, event, user);
+    while (await onTodoOverflow(query, event, user));
+    return;
+  }
   
-  if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') 
+  if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') {
     await onTodoAdd(query, event, user);
+    await onTodoAll(query, event, user);
+    while (await onTodoOverflow(query, event, user));
+    return;
+  }
 
-  if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') 
+  if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') {
     await onTodoRemove(query, event, user);
+    await onTodoAll(query, event, user);
+    while (await onTodoOverflow(query, event, user));
+    return;
+  }
 
-//  while (await onCstodoOverflow(event));
-
-  await onTodoAll(query, event, user);
+  await addEmoji(event, 'sad');
 }
 
 export default onTodo;

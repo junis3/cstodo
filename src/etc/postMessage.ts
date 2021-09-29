@@ -9,6 +9,19 @@ import { UserType } from '../database/user';
 export const postMessage = async (props: ChatPostMessageArguments) => {    
     await webClient.chat.postMessage(props);
 }
+
+export const addEmoji = async (event: any, emojiName: string) => {
+    try {
+        await webClient.reactions.add({
+            name: emojiName,
+            timestamp: event.ts,
+            channel: event.channel,
+        });
+    } catch (e) {
+        
+    }
+}
+
 interface Options {
     forceUnmute?: boolean;
     forceMute?: boolean;
@@ -96,15 +109,8 @@ export const replyMessage = async (event: any, user: UserType | undefined, props
             user: event.user,
         });
 
-        try {
-            await webClient.reactions.add({
-                name: 'blobokhand',
-                timestamp: event.ts,
-                channel: event.channel,
-            });
-        } catch (e) {
-
-        }
+        await addEmoji(event, 'blobokhand');
     }
+
     else await webClient.chat.postMessage(props);
 }

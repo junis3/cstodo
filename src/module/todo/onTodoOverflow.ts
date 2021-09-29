@@ -10,7 +10,7 @@ const onTodoOverflow = async (query: QueryType, event: any, user: UserType) => {
     const maxLen = Math.max(...cstodo.map((item) => item.content.length));
     const sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
 
-    if (sumLen <= 400 || cstodo.length <= 30) return false;
+    if (sumLen <= 2000 || cstodo.length <= 50) return false;
 
     while (true) {
         let i = Math.floor(Math.random() * cstodo.length);

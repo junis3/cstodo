@@ -3,6 +3,13 @@ import { model, Schema, Document } from "mongoose";
 export const themeList = ['weeb', 'blob'] as const;
 export type ThemeType = typeof themeList[number];
 
+export const controlList = ['whitelist', 'blacklist'] as const;
+export type ControlType = typeof controlList[number];
+
+export const useFeatureList = ['always', 'optional', 'never'] as const;
+export type UseFeatureType = typeof useFeatureList[number];
+
+
 export function isThemeType(str: string) : str is ThemeType {
     return themeList.find((value) => value === str) !== undefined;
 }
@@ -11,13 +18,18 @@ export interface UserType {
     id: string;
     name: string;
     command: string;
+    owner?: string;
+    home?: string;
     taskType: 'todo' | 'bar';
-    userControl: 'whitelist' | 'blacklist';
+    userControl: ControlType;
     userWhitelist?: string[];
     userBlacklist?: string[];
-    channelControl: 'whitelist' | 'blacklist';
+    channelControl: ControlType;
     channelWhitelist?: string[];
     channelBlacklist?: string[];
+    useDue: UseFeatureType;
+    usePriority: UseFeatureType;
+    useBar: UseFeatureType;
     autoRemove: boolean;
     muted: boolean;
     theme: ThemeType;
@@ -36,6 +48,9 @@ const userSchema = new Schema<UserDocument>({
     channelControl: { type: String, default: 'blacklist' },
     channelWhitelist: Array,
     channelBlacklist: Array,
+    useDue: { type: String, default: 'never' },
+    usePriority: { type: String, default: 'never' },
+    useBar: { type: String, default: 'never' },
     autoRemove: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
     theme: { type: String, default: false },
@@ -61,6 +76,18 @@ export const setMuted = async (command: string, muted: boolean) => {
 
 export const setAutoRemove = async (command: string, autoRemove: boolean) => {
     await User.findOneAndUpdate({ command }, { autoRemove }, { useFindAndModify: true });
+}
+
+export const setUseDue = async (command: string, useDue: UseFeatureType) => {
+    await User.findOneAndUpdate({ command }, { useDue }, { useFindAndModify: true });
+}
+
+export const setUsePriority = async (command: string, usePriority: UseFeatureType) => {
+    await User.findOneAndUpdate({ command }, { usePriority }, { useFindAndModify: true });
+}
+
+export const setUseBar = async (command: string, useBar: UseFeatureType) => {
+    await User.findOneAndUpdate({ command }, { useBar }, { useFindAndModify: true });
 }
 
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.

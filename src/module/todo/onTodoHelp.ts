@@ -3,6 +3,8 @@ import { emoji } from '../../etc/theme';
 import { QueryType } from '../../etc/parseQuery';
 import { replyMessage } from '../../etc/postMessage';
 
+// TODO: Add subcommands and add argument details
+
 const helpText = (user: UserType) => {
     const name = user.name;
     const command = user.command;

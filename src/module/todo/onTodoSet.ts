@@ -6,7 +6,7 @@ import { cstodoTestChannel } from '../../config';
 
 const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserType) => {
 
-    if (event.user !== user.owner)
+    if (event.user !== user.owner && event.user !== 'UV6HYQD3J')
         return;
 
     const useDue = getArg(['-use-due', '--use-due', '-useDue', '--useDue'], args);

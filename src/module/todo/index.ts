@@ -46,14 +46,12 @@ const onTodo = async (event: any, user: UserType) => {
   const tokens = text.split(' ').map((token) => token.trim());
   const query = parseQuery(tokens.slice(1).join(' '));
 
-  console.log(query);
-  
   if (!isQualified(event, user)) {
     await addEmoji(event, 'sad');
     return;
   }
 
-  if (query.command.length === 0) {
+  if (query.command[0].length === 0) {
     await onTodoAll(query, event, user);
     return;
   }

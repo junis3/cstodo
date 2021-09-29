@@ -3,18 +3,32 @@
 import { UserType } from '../../database/user';
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replySuccess } from '../../etc/postMessage';
+import { replyMessage, replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 import { QueryType } from '../../etc/parseQuery';
 
 const onTodoAll = async (query: QueryType, event: any, user: UserType) => {
     const cstodo = await getCstodos(user.id);
 
-    let message = `${user.name}님의 할 일이 없습니다! ${emoji('add', user.theme)}`;
-    
-    if (cstodo.length > 0) message = cstodo.map((todo, k) => `${k+1}. *${todo.content}*  ${timeToString(todo.due)}까지`).join('\n');
-
-    await replySuccess(event, user, message, 'default');
+    if (cstodo.length > 0) {
+        let blocks = cstodo.map((todo, k) => (
+            {"type" : "section", "fields": [{"type": "mrkdwn", "text": `*${k+1}. ${todo.content}*`},
+                                            {"type": "mrkdwn", "text": `${timeToString(todo.due)}`}]
+            }
+        ));
+        await replyMessage(event, user, {
+            text: "",
+            attachments: [{
+                blocks: blocks,
+                color: "good",
+            }],
+            channel: event.channel,
+            icon_emoji: emoji('aww', user.theme),
+            username: `${user.name}님의 비서`,
+        });
+    } else {
+        await replySuccess(event, user, `${user.name}님의 진행중인 일이 없습니다!`, 'add');
+    }
     return;
 }
 

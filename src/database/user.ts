@@ -41,7 +41,7 @@ const userSchema = new Schema<UserDocument>({
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     command: { type: String, required: true, unique: true },
-    owner: { type: String, default: 'UV6HYQD3J'},
+    owner: { type: String },
     taskType: { type: String, required: true, default: 'todo' },
     userControl: { type: String, default: 'blacklist' },
     userWhitelist: Array,

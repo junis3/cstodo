@@ -2,7 +2,7 @@
 
 Did cs71107 solve his diamond problems?
 
-This is a slackbot living in Koosaga slack built in order to help cs71107 catch his dream.
+This is a slackbot living in _koosaga slack_ built in order to help cs71107 catch his dream.
 
 ## Feature
 
@@ -12,50 +12,57 @@ After installing the bot and inviting the bot into the channel, you can use the 
 ### Todo Database
 
 
-
 * Command `cstodo` shows what cs71107 desires to do.
-
-* Command `cstodo format` shows in more neat and organized way what cs71107 desires to do.
-
-* Command `cstodo size` or `cstodo length` shows the length of the cstodo list.
 
 * Command `cstodo add [content]` adds his todo.
 
-* Command `cstodo remove [content]` removes his todo.
+* Command `cstodo remove [number]` removes his todo.
+
+### Midnight Diamond Alert
 
 * Shows every midnight(KST) problems cs71107 has solved in [BOJ](https://www.acmicpc.net/) yesterday(Either after the preprocessing or the full day).
 
 
-## Preprocess
+## Build
 
-Preprocess `cstodo.txt` and `history.txt` which are git-ignored. If you run without the preprocessing, the files won't be generated and will lead to unexpected behaviors.
+### Preperation
+
+#### Yarn
+
+You first need node.js, npm (node.js package manager) and yarn in order to build the project. If you are not familiar, please search. If you have all of them ready, command
 
 `yarn`
 
-`yarn preprocess`
+will get all your required packages to build your code ready.
 
-## Run
+#### MongoDB
 
-You first need a running mongoDB server. You can either configure your mongoDB server locally or use a cloud server. Check [mongodb.com] for detail.
+You then need a running mongoDB server. You can either configure your mongoDB server locally or use a cloud server. Check [mongodb.com] for detail.
+
+#### .env
 
 Make file named `.env` on your project folder and write
 
 ```
-SIGNING_SECRET = (your signing secret)
-ACCESS_TOKEN = (your access token)
-LOG_WEBHOOK = (optional, webhook address to log on the testing slack channel)
-MONGODB_URI = (mongodb database uri)
+SIGNING_SECRET = Your signing secret to [Slack API](https://api.slack.com/)
+ACCESS_TOKEN = Your access token to [Slack API](https://api.slack.com/)
+LOG_WEBHOOK = Optional, webhook address to log on the testing channel
+MONGODB_URI = URI to Mongodb database which saves all TODOs
+PORT = A port you want to run the project; Defaults to 3000 if not given
 ```
 
-If you want to rather execute the cstodo app than to test it, also append
+Contact me if you are a _koosaga slack_ member who wants to contribute on the slack, or you should generate one for your own slack.
+
+If you want to eliminate unnecessary logs on test channel (if the app is on production), append
 
 ```
 IS_PRODUCTION = true
 ```
 
-on the file. Then, Execute
+on the file.
 
-`yarn`
+
+### Run
 
 `yarn start`
 
@@ -63,11 +70,15 @@ and slackbot will run on `localhost:3000/cstodo`. If you want to run it on slack
 
 If you want to forward the log messages and the error messages to your slack, go to app > Feature > Incoming Webhook and create a webhook URL for the testing channel.
 
-If you want to use PM2 to manage processes, execute
+### Use PM2
+
+PM2 is a package which can manage deployment. It will run the project on the background. It can also automatically restart the run if the project is changed, or the project is crashed.
+
+If you want to use PM2, you should execute
 
 `yarn pm2 install typescript`
 
-at the first time. Execute
+for the first time. Execute
 
 `yarn pm2 start`
 

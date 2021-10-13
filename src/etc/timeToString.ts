@@ -40,7 +40,6 @@ const timeToString = (timestamp: number) => {
 
         if (time.getSeconds() === 0) {
             if (time.getMinutes() === 0) {
-                if (time.getHours() === 0) return '자정';
                 if (time.getHours() === 12) return '정오';
                 return `${hourToString(time.getHours())}시`;
             }

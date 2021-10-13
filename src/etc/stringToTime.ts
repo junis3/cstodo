@@ -90,7 +90,7 @@ const stringToTime = (str: string) => {
         else if (token === '오늘' || token.toLowerCase() === 'today') date = now.getDate();
         else if (token === '내일' || token.toLowerCase() === 'tomorrow') date = now.getDate() + 1;
         else if (token === '모레') date = now.getDate() + 2;
-        else if (token === '자정') hour = 0;
+        else if (token === '자정') hour = 24;
         else if (token === '정오') hour = 12;
         else if (weekdays.find((x) => x === token) !== undefined) {
             const nowDay = now.getDay();

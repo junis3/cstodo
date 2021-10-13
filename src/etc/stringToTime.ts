@@ -78,7 +78,7 @@ const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일
 
 const stringToTime = (str: string) => {
     let now = new Date();
-    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = 0, minute = 0, second = 0;
+    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = 23, minute = 59, second = 0;
     let isAfternoon: boolean | undefined = undefined;
 
     const tokens = str.split(' ');
@@ -90,7 +90,7 @@ const stringToTime = (str: string) => {
         else if (token === '오늘' || token.toLowerCase() === 'today') date = now.getDate();
         else if (token === '내일' || token.toLowerCase() === 'tomorrow') date = now.getDate() + 1;
         else if (token === '모레') date = now.getDate() + 2;
-        else if (token === '자정') hour = 24;
+        else if (token === '자정') hour = 23, minute = 59;
         else if (token === '정오') hour = 12;
         else if (weekdays.find((x) => x === token) !== undefined) {
             const nowDay = now.getDay();

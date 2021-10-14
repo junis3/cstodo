@@ -22,6 +22,7 @@ const onTodoRemove = async ({ command }: QueryType, event: any, user: UserType) 
     for (let s of command.slice(1).join(' ').split(',')) {
       let content = preprocessContent(s);
 
+      if (!content) continue;
       if (!isInteger(content)) {
         if (!todo.find((item) => item.content === content)) {
           await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 빼면 똑떨이에요...`);

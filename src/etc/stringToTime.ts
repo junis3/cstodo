@@ -78,7 +78,7 @@ const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일
 
 const stringToTime = (str: string) => {
     let now = new Date();
-    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = 23, minute = 59, second = 0;
+    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour: number | null = null, minute = 0, second = 0;
     let isAfternoon: boolean | undefined = undefined;
 
     const tokens = str.split(' ');
@@ -120,6 +120,11 @@ const stringToTime = (str: string) => {
             });
         });
     });
+
+    if (hour === null) {
+        hour = 23;
+        minute = 59;
+    }
 
     if (year < 1900 || year > 2100 || month < 0 || month > 11 || date < -9 || date > 39 || hour < 0 || hour > 24 || minute < 0 || minute > 60 || second < 0 || second > 60) {
         return undefined;

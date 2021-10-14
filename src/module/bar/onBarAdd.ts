@@ -11,7 +11,7 @@ let isSlackDecoration = (text: string) => {
   return match !== null && text === match[0];
 }
 let isQueryValid = (text: string) => {
-  return text.length > 0 && text.length <= 100 && !isSlackDecoration(text);
+  return text.length > 0 && text.length <= 200 && !isSlackDecoration(text);
 }
 
 let isContentValid = (content: string[]) => {

@@ -6,6 +6,7 @@ import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
+import getFlags from '../../etc/cmdFlags';
 
 const isInteger = (s: string) => {
   for (let c of s.split('')) {
@@ -17,7 +18,7 @@ const isInteger = (s: string) => {
 const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserType) => {
   let todo = await getCstodos(user.id);
 
-  const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
+  const dueArg = getArg(getFlags('due'), args);
 
   let newDue: number | undefined;
   if (!dueArg) {
@@ -34,7 +35,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
     return;
   }
 
-  const contentArg = getArg(['--content', '-c'], args);
+  const contentArg = getArg(getFlags('content'), args);
 
   let newContent : string | undefined;
 

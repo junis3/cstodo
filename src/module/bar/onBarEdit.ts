@@ -5,13 +5,14 @@ import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { BarType, editBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
+import getFlags from '../../etc/cmdFlags';
 
 
 const onBarEdit = async ({ command, args }: QueryType, event: any, user: UserType) => {
     let bars = await getBars(user.id);
 
-    const progArg = getArg(['--progress', '--prog', '-p'], args);
-    const goalArg = getArg(['--goal', '-g'], args);
+    const progArg = getArg(getFlags('progress'), args);
+    const goalArg = getArg(getFlags('goal'), args);
 
     let newProg: number | undefined;
     if(progArg) {
@@ -45,7 +46,7 @@ const onBarEdit = async ({ command, args }: QueryType, event: any, user: UserTyp
         newGoal = undefined;
     }
 
-  const contentArg = getArg(['--content', '-c'], args);
+  const contentArg = getArg(getFlags('content'), args);
 
   let newContent : string | undefined;
 

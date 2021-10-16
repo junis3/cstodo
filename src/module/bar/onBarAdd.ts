@@ -5,6 +5,7 @@ import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { addBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
+import getFlags from '../../etc/cmdFlags';
 
 let isSlackDecoration = (text: string) => {
   let match = text.match(/[~_]+/);
@@ -31,8 +32,8 @@ function makeUnique<T>(arr: T[]) {
 const onBarAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
   let bars = await getBars(user.id);
 
-  const progArg = getArg(['--progress', '--prog', '-p'], args);
-  const goalArg = getArg(['--goal', '-g'], args);
+  const progArg = getArg(getFlags('progress'), args);
+  const goalArg = getArg(getFlags('goal'), args);
 
   let _prog = 0;
   if(progArg) {

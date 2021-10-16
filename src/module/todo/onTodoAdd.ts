@@ -6,6 +6,7 @@ import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import { reduceEachTrailingCommentRange } from 'typescript';
 import preprocessContent from '../../etc/preprocessContent';
+import getFlags from '../../etc/cmdFlags'
 
 let isSlackDecoration = (text: string) => {
   let match = text.match(/[~_]+/);
@@ -33,7 +34,7 @@ function makeUnique<T>(arr: T[]) {
 const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
   let todo = await getCstodos(user.id);
 
-  const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
+  const dueArg = getArg(getFlags('due'), args);
 
   let _due = 0;
   if (!dueArg) {

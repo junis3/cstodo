@@ -61,6 +61,10 @@ IS_PRODUCTION = true
 
 on the file.
 
+## Test
+
+You may run unit tests by command `yarn jest`.
+We name test suites by `<module-name>.test.ts`.
 
 ### Run
 

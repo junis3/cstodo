@@ -20,7 +20,7 @@ const getCurrentHistory = async () => {
 
     const $history = $('div.panel-body');
 
-    let history = $history.eq(0).text();
+    let history = $history.eq(1).text();
 
     history = voca.replaceAll(history, '\t', '');
     history = voca.trim(history);

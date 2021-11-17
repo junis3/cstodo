@@ -18,6 +18,7 @@ const onMessage = async (event: any) => {
     if (event.ts < turnOnTimestamp) return;
 //    if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
+    if (event.thread_ts) return;
 
     if (nowUser != event.user) {
       lastUser = nowUser;
@@ -46,9 +47,9 @@ const onMessage = async (event: any) => {
     }
 
     // Random blobaww
-    let percentage = 0.0006;
-    if (event.channel === cstodoChannel) percentage *= 3.0;
-    if (event.user === csGod) percentage *= 3.0;
+    let percentage = 0.00050;
+    if (event.channel === cstodoChannel) percentage *= 2.5;
+    if (event.user === csGod) percentage *= 2.5;
 
     if (Math.random() < percentage) {
       let profileResult = await webClient.users.profile.get({

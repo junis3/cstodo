@@ -8,6 +8,7 @@ import { getUser } from '../database/user';
 import { webClient } from '../index';
 import { emoji } from '../etc/theme';
 import { replyMessage } from '../etc/postMessage';
+import { addMessage } from '../database/message';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -51,7 +52,11 @@ const onMessage = async (event: any) => {
     if (event.channel === cstodoChannel) percentage *= 2.5;
     if (event.user === csGod) percentage *= 2.5;
 
-    if (Math.random() < percentage) {
+    const blobawwFired = Math.random() < percentage;
+
+    addMessage({ event, blobawwFired });
+
+    if (blobawwFired) {
       let profileResult = await webClient.users.profile.get({
         user: csGod,
       });

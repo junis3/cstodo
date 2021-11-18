@@ -51,14 +51,13 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   let newUser = user;
 
-  if (newDue || newContent) {
-    await replyDdokddul(event, user, `저는 똑떨이에요...`)
-    return;
-  } else if (typeof userArg === 'string') {
-    newUser = await getUser(userArg) || newUser;
-  } else {
-    await replyDdokddul(event, user, `저는 똑떨이에요...`)
-    return;
+  if (typeof userArg === 'string') {
+    if (newDue || newContent) {
+      await replyDdokddul(event, user, `저는 똑떨이에요...`)
+      return;
+    } else {
+      newUser = await getUser(userArg) || newUser;
+    }
   }
 
   const change: Partial<CstodoType> = { due: newDue, content: newContent, owner: newUser.id };

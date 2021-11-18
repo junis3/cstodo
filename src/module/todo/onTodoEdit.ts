@@ -1,4 +1,4 @@
-import { UserType } from '../../database/user';
+import { getUser, UserType } from '../../database/user';
 import { addCstodo, CstodoType, editCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
 import { replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
@@ -47,7 +47,24 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
     return;
   }
 
-  const change: Partial<CstodoType> = { due: newDue, content: newContent };
+  const userArg = getArg(['--dangerous-user'], args);
+
+  let newUser : UserType | undefined;
+
+  if (!userArg) {
+    newUser = undefined;
+  }
+  else if (newDue || newContent) {
+    await replyDdokddul(event, user, `저는 똑떨이에요...`)
+    return;
+  } else if (typeof userArg === 'string') {
+    newUser = await getUser(userArg);
+  } else {
+    await replyDdokddul(event, user, `저는 똑떨이에요...`)
+    return;
+  }
+
+  const change: Partial<CstodoType> = { due: newDue, content: newContent, owner: newUser?.id };
 
   if (!newDue) delete change.due;
   if (!newContent) delete change.content;
@@ -56,6 +73,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   if (newDue) changeString += `마감 시한을 ${timeToString(newDue)}까지로, `;
   if (newContent) changeString += `내용을 *${newContent}* 로, `;
+  if (newUser) changeString += `주인을 ${newUser.command}로, `
 
   if (changeString.length === 0) {
     await replyDdokddul(event, user, `바꿀 게 없어서 똑떨이에요...`);

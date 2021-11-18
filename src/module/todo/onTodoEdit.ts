@@ -49,22 +49,19 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   const userArg = getArg(['--dangerous-user'], args);
 
-  let newUser : UserType | undefined;
+  let newUser = user;
 
-  if (!userArg) {
-    newUser = undefined;
-  }
-  else if (newDue || newContent) {
+  if (newDue || newContent) {
     await replyDdokddul(event, user, `저는 똑떨이에요...`)
     return;
   } else if (typeof userArg === 'string') {
-    newUser = await getUser(userArg);
+    newUser = await getUser(userArg) || newUser;
   } else {
     await replyDdokddul(event, user, `저는 똑떨이에요...`)
     return;
   }
 
-  const change: Partial<CstodoType> = { due: newDue, content: newContent, owner: newUser?.id };
+  const change: Partial<CstodoType> = { due: newDue, content: newContent, owner: newUser.id };
 
   if (!newDue) delete change.due;
   if (!newContent) delete change.content;

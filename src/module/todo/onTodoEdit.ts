@@ -69,7 +69,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   if (newDue) changeString += `마감 시한을 ${timeToString(newDue)}까지로, `;
   if (newContent) changeString += `내용을 *${newContent}* 로, `;
-  if (newUser) changeString += `주인을 ${newUser.command}로, `
+  if (newUser.id !== user.id) changeString += `주인을 ${newUser.command}로, `
 
   if (changeString.length === 0) {
     await replyDdokddul(event, user, `바꿀 게 없어서 똑떨이에요...`);

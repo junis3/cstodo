@@ -14,4 +14,7 @@ export const csGod = 'UV78YL6TW';
 export const cstodoTestChannel = 'C01JER4T7AN';
 export const cstodoChannel = isTesting ? cstodoTestChannel : 'C01H4RY69CL';
 
+export const green55 = 'UVA490VL7';
+export const green55Channel = isTesting ? cstodoTestChannel : 'C01S7FP48JY';
+
 export const defaultBarOwner = 'testbar';

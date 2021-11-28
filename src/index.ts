@@ -8,6 +8,7 @@ import onDailyProblem from './module/onDailyProblem';
 import onTest from './module/onTest';
 import axios from "axios";
 import mongoose from 'mongoose';
+import {chooseProblem, validateProblem} from './module/onDailyGreenGold';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
@@ -45,6 +46,9 @@ slackEvents.on('message', onMessage);
 
 // 자정에 울리는 '오늘 CS님이 푼 문제 목록'
 schedule.scheduleJob('0 0 0 * * *', onDailyProblem);
+
+schedule.scheduleJob('0 10 12 * * *', chooseProblem);
+schedule.scheduleJob('0 0 12 * * *', validateProblem);
 
 // 테스트 모드가 켜져있으면 끄라고 #cstodo-test에 알림을 보냅니다.
 if (isTesting) onTest();

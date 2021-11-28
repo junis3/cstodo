@@ -18,7 +18,7 @@ export const chooseProblem = async () => {
 
     console.log(`<@${green55}> 오늘의 문제는 ${href}입니다!`);
     postMessage({
-        text: `<@${green55}> 오늘의 문제는 ${href}입니다!`,
+        text: `${username}님, 오늘의 문제는 ${href}입니다!`,
         channel: green55Channel,
         icon_emoji: ':green55:',
         username: 'GreenGold',
@@ -58,7 +58,7 @@ export const validateProblem = async () => {
             username: 'GreenGold',
         });
         await postMessage({
-            text: `역사상 최고, <@${green55}>`,
+            text: `*역사상 최고, GREEN55*`,
             channel: green55Channel,
             icon_emoji: `:blobgreenorz:`,
             username: 'GreenGold',

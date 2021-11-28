@@ -48,7 +48,7 @@ slackEvents.on('message', onMessage);
 schedule.scheduleJob('0 0 0 * * *', onDailyProblem);
 
 schedule.scheduleJob('0 10 12 * * *', chooseProblem);
-schedule.scheduleJob('0 * * * * *', validateProblem);
+schedule.scheduleJob('0 0 12 * * *', validateProblem);
 
 // 테스트 모드가 켜져있으면 끄라고 #cstodo-test에 알림을 보냅니다.
 if (isTesting) onTest();

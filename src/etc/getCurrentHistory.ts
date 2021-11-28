@@ -2,17 +2,17 @@ import axios from "axios";
 import cheerioModule from "cheerio";
 import voca from "voca";
 
-const getHTML = async () => {
+const getHTML = async (username = 'cs71107') => {
     try {
-        return await axios.get('https://www.acmicpc.net/user/cs71107');
+        return await axios.get(`https://www.acmicpc.net/user/${username}`);
     } catch (error) {
         console.log(error);
         throw error;
     }
 }
 
-const getCurrentHistory = async () => {
-    const result = await getHTML();
+const getCurrentHistory = async (username = 'cs71107') => {
+    const result = await getHTML(username);
 
     console.log('Loaded currently solved problem with status ' + result.status);
     

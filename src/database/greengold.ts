@@ -11,9 +11,9 @@ export interface GreenGoldType {
 export type GreenGoldDocument = Document & GreenGoldType;
 
 const greengoldSchema = new Schema<GreenGoldDocument>({
-    id: { type: Number },
-    username: {type: String},
-    title: {type: String},
+    id: Number,
+    username: String,
+    title: String,
     sourcedTimestamp: {type: Number, default: Date.now },
 });
 
@@ -21,7 +21,7 @@ const GreenGold = model('greengold', greengoldSchema, 'greengolds');
 export default GreenGold;
 
 export const getGreenGolds = async () => {
-    (await GreenGold.find()).map((doc) => doc.toObject() as GreenGoldType);
+    return (await GreenGold.find()).map((doc) => doc.toObject() as GreenGoldType);
 }
 
 export const getLatestGreenGold = async (username: string) => {

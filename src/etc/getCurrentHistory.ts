@@ -28,8 +28,5 @@ const getCurrentHistory = async (username = 'cs71107') => {
     return history.split(' ').map((idString) => Number.parseInt(idString));
 }
 
-getCurrentHistory().then((history) => {
-    console.log(history);
-})
 
 export default getCurrentHistory;

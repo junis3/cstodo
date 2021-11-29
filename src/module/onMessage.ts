@@ -35,6 +35,9 @@ const onMessage = async (event: any) => {
     const command = tokens[0].toLowerCase();
 
     // Special commands
+    if (event.channel === cstodoTestChannel && command === 'restart') {
+      throw new Error('Restarting!!');
+    }
     if (command === 'echo' && tokens.length > 1) await onEcho(event);
     else if (command === 'code' && tokens.length > 1) await onCode(event);
     else if (command === 'on') await onYourMark(event);

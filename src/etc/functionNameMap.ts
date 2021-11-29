@@ -1,0 +1,44 @@
+import { webClient } from "..";
+import { chooseProblem, validateProblem } from "../module/onDailyGreenGold";
+import onDailyProblem from '../module/onDailyProblem';
+
+const cstodoTestChannel = 'C01JER4T7AN';
+
+interface FunctionNameData {
+    name: string;
+    callback: (fireDate: Date, ...params: string[]) => void;
+}
+
+export const functionNameMap: FunctionNameData[] = [
+    {
+        name: "test",
+        callback: async (fireDate: Date, ...params: string[]) => {
+            await webClient.chat.postMessage({
+                text: `현재 시간: ${fireDate}. 이 메시지는 25초마다 한 번씩 발송됩니다.`,
+                icon_emoji: ':cs71107:',
+                channel: cstodoTestChannel,
+                username: 'cs71107',
+            });
+        }
+    },
+    {
+        name: "giveGreenProblem",
+        callback: () => chooseProblem(),
+    },
+    {
+        name: "checkGreenProblem",
+        callback: () => validateProblem(),
+    },
+    {
+        name: "checkCsDiamond",
+        callback: () => onDailyProblem(),
+    }
+]
+
+export const getFunctionByName = (name: string) => {
+    const data = functionNameMap.find((data) => data.name === name);
+
+    if (data === undefined) throw new Error(`Function named ${name} does not exist!`);
+
+    return data.callback;
+}

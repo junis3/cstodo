@@ -38,7 +38,7 @@ export const validateProblem = async () => {
         return;
     }
     const problem = $[0];
-    console.log(problem);
+//    console.log(problem);
 
     const currentHistory = await getCurrentHistory(username);
     const href = history2Href(await getProblemInfo(problem.id!!));

@@ -36,7 +36,7 @@ const onMessage = async (event: any) => {
 
     // Special commands
     if (event.channel === cstodoTestChannel && command === 'restart') {
-      throw new Error('Restarting!!');
+      process.exit();
     }
     if (command === 'echo' && tokens.length > 1) await onEcho(event);
     else if (command === 'code' && tokens.length > 1) await onCode(event);

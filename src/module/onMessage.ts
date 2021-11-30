@@ -38,7 +38,9 @@ const onMessage = async (event: any) => {
     if (event.channel === cstodoTestChannel && command === 'restart') {
       process.exit();
     }
-    if (command === 'echo' && tokens.length > 1) await onEcho(event);
+    if (command === 'echo' && tokens.length > 1) {
+      if (tokens.length < 5 || !([0, 1, 2, 3, 4].every((i) => tokens[i] === 'echo'))) await onEcho(event);
+    }
     else if (command === 'code' && tokens.length > 1) await onCode(event);
     else if (command === 'on') await onYourMark(event);
 

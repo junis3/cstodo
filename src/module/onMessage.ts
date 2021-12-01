@@ -27,7 +27,7 @@ const onMessage = async (event: any) => {
     }
 
 
-    const text : string = event.text;
+    const text : string = event.text.replace(/[^ -~가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
     const tokens = text.split(' ');
 
     if (tokens.length < 1) return;

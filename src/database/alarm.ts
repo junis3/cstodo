@@ -62,7 +62,9 @@ export const initiateAlarms = async () => {
                 scheduleJob(nextFireTime(fireTime+1), callback);
             }
             
-            getFunctionByName(alarm.function)(fireDate, ...alarm.params);            
+            const f = getFunctionByName(alarm.function);
+            
+            if (f) f(fireDate, ...alarm.params);            
         };
 
         console.log(alarm.function);

@@ -43,7 +43,9 @@ export const functionNameMap: FunctionNameData[] = [
 export const getFunctionByName = (name: string) => {
     const data = functionNameMap.find((data) => data.name === name);
 
-    if (data === undefined) throw new Error(`Function named ${name} does not exist!`);
+    if (data === undefined) {
+        return undefined;
+    }
 
     return data.callback;
 }

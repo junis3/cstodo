@@ -1,8 +1,10 @@
-import { setHome, setOwner, UserType } from '../../database/user';
+import { setHome, setOwner, setUseAlarm, UserType } from '../../database/user';
 import { emoji } from '../../etc/theme';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { addEmoji, replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
+
+const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
 const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserType) => {
 
@@ -14,6 +16,7 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
     const useDue = getArg(['-use-due', '--use-due', '-useDue', '--useDue'], args);
     const usePriority = getArg(['-use-priority', '--use-priority', '-usePriority', '--usePriority'], args);
     const useBar = getArg(['-use-bar', '--use-bar', '-useBar', '--useBar'], args);
+    const useAlarm = getArg(['-use-alarm', '--use-alarm', '-useAlarm', '--useAlarm'], args);
     const rawOwner = getArg(['--owner'], args);
     const rawHome = getArg(['--home'], args);
 
@@ -33,7 +36,18 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
             await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
         else {
             await setHome(user.command, home);
-            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! 추후 봇 관련 큰 변화가 있을 때 이 채널로 전달될 예정입니다..`);            
+            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`);            
+        }
+    }
+
+    if (typeof useAlarm === 'string') {
+        if (negativeWords.find((x) => useAlarm === x)) {
+            setUseAlarm(user.command, 'never');
+            await replySuccess(event, user, `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리지 않겠습니다..`);
+        }
+        else {
+            setUseAlarm(user.command, 'always');
+            await replySuccess(event, user, `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리겠습니다!`);
         }
     }
     

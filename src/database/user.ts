@@ -1,4 +1,6 @@
 import { model, Schema, Document } from "mongoose";
+import { addAlarm } from "./alarm";
+import { getCstodos } from "./cstodo";
 
 export const themeList = ['weeb', 'blob'] as const;
 export type ThemeType = typeof themeList[number];
@@ -30,6 +32,7 @@ export interface UserType {
     useDue: UseFeatureType;
     usePriority: UseFeatureType;
     useBar: UseFeatureType;
+    useAlarm: UseFeatureType;
     autoRemove: boolean;
     muted: boolean;
     theme: ThemeType;
@@ -52,6 +55,7 @@ const userSchema = new Schema<UserDocument>({
     useDue: { type: String, default: 'never' },
     usePriority: { type: String, default: 'never' },
     useBar: { type: String, default: 'never' },
+    useAlarm: { type: String, default: 'never' },
     autoRemove: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
     theme: { type: String, default: false },
@@ -65,6 +69,10 @@ export const getUser = async (command: string) => {
     
     if (user) return user.toObject() as UserType;
     else return undefined;
+}
+
+export const getAllUsers = async () => {
+    return (await User.find({ })).map((userDocument) => userDocument.toObject() as UserType);
 }
 
 export const setOwner = async (command: string, owner: string) => {
@@ -97,6 +105,14 @@ export const setUsePriority = async (command: string, usePriority: UseFeatureTyp
 
 export const setUseBar = async (command: string, useBar: UseFeatureType) => {
     await User.findOneAndUpdate({ command }, { useBar }, { useFindAndModify: true });
+}
+
+export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => {
+//    const user = await User.findOne({ command });
+//    if (!user) return;
+
+//    const oriUseAlarm = user.useAlarm;
+    await User.findOneAndUpdate({ command }, { useAlarm }, { useFindAndModify: true });
 }
 
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.

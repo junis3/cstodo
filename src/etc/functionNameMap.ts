@@ -1,6 +1,7 @@
 import { webClient } from "..";
 import { chooseProblem, validateProblem } from "../module/onDailyGreenGold";
 import onDailyProblem from '../module/onDailyProblem';
+import checkAllTodoAlarms from './checkAllTodoAlarms';
 
 const cstodoTestChannel = 'C01JER4T7AN';
 
@@ -12,7 +13,7 @@ interface FunctionNameData {
 export const functionNameMap: FunctionNameData[] = [
     {
         name: "test",
-        callback: async (fireDate: Date, ...params: string[]) => {
+        callback: async (fireDate, ...params) => {
             await webClient.chat.postMessage({
                 text: `현재 시간: ${fireDate}. 이 메시지는 25초마다 한 번씩 발송됩니다.`,
                 icon_emoji: ':cs71107:',
@@ -32,6 +33,10 @@ export const functionNameMap: FunctionNameData[] = [
     {
         name: "checkCsDiamond",
         callback: () => onDailyProblem(),
+    },
+    {
+        name: "checkAllTodoAlarms",
+        callback: (fireDate) => checkAllTodoAlarms(fireDate),
     }
 ]
 

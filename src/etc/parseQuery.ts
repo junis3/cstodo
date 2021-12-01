@@ -9,6 +9,9 @@ export interface QueryType {
     args: Arg[],    
 }
 
+// Argument set with key : the key
+// Argument set without key: empty string
+// Argument not set: null
 export const getArg = (flags: string[], args: Arg[]) => {
     const existNames = flags.filter((name) => args.find((arg) => arg.key === name) !== undefined);
 
@@ -20,7 +23,7 @@ export const getArg = (flags: string[], args: Arg[]) => {
     const matchedArgs = args.filter((arg) => flags.find((name) => name === arg.key) !== undefined);
     if (matchedArgs.length > 1) return new Error(`인자 ${name}이 중복되어 주어졌습니다.`);
         
-    return args.find((arg) => arg.key === name)!.value;
+    return args.find((arg) => arg.key === name)!.value || '';
 }
 
 const parseQuery = (rawCommand: string) => {

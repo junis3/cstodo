@@ -37,6 +37,7 @@ export const webClient = new WebClient(accessToken);
   await webClient.chat.postMessage({
     text: `[${date.toString()}] IP ${data.query} (${data.regionName}) 에서 cstodo가 실행됩니다!`,
     channel: cstodoTestChannel,
+    username: 'cstodo_boot'
   });
 })();
 

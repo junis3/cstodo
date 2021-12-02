@@ -26,7 +26,7 @@ export const chooseProblem = async () => {
 export const validateProblem = async () => {
     const username = 'Green55';
     const $ = await getLatestGreenGold(username);
-    if($ === null) {
+    if($ === null || $[0] === undefined) {
         postMessage({
             text: `똑바로 안 만들어? 추천된 문제가 없대요...`,
             channel: green55Channel,

@@ -8,7 +8,7 @@ import { getLatestGreenGold, greenGoldToHrefNoLevel } from '../../database/green
   
 const onTodoHW = async (query: QueryType, event: any, user: UserType) => {
     const $ = await getLatestGreenGold(user.id);
-    if($ === null) {
+    if($ === null || $[0] === undefined) {
         await replyDdokddul(event, user, `${user.name}님은 숙제를 받은 적이 없어서 똑떨이에요...`);
         return;
     }

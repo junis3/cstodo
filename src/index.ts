@@ -10,8 +10,11 @@ import { initiateAlarms } from './database/alarm';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
-    consoleToSlack.init(logWebhook, 2);
-    consoleToSlack.init(logWebhook, 3);
+    const options = {
+      name: 'cstodo_log'
+    }
+    consoleToSlack.init(logWebhook, 2, options);
+    consoleToSlack.init(logWebhook, 3, options);
 }
 
 mongoose.connect(mongodbUri, {

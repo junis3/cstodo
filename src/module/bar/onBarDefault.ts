@@ -3,7 +3,7 @@ import { isThemeType, UserType } from '../../database/user';
 import { Block } from '@slack/types/dist/index';
 import { QueryType } from '../../etc/parseQuery';
 import { formatBar } from './barFormatter';
-import { replyBlock, replyMessage, replySuccess } from '../../etc/postMessage';
+import { replyMessage, replySuccess } from '../../etc/postMessage';
 import { emoji } from '../../etc/theme';
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 

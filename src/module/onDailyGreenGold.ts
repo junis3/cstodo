@@ -1,14 +1,12 @@
 import recommendProblem from '../etc/recommendProblem';
 import {postMessage} from '../etc/postMessage';
 import { green55, green55Channel } from '../config';
-import { HistoryType } from '../database/history';
+import { history2Href } from '../database/history';
 import { addGreenGold, getLatestGreenGold } from '../database/greengold';
 import getCurrentHistory from '../etc/getCurrentHistory';
 import getProblemInfo from '../etc/getProblemInfo';
 
-const history2Href = (problem: HistoryType) => {
-    return `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;
-}
+
 export const chooseProblem = async () => {
     const problem = await recommendProblem();
     const username = 'Green55';

@@ -10,6 +10,7 @@ import onTodoSet from './onTodoSet';
 import onTodoTheme from './onTodoTheme';
 import onTodoMute from './onTodoMute';
 import onTodoFuck from './onTodoFuck';
+import onTodoHW from './onTodoHW';
 import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
 import { isThemeType, UserType } from '../../database/user';
@@ -95,6 +96,11 @@ const onTodo = async (event: any, user: UserType) => {
 
   if (query.command[0] === 'set') {
     await onTodoSet(query, event, user);
+    return;
+  }
+
+  if (query.command[0] == 'hw' || query.command[0] == 'homework') {
+    await onTodoHW(query, event, user);
     return;
   }
 

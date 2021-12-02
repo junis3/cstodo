@@ -40,3 +40,7 @@ export const addGreenGold = async(username: string, {id, title} : HistoryType) =
         sourcedTimestamp: nowTimestamp,
     }).save();
 }
+
+export const greenGoldToHrefNoLevel = (problem: GreenGoldType) => {
+    return `<http://icpc.me/${problem.id}|${problem.title}>`;
+}

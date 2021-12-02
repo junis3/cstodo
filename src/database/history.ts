@@ -46,3 +46,7 @@ export const removeHistory = async (id : number) => {
     
     await History.deleteOne({ id });
 }
+
+export const history2Href = (problem: HistoryType) => {
+    return `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;
+}

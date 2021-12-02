@@ -57,26 +57,6 @@ export const replySuccess = async (event: any, user: UserType, message: string, 
     }, options);
 }
 
-export const replyBlock = async (event: any, user: UserType) => {
-    await replyMessage(event, user, {
-        text: "",
-        username: `${user.name}님의 비서`,
-        attachments: [{
-            text: "",
-            blocks: [{
-                "type": "section",
-                "fields": [
-                    {"type": "mrkdwn", "text": "asdf"},
-                    {"type": "mrkdwn", "text": "ddokddul"}
-                ],
-            }],
-            color: "good",
-        }],
-        channel: event.channel,
-        icon_emoji: emoji('aww', user.theme),
-    })
-}
-
 export const replyFail = async (event: any, user: UserType, message: string, options?: Options) => {
     await replyMessage(event, user, {
         text: "",

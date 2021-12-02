@@ -10,11 +10,8 @@ import { initiateAlarms } from './database/alarm';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
-    const options = {
-      name: 'cstodo_log'
-    }
-    consoleToSlack.init(logWebhook, 2, options);
-    consoleToSlack.init(logWebhook, 3, options);
+    consoleToSlack.init(logWebhook, 2);
+    consoleToSlack.init(logWebhook, 3);
 }
 
 mongoose.connect(mongodbUri, {
@@ -40,6 +37,7 @@ export const webClient = new WebClient(accessToken);
   await webClient.chat.postMessage({
     text: `[${date.toString()}] IP ${data.query} (${data.regionName}) 에서 cstodo가 실행됩니다!`,
     channel: cstodoTestChannel,
+    username: 'cstodo_boot'
   });
 })();
 

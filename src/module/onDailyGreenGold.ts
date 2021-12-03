@@ -14,7 +14,6 @@ export const chooseProblem = async () => {
 
     const href = history2Href(problem);
 
-    console.log(`<@${green55}> 오늘의 문제는 ${href}입니다!`);
     postMessage({
         text: `${username}님, 오늘의 문제는 ${href}입니다!`,
         channel: green55Channel,

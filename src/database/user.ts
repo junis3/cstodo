@@ -62,8 +62,8 @@ const userSchema = new Schema<UserDocument>({
     autoRemove: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
     theme: { type: String, default: false },
-    bojHandle: {type: String, default: 'a'},
-    hwQuery: {type: String, default: ''},
+    bojHandle: {type: String},
+    hwQuery: {type: String},
 });
 
 const User = model('user', userSchema, 'users');
@@ -121,6 +121,8 @@ export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => 
 }
 
 export const setBojHandle = async (command: string, bojHandle: string) => {
+    const user = await User.findOne({ command });
+    if (user?.bojHandle) return;
     await User.findOneAndUpdate({ command }, { bojHandle }, { useFindAndModify: true });
 }
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.

@@ -56,8 +56,16 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
     }
     
     if (typeof bojHandle === 'string') {
-        const bojResp = await axios.get(`https://acmicpc.net/user/${bojHandle}`);
-        if(bojResp.status != 200) {
+        const bojResp = await (async () => {
+            try {
+                const resp = await axios.get(`https://acmicpc.net/user/${bojHandle}`);
+                return resp.status;
+            } catch (error) {
+                console.log(error);
+                return 500;
+            }
+        })();
+        if(bojResp != 200) {
             await replyDdokddul(event, user, `${bojHandle}이라는 유저가 백준에서 확인되지 않아 똑떨이에요...`);
         } else {
             await setBojHandle(user.command, bojHandle);

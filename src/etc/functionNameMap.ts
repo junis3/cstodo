@@ -24,11 +24,19 @@ export const functionNameMap: FunctionNameData[] = [
     },
     {
         name: "giveGreenProblem",
-        callback: () => chooseProblem(),
+        callback: () => chooseProblem('greentodo'),
     },
     {
         name: "checkGreenProblem",
-        callback: () => validateProblem(),
+        callback: () => validateProblem('greentodo'),
+    },
+    {
+        name: "giveAhgusProblem",
+        callback: () => chooseProblem('motodo'),
+    },
+    {
+        name: "checkAhgusProblem",
+        callback: () => validateProblem('motodo'),
     },
     {
         name: "checkCsDiamond",

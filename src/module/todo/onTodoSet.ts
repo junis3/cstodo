@@ -1,14 +1,15 @@
-import { setHome, setOwner, setUseAlarm, UserType } from '../../database/user';
+import { setBojHandle, setHome, setOwner, setUseAlarm, UserType } from '../../database/user';
 import { emoji } from '../../etc/theme';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { addEmoji, replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
+import axios from 'axios';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
 const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserType) => {
 
-    if (event.user !== user.owner && event.user !== 'UV6HYQD3J') {
+    if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user != 'UV8DYMMV5') {
         addEmoji(event, 'sad');
         return;
     }
@@ -19,6 +20,7 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
     const useAlarm = getArg(['-use-alarm', '--use-alarm', '-useAlarm', '--useAlarm'], args);
     const rawOwner = getArg(['--owner'], args);
     const rawHome = getArg(['--home'], args);
+    const bojHandle = getArg(['--boj'], args);
 
     if (typeof rawOwner === 'string' && (rawOwner.startsWith('<@') && rawOwner.endsWith('>'))) {
         const owner = rawOwner.slice(2, -1);
@@ -30,8 +32,9 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
         }
     }
 
-    if (typeof rawHome === 'string' && (rawHome.startsWith('<#') && rawHome.endsWith('>'))) {
-        const home = rawHome.slice(2, -1);
+    // FIXME: channel 하이퍼링크 파싱할 것
+    if (typeof rawHome === 'string') {
+        const home = rawHome;
         if (event.channel !== home) {
             console.warn(`target ${home}과 event ${event.channel}이 다릅니다.`);
             await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
@@ -52,6 +55,16 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
         }
     }
     
+    if (typeof bojHandle === 'string') {
+        const bojResp = await axios.get(`https://acmicpc.net/user/${bojHandle}`);
+        if(bojResp.status != 200) {
+            await replyDdokddul(event, user, `${bojHandle}이라는 유저가 백준에서 확인되지 않아 똑떨이에요...`);
+        } else {
+            await setBojHandle(user.command, bojHandle);
+            await replySuccess(event, user, `${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다!`);
+            console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다. 실제와 다른 경우 제재가 가해질 수 있습니다.`);
+        }
+    }
 //    await replySuccess(event, user, message, 'default');
     return;
 }

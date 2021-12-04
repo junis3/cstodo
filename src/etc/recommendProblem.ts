@@ -3,10 +3,11 @@ import cheerioModule from "cheerio";
 import voca from "voca";
 import fs from "fs";
 import { HistoryType } from '../database/history';
+import { getUser } from "../database/user";
 
-const querySolvedAC = async (username = 'Green55') => {
+const querySolvedAC = async (query = '') => {
     try {
-        return await axios.get(`https://solved.ac/api/v3/search/problem?query=-solved_by%3AGreen55%20tier%3Ag5..g1&sort=random`, {
+        return await axios.get(`https://solved.ac/api/v3/search/problem?query=${query}&sort=random`, {
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -24,9 +25,16 @@ const parseLevel = (levelNum: number) => {
 
 
 
-const recommendProblem = async () => {
+const recommendProblem = async (todoCommand: string = "greentodo") => {
+    const query = await (async () => {
+        const user = await getUser(todoCommand);
+        if(user) {
+            return user.hwQuery;
+        }
+        return '';
+    })();
 
-    const result = await querySolvedAC();
+    const result = await querySolvedAC(query);
     const problem = result.data.items[0];
     let id : number = 0;
     return {
@@ -36,14 +44,5 @@ const recommendProblem = async () => {
         source: undefined,
     } as HistoryType;
 }
-
-recommendProblem().then((problem) => {
-    console.log(problem);
-})
-// getCurrentHistory().then((history) => {
-//     console.log(history);
-// })
-
-recommendProblem();
 
 export default recommendProblem;

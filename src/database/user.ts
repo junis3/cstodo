@@ -36,6 +36,8 @@ export interface UserType {
     autoRemove: boolean;
     muted: boolean;
     theme: ThemeType;
+    bojHandle?: string;
+    hwQuery?: string;
 }
 
 export type UserDocument = Document & UserType;
@@ -45,6 +47,7 @@ const userSchema = new Schema<UserDocument>({
     name: { type: String, required: true },
     command: { type: String, required: true, unique: true },
     owner: { type: String },
+    home: { type: String },
     taskType: { type: String, required: true, default: 'todo' },
     userControl: { type: String, default: 'blacklist' },
     userWhitelist: Array,
@@ -59,6 +62,8 @@ const userSchema = new Schema<UserDocument>({
     autoRemove: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
     theme: { type: String, default: false },
+    bojHandle: {type: String, default: 'a'},
+    hwQuery: {type: String, default: ''},
 });
 
 const User = model('user', userSchema, 'users');
@@ -115,5 +120,8 @@ export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => 
     await User.findOneAndUpdate({ command }, { useAlarm }, { useFindAndModify: true });
 }
 
+export const setBojHandle = async (command: string, bojHandle: string) => {
+    await User.findOneAndUpdate({ command }, { bojHandle }, { useFindAndModify: true });
+}
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.
 // KKOWA?

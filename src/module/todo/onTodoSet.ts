@@ -68,9 +68,11 @@ const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserTyp
         if(bojResp != 200) {
             await replyDdokddul(event, user, `${bojHandle}이라는 유저가 백준에서 확인되지 않아 똑떨이에요...`);
         } else {
-            await setBojHandle(user.command, bojHandle);
-            await replySuccess(event, user, `${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다!`);
-            console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다. 실제와 다른 경우 제재가 가해질 수 있습니다.`);
+            const isChanged = await setBojHandle(user.command, bojHandle);
+            if(isChanged) {
+                await replySuccess(event, user, `${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다!`);
+                console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다. 실제와 다른 경우 제재가 가해질 수 있습니다.`);
+            }
         }
     }
 //    await replySuccess(event, user, message, 'default');

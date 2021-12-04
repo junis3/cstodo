@@ -122,8 +122,9 @@ export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => 
 
 export const setBojHandle = async (command: string, bojHandle: string) => {
     const user = await User.findOne({ command });
-    if (user?.bojHandle) return;
+    if (user?.bojHandle) return false;
     await User.findOneAndUpdate({ command }, { bojHandle }, { useFindAndModify: true });
+    return true;
 }
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.
 // KKOWA?

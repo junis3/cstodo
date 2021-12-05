@@ -35,7 +35,7 @@ const onMessage = async (event: any) => {
     const command = tokens[0].toLowerCase();
 
     // Special commands
-    if (event.channel === cstodoTestChannel && command === 'restart') {
+    if (event.channel === cstodoTestChannel && command === 'restart' && (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5')) {
       process.exit();
     }
     if (command === 'echo' && tokens.length > 1) {

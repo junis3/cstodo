@@ -38,6 +38,7 @@ export interface UserType {
     theme: ThemeType;
     bojHandle?: string;
     hwQuery?: string;
+    numProbsPerCycle?: number;
 }
 
 export type UserDocument = Document & UserType;
@@ -64,6 +65,7 @@ const userSchema = new Schema<UserDocument>({
     theme: { type: String, default: false },
     bojHandle: {type: String},
     hwQuery: {type: String},
+    numProbsPerCycle: {type: Number, default: 1},
 });
 
 const User = model('user', userSchema, 'users');

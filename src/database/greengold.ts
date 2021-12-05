@@ -24,10 +24,10 @@ export const getGreenGolds = async () => {
     return (await GreenGold.find()).map((doc) => doc.toObject() as GreenGoldType);
 }
 
-export const getLatestGreenGold = async (username: string) => {
+export const getLatestGreenGolds = async (username: string, numProblems: number) => {
     return await GreenGold.find({username: username}).sort({
         sourcedTimestamp: -1,
-    }).limit(1) as Array<GreenGoldType> | null;
+    }).limit(numProblems) as Array<GreenGoldType> | null;
 }
 
 export const addGreenGold = async(username: string, {id, title} : HistoryType) => {

@@ -5,6 +5,7 @@ import onBarDefault from './onBarDefault';
 import onBarAdd from './onBarAdd';
 import onBarEdit from './onBarEdit';
 import onBarRemove from './onBarRemove';
+import onBarHW from './onBarHW';
 
 const isQualified = (event: any, user: UserType) => {
     const isUserQualified = (() => {
@@ -37,6 +38,11 @@ const onBar = async (event: any, user: UserType) => {
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());
   const query = parseQuery(tokens.slice(1).join(' '));
+
+  if (query.command[0] == 'hw' || query.command[0] == 'homework') {
+    await onBarHW(query, event, user);
+    return;
+  }
 
   if (query.command[0] === 'edit' || query.command[0] === 'update')
     await onBarEdit(query, event, user);

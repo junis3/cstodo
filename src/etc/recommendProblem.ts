@@ -25,7 +25,7 @@ const parseLevel = (levelNum: number) => {
 
 
 
-const recommendProblem = async (todoCommand: string = "greentodo") => {
+const recommendProblem = async (todoCommand: string = "greentodo", numProblems = 1) => {
     const query = await (async () => {
         const user = await getUser(todoCommand);
         if(user) {
@@ -35,14 +35,15 @@ const recommendProblem = async (todoCommand: string = "greentodo") => {
     })();
 
     const result = await querySolvedAC(query);
-    const problem = result.data.items[0];
+    const problems = result.data.items.slice(0, numProblems);
     let id : number = 0;
-    return {
-        id: problem.problemId,
-        title: problem.titleKo,
-        level: parseLevel(problem.level),
-        source: undefined,
-    } as HistoryType;
+    return problems.map((problem: { problemId: any; titleKo: any; level: number; }) => {
+            return {
+                id: problem.problemId,
+                title: problem.titleKo,
+                level: parseLevel(problem.level),
+                source: undefined,
+            } as HistoryType;
+    });
 }
-
 export default recommendProblem;

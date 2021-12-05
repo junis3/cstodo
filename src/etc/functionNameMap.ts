@@ -45,6 +45,14 @@ export const functionNameMap: FunctionNameData[] = [
     {
         name: "checkAllTodoAlarms",
         callback: (fireDate) => checkAllTodoAlarms(fireDate),
+    },
+    {
+        name: "giveHW",
+        callback: (fireDate, ...params) => chooseProblem(params[0]),
+    },
+    {
+        name: "checkHW",
+        callback: (fireDate, ...params) => validateProblem(params[0]),
     }
 ]
 

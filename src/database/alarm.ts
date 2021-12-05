@@ -57,7 +57,7 @@ export const initiateAlarms = async () => {
             const fireTime = fireDate.getTime();
 
             if (alarm.repeatTime > 0) {
-                console.log(alarm.function);
+                console.log(alarm.function, alarm.params);
                 console.log(nextFireTime(fireTime+1));
                 scheduleJob(nextFireTime(fireTime+1), callback);
             }
@@ -67,7 +67,7 @@ export const initiateAlarms = async () => {
             if (f) f(fireDate, ...alarm.params);            
         };
 
-        console.log(alarm.function);
+        console.log(alarm.function, alarm.params);
         console.log(nextFireTime(nowTime));
         scheduleJob(nextFireTime(nowTime), callback);
     })

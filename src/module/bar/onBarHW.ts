@@ -6,7 +6,7 @@ import { QueryType } from '../../etc/parseQuery';
 import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../../database/greengold';
 
   
-const onTodoHW = async (query: QueryType, event: any, user: UserType) => {
+const onBarHW = async (query: QueryType, event: any, user: UserType) => {
     const numProblems = user.numProbsPerCycle || 1;
     console.log(user.numProbsPerCycle, numProblems);
     const problems = await getLatestGreenGolds(user.command, numProblems);
@@ -25,4 +25,4 @@ const onTodoHW = async (query: QueryType, event: any, user: UserType) => {
     return;
 }
 
-export default onTodoHW;
+export default onBarHW;

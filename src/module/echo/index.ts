@@ -1,7 +1,8 @@
 import { replyMessage } from '../../etc/postMessage';
+import { SlackMessageEvent } from '../../slack/event';
 import isAttack from '../isAttack';
 
-const onEcho = async (event: any) => {
+const onEcho = async (event: SlackMessageEvent) => {
     if (await isAttack(event)) return;
 //    if (event.thread_ts && Number.parseFloat(event.thread_ts) < (new Date().getTime() / 1000) - 5 * 60) return;
     

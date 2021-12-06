@@ -1,13 +1,14 @@
 import { UserType } from '../../database/user';
-import { replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
+import { ForceMuteType, replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { BarType, editBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
+import { SlackMessageEvent } from '../../slack/event';
 
 
-const onBarEdit = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
     let bars = await getBars(user.id);
 
     const progArg = getArg(['--progress', '--prog', '-p'], args);
@@ -119,7 +120,9 @@ const onBarEdit = async ({ command, args }: QueryType, event: any, user: UserTyp
 
   for(let content of Array.from(contents)) {
     if (await editBar(content, change)) {
-      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', {forceUnmute: true});
+      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', {
+        forceMuteType: ForceMuteType.Unmute
+      });
     } else {
       await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
     }

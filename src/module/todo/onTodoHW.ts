@@ -4,9 +4,10 @@ import { emoji } from '../../etc/theme';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../../database/greengold';
+import { SlackMessageEvent } from '../../slack/event';
 
   
-const onTodoHW = async (query: QueryType, event: any, user: UserType) => {
+const onTodoHW = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
     const numProblems = user.numProbsPerCycle || 1;
     console.log(user.numProbsPerCycle, numProblems);
     const problems = await getLatestGreenGolds(user.command, numProblems);

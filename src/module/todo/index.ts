@@ -15,8 +15,9 @@ import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
 import { isThemeType, UserType } from '../../database/user';
 import { addEmoji } from '../../etc/postMessage';
+import { SlackMessageEvent } from '../../slack/event';
 
-const isQualified = (event: any, user: UserType) => {
+const isQualified = (event: SlackMessageEvent, user: UserType) => {
   
     const isUserQualified = (() => {
         if (user.userControl === 'whitelist') {
@@ -41,7 +42,7 @@ const isQualified = (event: any, user: UserType) => {
     return isUserQualified && isChannelQualified;
 }
 
-const onTodo = async (event: any, user: UserType) => {
+const onTodo = async (event: SlackMessageEvent, user: UserType) => {
   if (await isAttack(event)) return;
 
   const text : string = event.text;

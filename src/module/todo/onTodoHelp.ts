@@ -2,6 +2,7 @@ import { UserType } from '../../database/user';
 import { emoji } from '../../etc/theme';
 import { QueryType } from '../../etc/parseQuery';
 import { replyMessage } from '../../etc/postMessage';
+import { SlackMessageEvent } from '../../slack/event';
 
 // TODO: Add subcommands and add argument details
 
@@ -17,7 +18,7 @@ const helpText = (user: UserType) => {
 \`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.`
 }
   
-const onTodoHelp = async (query: QueryType, event: any, user: UserType) => {
+const onTodoHelp = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
     await replyMessage(event, user, {
       text: helpText(user),
       channel: event.channel,

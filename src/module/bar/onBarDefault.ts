@@ -5,9 +5,10 @@ import { QueryType } from '../../etc/parseQuery';
 import { formatBar } from './barFormatter';
 import { replyMessage, replySuccess } from '../../etc/postMessage';
 import { emoji } from '../../etc/theme';
+import { SlackMessageEvent } from '../../slack/event';
 const bulletEmoji = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"];
 
-const onBarDefault = async (query: QueryType, event: any, user: UserType) => {
+const onBarDefault = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
     const allBars = await getBars(user.id);
     const bars = allBars;
 

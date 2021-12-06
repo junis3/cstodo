@@ -1,12 +1,13 @@
 import { UserType } from '../../database/user';
-import { replySuccess, replyDdokddul, replyFail } from '../../etc/postMessage';
+import { replySuccess, replyDdokddul, replyFail, ForceMuteType } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 import preprocessContent from '../../etc/preprocessContent';
 import { isInteger } from '../../etc/isInteger';
 import { getBars, removeBar } from '../../database/bar';
+import { SlackMessageEvent } from '../../slack/event';
 
 
-const onBarRemove = async ({ command }: QueryType, event: any, user: UserType) => {
+const onBarRemove = async ({ command }: QueryType, event: SlackMessageEvent, user: UserType) => {
     const bars = await getBars(user.id);
     
     if (command.length === 1) {
@@ -41,7 +42,9 @@ const onBarRemove = async ({ command }: QueryType, event: any, user: UserType) =
 
     for(let content of Array.from(contents)) {
       if (await removeBar({ owner: user.id, content })) {
-        await replySuccess(event, user, `${user.name}님의 진행중인 일에서 *${content}* 를 제거했어요!`, 'remove', {forceUnmute: (user.userControl === 'blacklist')});
+        await replySuccess(event, user, `${user.name}님의 진행중인 일에서 *${content}* 를 제거했어요!`, 'remove', {
+          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : ForceMuteType.None
+        });
       } else {
         await replyFail(event, user, `${user.name}님의 진행중인 일에서 *${content}* 를 제거하는 데 실패했어요...`);
       }

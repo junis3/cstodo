@@ -6,8 +6,9 @@ import { emoji } from '../../etc/theme';
 import { replyMessage, replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 import { QueryType } from '../../etc/parseQuery';
+import { SlackMessageEvent } from '../../slack/event';
 
-const onTodoAll = async (query: QueryType, event: any, user: UserType) => {
+const onTodoAll = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
     const cstodo = await getCstodos(user.id);
 
     if (cstodo.length > 0) {

@@ -1,11 +1,12 @@
 import { UserType } from '../../database/user';
 import { addCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replySuccess, replyDdokddul } from '../../etc/postMessage';
+import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import { reduceEachTrailingCommentRange } from 'typescript';
 import preprocessContent from '../../etc/preprocessContent';
+import { SlackMessageEvent } from '../../slack/event';
 
 let isSlackDecoration = (text: string) => {
   let match = text.match(/[~_]+/);
@@ -30,7 +31,7 @@ function makeUnique<T>(arr: T[]) {
   return Array.from(new Set<T>(arr));
 }
 
-const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   let todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
@@ -72,7 +73,7 @@ const onTodoAdd = async ({ command, args }: QueryType, event: any, user: UserTyp
       });
 
       await replySuccess(event, user, `${user.name}님의 할 일에 *${content}* 를 추가했어요!`, 'add', 
-      {forceUnmute: (user.userControl === 'blacklist')});
+        { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : ForceMuteType.None });
     }
   }));
 }

@@ -1,6 +1,6 @@
 import { emoji } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
-import { webClient } from '../../index';
+import { webClient } from '../../slack/command';
 import { UserType } from '../../database/user';
 import { QueryType } from '../../etc/parseQuery';
 import { SlackMessageEvent } from '../../slack/event';

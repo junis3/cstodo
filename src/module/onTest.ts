@@ -1,4 +1,3 @@
-import { webClient } from '..';
 import { cstodoTestChannel } from '../config';
 import schedule from 'node-schedule';
 import Axios from 'axios';

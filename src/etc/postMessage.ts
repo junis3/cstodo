@@ -24,7 +24,6 @@ export const addEmoji = async (event: SlackMessageEvent, emojiName: string) => {
 }
 
 export enum ForceMuteType {
-    None,
     Unmute,
     Mute
 }

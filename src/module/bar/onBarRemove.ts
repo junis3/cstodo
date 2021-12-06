@@ -43,7 +43,7 @@ const onBarRemove = async ({ command }: QueryType, event: SlackMessageEvent, use
     for(let content of Array.from(contents)) {
       if (await removeBar({ owner: user.id, content })) {
         await replySuccess(event, user, `${user.name}님의 진행중인 일에서 *${content}* 를 제거했어요!`, 'remove', {
-          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : ForceMuteType.None
+          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined
         });
       } else {
         await replyFail(event, user, `${user.name}님의 진행중인 일에서 *${content}* 를 제거하는 데 실패했어요...`);

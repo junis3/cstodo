@@ -91,7 +91,7 @@ const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, 
       });
 
       await replySuccess(event, user, `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`, 'add', 
-        { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : ForceMuteType.None });
+        { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined });
     }
   }));
 }

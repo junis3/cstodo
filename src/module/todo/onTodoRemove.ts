@@ -45,7 +45,7 @@ const onTodoRemove = async ({ command }: QueryType, event: SlackMessageEvent, us
     for(let content of Array.from(contents)) {
       if (await removeCstodo({ owner: user.id, content })) {
         await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`, 'remove', {
-          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : ForceMuteType.None
+          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined
         });
       } else {
         await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`);

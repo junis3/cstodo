@@ -6,8 +6,9 @@ import onBarAdd from './onBarAdd';
 import onBarEdit from './onBarEdit';
 import onBarRemove from './onBarRemove';
 import onBarHW from './onBarHW';
+import { SlackMessageEvent } from '../../slack/event';
 
-const isQualified = (event: any, user: UserType) => {
+const isQualified = (event: SlackMessageEvent, user: UserType) => {
     const isUserQualified = (() => {
         if (user.userControl === 'whitelist') {
             if (!user.userWhitelist) return false;
@@ -31,7 +32,7 @@ const isQualified = (event: any, user: UserType) => {
     return isUserQualified && isChannelQualified;
 }
 
-const onBar = async (event: any, user: UserType) => {
+const onBar = async (event: SlackMessageEvent, user: UserType) => {
   if (!isQualified(event, user)) return;
   if (await isAttack(event)) return;
 

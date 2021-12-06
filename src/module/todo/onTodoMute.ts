@@ -1,10 +1,11 @@
 import { emoji } from '../../etc/theme';
-import { replyMessage } from '../../etc/postMessage';
+import { ForceMuteType, replyMessage } from '../../etc/postMessage';
 import { setMuted, UserType } from '../../database/user';
 import { QueryType } from '../../etc/parseQuery';
+import { SlackMessageEvent } from '../../slack/event';
 
   
-const onTodoMute = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoMute = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
     const text : string = event.text;
     const tokens = text.split(' ').map((token) => token.trim());
     
@@ -17,7 +18,7 @@ const onTodoMute = async ({ command, args }: QueryType, event: any, user: UserTy
             channel: event.channel,
             icon_emoji: emoji('default', user.theme),
         }, {
-            forceUnmute: true,
+            forceMuteType: ForceMuteType.Unmute,
         });
     } else {
         await setMuted(user.command, false);
@@ -27,7 +28,7 @@ const onTodoMute = async ({ command, args }: QueryType, event: any, user: UserTy
             channel: event.channel,
             icon_emoji: emoji('default', user.theme),
         }, {
-            forceUnmute: true,
+            forceMuteType: ForceMuteType.Unmute,
         });
     }
 }

@@ -3,9 +3,10 @@ import { replyDdokddul, replyMessage, replySuccess } from '../../etc/postMessage
 import { QueryType } from '../../etc/parseQuery';
 import { isThemeType, setTheme, UserType } from '../../database/user';
 import preprocessContent from '../../etc/preprocessContent';
+import { SlackMessageEvent } from '../../slack/event';
 
   
-const onTodoTheme = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoTheme = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
     const newTheme = preprocessContent(command[0]);
 
     if (!isThemeType(newTheme)) {

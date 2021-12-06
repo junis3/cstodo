@@ -9,14 +9,15 @@ import { webClient } from '../index';
 import { emoji } from '../etc/theme';
 import { replyMessage } from '../etc/postMessage';
 import { addMessage } from '../database/message';
+import { SlackMessageEvent } from '../slack/event';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
 let lastUser: string;
 let nowUser: string;
 
-const onMessage = async (event: any) => {
-    if (event.ts < turnOnTimestamp) return;
+const onMessage = async (event: SlackMessageEvent) => {
+    if (Number(event.ts) < turnOnTimestamp) return;
 //    if (isTesting && event.channel !== cstodoTestChannel) return;
     if (!event.text || !event.user) return;
     if (event.thread_ts) return;

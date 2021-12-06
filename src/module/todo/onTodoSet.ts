@@ -4,10 +4,11 @@ import { getArg, QueryType } from '../../etc/parseQuery';
 import { addEmoji, replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
 import axios from 'axios';
+import { SlackMessageEvent } from '../../slack/event';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
-const onTodoSet = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
 
     if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user != 'UV8DYMMV5') {
         addEmoji(event, 'sad');

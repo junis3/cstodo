@@ -1,11 +1,12 @@
 import { getUser, UserType } from '../../database/user';
 import { addCstodo, CstodoType, editCstodo, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
+import { ForceMuteType, replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
+import { SlackMessageEvent } from '../../slack/event';
 
 const isInteger = (s: string) => {
   for (let c of s.split('')) {
@@ -14,7 +15,7 @@ const isInteger = (s: string) => {
   return true;
 }
 
-const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   let todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
@@ -109,7 +110,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: any, user: UserTy
 
   for(let content of Array.from(contents)) {
     if (await editCstodo(content, change)) {
-      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', {forceUnmute: true});
+      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', { forceMuteType: ForceMuteType.Unmute });
     } else {
       await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
     }

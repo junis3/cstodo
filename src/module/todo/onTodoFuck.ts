@@ -3,9 +3,10 @@ import { replyMessage } from '../../etc/postMessage';
 import { webClient } from '../../index';
 import { UserType } from '../../database/user';
 import { QueryType } from '../../etc/parseQuery';
+import { SlackMessageEvent } from '../../slack/event';
 
   
-const onTodoFuck = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onTodoFuck = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
     await replyMessage(event, user, {
       text: emoji('fuck', user.theme).repeat(23),
       username: `${user.name}님의 비서`,

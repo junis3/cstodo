@@ -1,10 +1,11 @@
 import { UserType } from '../../database/user';
-import { replySuccess, replyDdokddul } from '../../etc/postMessage';
+import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { addBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
+import { SlackMessageEvent } from '../../slack/event';
 
 let isSlackDecoration = (text: string) => {
   let match = text.match(/[~_]+/);
@@ -28,7 +29,7 @@ function makeUnique<T>(arr: T[]) {
   return Array.from(new Set<T>(arr));
 }
 
-const onBarAdd = async ({ command, args }: QueryType, event: any, user: UserType) => {
+const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   let bars = await getBars(user.id);
 
   const progArg = getArg(['--progress', '--prog', '-p'], args);
@@ -90,7 +91,7 @@ const onBarAdd = async ({ command, args }: QueryType, event: any, user: UserType
       });
 
       await replySuccess(event, user, `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`, 'add', 
-      {forceUnmute: (user.userControl === 'blacklist')});
+        { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined });
     }
   }));
 }

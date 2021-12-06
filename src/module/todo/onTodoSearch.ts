@@ -3,9 +3,10 @@ import { CstodoType, getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
+import { SlackMessageEvent } from '../../slack/event';
 
 // Needs refactor......
-const onTodoSearch = async (rawQuery: QueryType, event: any, user: UserType) => {
+const onTodoSearch = async (rawQuery: QueryType, event: SlackMessageEvent, user: UserType) => {
     const text : string = event.text;
     const tokens = text.split(' ').map((token) => token.trim());
     const query = tokens.slice(2).join(' ').trim();

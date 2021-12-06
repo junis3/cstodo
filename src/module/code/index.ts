@@ -1,7 +1,8 @@
 import { replyMessage } from '../../etc/postMessage';
+import { SlackMessageEvent } from '../../slack/event';
 import isAttack from '../isAttack';
 
-const onCode = async (event: any) => {
+const onCode = async (event: SlackMessageEvent) => {
     if (await isAttack(event)) return;
     
     const text : string = event.text;

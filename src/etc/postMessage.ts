@@ -4,13 +4,14 @@ import { webClient } from '..';
 import { emoji } from './theme';
 import { cstodoChannel, cstodoTestChannel } from '../config';
 import { UserType } from '../database/user';
+import { SlackMessageEvent } from '../slack/event';
 
 
 export const postMessage = async (props: ChatPostMessageArguments) => {    
     await webClient.chat.postMessage(props);
 }
 
-export const addEmoji = async (event: any, emojiName: string) => {
+export const addEmoji = async (event: SlackMessageEvent, emojiName: string) => {
     try {
         await webClient.reactions.add({
             name: emojiName,
@@ -22,12 +23,16 @@ export const addEmoji = async (event: any, emojiName: string) => {
     }
 }
 
+export enum ForceMuteType {
+    Unmute,
+    Mute
+}
+
 interface Options {
-    forceUnmute?: boolean;
-    forceMute?: boolean;
+    forceMuteType?: ForceMuteType;
 };
 
-export const replyDdokddul = async (event: any, user: UserType, message: string, options?: Options) => {
+export const replyDdokddul = async (event: SlackMessageEvent, user: UserType, message: string, options?: Options) => {
     await replyMessage(event, user, {
         text: "",
         username: `${user.name}님의 똑떨한 비서`,
@@ -40,7 +45,7 @@ export const replyDdokddul = async (event: any, user: UserType, message: string,
     }, options);
 }
 
-export const replySuccess = async (event: any, user: UserType, message: string, icon_emoji?: string, options?: Options) => {
+export const replySuccess = async (event: SlackMessageEvent, user: UserType, message: string, icon_emoji?: string, options?: Options) => {
     let emoji_kw = 'default';
     if (icon_emoji !== undefined) {
         emoji_kw = icon_emoji;
@@ -57,7 +62,7 @@ export const replySuccess = async (event: any, user: UserType, message: string, 
     }, options);
 }
 
-export const replyFail = async (event: any, user: UserType, message: string, options?: Options) => {
+export const replyFail = async (event: SlackMessageEvent, user: UserType, message: string, options?: Options) => {
     await replyMessage(event, user, {
         text: "",
         username: `${user.name}님의 똑떨한 비서`,
@@ -76,12 +81,12 @@ export const replyFail = async (event: any, user: UserType, message: string, opt
     });
 }
 
-export const replyMessage = async (event: any, user: UserType | undefined, props: ChatPostMessageArguments, options?: Options) => {   
+export const replyMessage = async (event: SlackMessageEvent, user: UserType | undefined, props: ChatPostMessageArguments, options?: Options) => {
 
-    let muted = user && user.muted;
+    let muted = user?.muted;
 
-    if (options && options.forceMute) muted = true;
-    if (options && options.forceUnmute) muted = false;
+    if (options?.forceMuteType === ForceMuteType.Mute) muted = true;
+    else if (options?.forceMuteType === ForceMuteType.Unmute) muted = false;
 
     if (muted) {
         await webClient.chat.postEphemeral({

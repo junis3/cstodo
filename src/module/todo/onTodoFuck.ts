@@ -21,7 +21,7 @@ const onTodoFuck = async ({ command, args }: QueryType, event: SlackMessageEvent
       icon_emoji: emoji('fuck', user.theme),
     });
 
-    try {
+/*    try {
       await webClient.conversations.leave({
         channel: event.channel,
       });
@@ -30,7 +30,7 @@ const onTodoFuck = async ({ command, args }: QueryType, event: SlackMessageEvent
         return;
       }
       else throw e;
-    }
+    } */
 }
 
 export default onTodoFuck;

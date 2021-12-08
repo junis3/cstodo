@@ -11,7 +11,7 @@ const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
 
     if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user != 'UV8DYMMV5') {
-        addEmoji(event, 'sad');
+        addEmoji(event.ts, event.channel, 'sad');
         return;
     }
 

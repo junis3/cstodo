@@ -1,12 +1,12 @@
 import { createEventAdapter } from "@slack/events-api";
-import { WebClient } from "@slack/web-api";
 import express from "express";
-import { accessToken, cstodoTestChannel, isTesting, logWebhook, mongodbUri, port, signingSecret } from "./config";
+import { cstodoTestChannel, isTesting, logWebhook, mongodbUri, port, signingSecret } from "./config";
 import onMessage from './module/onMessage';
 import onTest from './module/onTest';
 import axios from "axios";
 import mongoose from 'mongoose';
 import { initiateAlarms } from './database/alarm';
+import { webClient } from './slack/command';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
@@ -26,7 +26,6 @@ mongoose.connect(mongodbUri, {
 });
 
 export const slackEvents = createEventAdapter(signingSecret);
-export const webClient = new WebClient(accessToken);
 
 (async () => {
   const response = await axios.get('http://ip-api.com/json');

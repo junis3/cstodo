@@ -50,7 +50,7 @@ const onTodo = async (event: SlackMessageEvent, user: UserType) => {
   const query = parseQuery(tokens.slice(1).join(' '));
 
   if (!isQualified(event, user)) {
-    await addEmoji(event, 'sad');
+    await addEmoji(event.ts, event.channel, 'sad');
     return;
   }
 
@@ -128,7 +128,7 @@ const onTodo = async (event: SlackMessageEvent, user: UserType) => {
     return;
   }
 
-  await addEmoji(event, 'sad');
+  await addEmoji(event.ts, event.channel, 'sad');
 }
 
 export default onTodo;

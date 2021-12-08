@@ -1,4 +1,4 @@
-import { webClient } from "..";
+import { webClient } from "../slack/command";
 import { chooseProblem, validateProblem } from "../module/onDailyGreenGold";
 import onDailyProblem from '../module/onDailyProblem';
 import checkAllTodoAlarms from './checkAllTodoAlarms';

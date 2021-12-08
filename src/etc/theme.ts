@@ -1,4 +1,3 @@
-import { ThemeType } from "../database/user";
 
 interface StringMap {
   [key: string]: string;

@@ -21,7 +21,7 @@ const onTodoHW = async (query: QueryType, event: SlackMessageEvent, user: UserTy
         )
     );
     const href = hrefs.join(", ");
-    const josa = href.length > 1 ? '들은' : '는';
+    const josa = hrefs.length > 1 ? '들은' : '는';
     await replySuccess(event, user, `${user.name}님의 최근 숙제${josa} ${href}입니다!`, 'hw');
     return;
 }

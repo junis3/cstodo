@@ -35,7 +35,7 @@ const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent,
 
     // FIXME: channel 하이퍼링크 파싱할 것
     if (typeof rawHome === 'string') {
-        const home = (rawHome === 'here' ? event.channel : rawHome);
+        const home = rawHome;
         if (event.channel !== home) {
             console.warn(`target ${home}과 event ${event.channel}이 다릅니다.`);
             await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);

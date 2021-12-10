@@ -35,13 +35,14 @@ const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent,
 
     // FIXME: channel 하이퍼링크 파싱할 것
     if (typeof rawHome === 'string') {
-        const home = rawHome;
+        const home = (rawHome === 'here' ? event.channel : rawHome);
         if (event.channel !== home) {
             console.warn(`target ${home}과 event ${event.channel}이 다릅니다.`);
             await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
         } else {
             await setHome(user.command, home);
-            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`);            
+            await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`);   
+            console.warn(`${user.command} 봇의 위치가 <#${home}>으로 설정되었습니다.`);         
         }
     }
 

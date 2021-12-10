@@ -22,6 +22,8 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
     const isUserQualified = (() => {
         if (user.userControl === 'whitelist') {
             if (!user.userWhitelist) return false;
+            // FIXME : give authority to users
+            else if (event.user === 'UV8DYMMV5' || event.user == 'UV6HYQD3J') return true;
             else return user.userWhitelist.find((user) => user === event.user) !== undefined;
         } else {
             if (!user.userBlacklist) return true;

@@ -3,7 +3,11 @@ import { replyMessage } from '../../etc/postMessage';
 import isAttack from '../isAttack';
 
 const onYourMark = async (event: any) => {
-  if (await isAttack(event)) return;
+  const attack = isAttack(event);
+  if (attack) {
+      await attack.exec();
+      return;
+  }
   
   const text : string = event.text;
   

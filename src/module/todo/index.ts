@@ -45,7 +45,11 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
 }
 
 const onTodo = async (event: SlackMessageEvent, user: UserType) => {
-  if (await isAttack(event)) return;
+  const attack = isAttack(event);
+  if (attack) {
+    await attack.exec();
+    return;
+  }
 
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());

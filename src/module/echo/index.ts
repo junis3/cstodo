@@ -3,12 +3,11 @@ import { SlackCommand } from '../../slack/command';
 import { SlackMessageEvent } from '../../slack/event';
 import { SlackReplyMessageCommand } from '../../slack/replyMessage';
 import isAttack from '../isAttack';
+import { MessageRouter } from '../router';
 
-function onEcho(event: SlackMessageEvent): SlackCommand[] {
+const onEcho: MessageRouter = ({ event }) => {
     const attack = isAttack(event);
-    if (attack) {
-        return [attack];
-    }
+    if (attack) return [attack];
 //    if (event.thread_ts && Number.parseFloat(event.thread_ts) < (new Date().getTime() / 1000) - 5 * 60) return;
     
     const text : string = event.text;
@@ -20,13 +19,11 @@ function onEcho(event: SlackMessageEvent): SlackCommand[] {
 
     const query = preprocessQuery(tokens.slice(1).join(' '));
 
-    return [
-        new SlackReplyMessageCommand(event, undefined, {
-            text: query,
-            channel: event.channel,
-            thread_ts: event.thread_ts,
-        })
-    ];
+    return new SlackReplyMessageCommand(event, undefined, {
+        text: query,
+        channel: event.channel,
+        thread_ts: event.thread_ts,
+    });
 }
 
 export default onEcho;

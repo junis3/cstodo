@@ -7,14 +7,15 @@ import { QueryType } from '../../etc/parseQuery';
 import preprocessContent from '../../etc/preprocessContent';
 import { isInteger } from '../../etc/isInteger';
 import { SlackMessageEvent } from '../../slack/event';
+import { TodoRouter } from '../router';
 
 
-const onTodoRemove = async ({ command }: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoRemove: TodoRouter = async ({ user, event, query: { command }}) => {
     const todo = await getCstodos(user.id);
     
     if (command.length === 1) {
       await replyDdokddul(event, user, `remove 쿼리에 인자가 없으면 똑떨이에요...`);
-      return;
+      return [];
     } 
 
 
@@ -25,16 +26,14 @@ const onTodoRemove = async ({ command }: QueryType, event: SlackMessageEvent, us
 
       if (!content) continue;
       if (!isInteger(content)) {
-        if (!todo.find((item) => item.content === content)) {
-          await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 빼면 똑떨이에요...`);
-          return;
-        }
+        await replyDdokddul(event, user, `할 일을 제거할 땐 제거할 일의 번호를 주셔야 해요...`);
+        return [];
       } else {
         let x = Number.parseInt(content);
 
         if (x <= 0 || x > todo.length) {
           await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요...`);
-          return;
+          return [];
         }
         
         content = todo[x-1].content;
@@ -51,6 +50,7 @@ const onTodoRemove = async ({ command }: QueryType, event: SlackMessageEvent, us
         await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`);
       }
     }
+    return [];
 }
 
 export default onTodoRemove;

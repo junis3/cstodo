@@ -4,9 +4,10 @@ import { emoji } from '../../etc/theme';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 import { SlackMessageEvent } from '../../slack/event';
+import { TodoRouter } from '../router';
 
 // Needs refactor......
-const onTodoSearch = async (rawQuery: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoSearch: TodoRouter = async ({ event, user }) => {
     const text : string = event.text;
     const tokens = text.split(' ').map((token) => token.trim());
     const query = tokens.slice(2).join(' ').trim();
@@ -37,10 +38,10 @@ const onTodoSearch = async (rawQuery: QueryType, event: SlackMessageEvent, user:
 
     if (isDdokddul) {
       await replyDdokddul(event, user, message);
-      return;
+      return [];
     }
     await replySuccess(event, user, message, 'search');
-    return;
+    return [];
 }
 
 export default onTodoSearch;

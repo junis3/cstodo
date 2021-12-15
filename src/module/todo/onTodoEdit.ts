@@ -7,6 +7,7 @@ import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
 import { SlackMessageEvent } from '../../slack/event';
+import { TodoRouter } from '../router';
 
 const isInteger = (s: string) => {
   for (let c of s.split('')) {
@@ -15,7 +16,7 @@ const isInteger = (s: string) => {
   return true;
 }
 
-const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } }) => {
   let todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
@@ -27,12 +28,12 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
     const time = stringToTime(dueArg);
     if (!time) {
       await replyDdokddul(event, user, `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...`);
-      return;
+      return [];
     }
     newDue = time;
   } else {
     await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
-    return;
+    return [];
   }
 
   const contentArg = getArg(['--content', '-c'], args);
@@ -45,7 +46,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
     newContent = preprocessContent(contentArg);
   } else {
     await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`)
-    return;
+    return [];
   }
 
   const userArg = getArg(['--dangerous-user'], args);
@@ -55,7 +56,7 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
   if (typeof userArg === 'string') {
     if (newDue || newContent) {
       await replyDdokddul(event, user, `저는 똑떨이에요...`)
-      return;
+      return [];
     } else {
       newUser = await getUser(userArg) || newUser;
     }
@@ -74,14 +75,14 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
 
   if (changeString.length === 0) {
     await replyDdokddul(event, user, `바꿀 게 없어서 똑떨이에요...`);
-    return;
+    return [];
   }
 
   changeString = changeString.slice(0, changeString.length - 2);
 
   if (command.length === 1) {
     await replyDdokddul(event, user, `edit 쿼리에 인자가 없으면 똑떨이에요...`)
-    return;
+    return [];
   } 
 
 
@@ -93,14 +94,14 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
     if (!isInteger(content)) {
       if (!todo.find((item) => item.content === content)) {
         await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`)
-        return;
+        return [];
       }
     } else {
       let x = Number.parseInt(content);
 
       if (x <= 0 || x > todo.length) {
         await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`)
-        return;
+        return [];
       }
       
       content = todo[x-1].content;
@@ -115,6 +116,8 @@ const onTodoEdit = async ({ command, args }: QueryType, event: SlackMessageEvent
       await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
     }
   }
+
+  return [];
 }
 
 export default onTodoEdit;

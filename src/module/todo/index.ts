@@ -2,10 +2,10 @@ import onTodoAdd from './onTodoAdd';
 import onTodoHelp from './onTodoHelp';
 import onTodoEdit from './onTodoEdit';
 import onTodoAll from './onTodoAll';
-import onTodoLength from './onTodoLength';
+// import onTodoLength from './onTodoLength';
 import onTodoRemove from './onTodoRemove';
 import onTodoOverflow from './onTodoOverflow';
-import onTodoSearch from './onTodoSearch';
+// import onTodoSearch from './onTodoSearch';
 import onTodoSet from './onTodoSet';
 import onTodoTheme from './onTodoTheme';
 import onTodoMute from './onTodoMute';
@@ -16,6 +16,7 @@ import isAttack from '../isAttack';
 import { isThemeType, UserType } from '../../database/user';
 import { addEmoji } from '../../etc/postMessage';
 import { SlackMessageEvent } from '../../slack/event';
+import { MessageRouter } from '../router';
 
 const isQualified = (event: SlackMessageEvent, user: UserType) => {
   
@@ -44,12 +45,9 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
     return isUserQualified && isChannelQualified;
 }
 
-const onTodo = async (event: SlackMessageEvent, user: UserType) => {
+const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
   const attack = isAttack(event);
-  if (attack) {
-    await attack.exec();
-    return;
-  }
+  if (attack) return [attack];
 
   const text : string = event.text;
   const tokens = text.split(' ').map((token) => token.trim());
@@ -57,84 +55,75 @@ const onTodo = async (event: SlackMessageEvent, user: UserType) => {
 
   if (!isQualified(event, user)) {
     await addEmoji(event.ts, event.channel, 'sad');
-    return;
+    return [];
   }
 
   if (query.command[0].length === 0) {
-    await onTodoAll(query, event, user);
-    return;
+    return onTodoAll({ event, user, query });
   }
 
 
   if (query.command[0] === 'fuck') {
-    await onTodoFuck(query, event, user);
-    return;
+    return onTodoFuck({ query, event, user });
   }
 
   if (query.command[0] === 'mute' || query.command[0] === 'unmute') {
-    await onTodoMute(query, event, user);
-    return;
+    return onTodoMute({ query, event, user });
   }
 
   if (isThemeType(query.command[0])) {
-    await onTodoTheme(query, event, user);
-    return;
+    return onTodoTheme({ query, event, user });
   }
 
   if (query.command[0] === 'help') {
-    await onTodoHelp(query, event, user);
-    return;
+    return onTodoHelp({ query, event, user });
   }
 
-  if (query.command[0] === 'length' || query.command[0] === 'size') {
-    await onTodoLength(query, event, user);
-    return;
-  }
+  // if (query.command[0] === 'length' || query.command[0] === 'size') {
+  //   return onTodoLength({ query, event, user });
+  // }
 
-  if (query.command[0] === 'search') {
-    await onTodoSearch(query, event, user);
-    return;
-  }
+  // if (query.command[0] === 'search') {
+  //   return onTodoSearch({ query, event, user });
+  // }
 
   if (query.command[0] === 'all') {
-    await onTodoAll(query, event, user);
-    return;
+    return onTodoAll({ query, event, user });
   }
 
   if (query.command[0] === 'set') {
-    await onTodoSet(query, event, user);
-    return;
+    return onTodoSet({ query, event, user });
   }
 
   if (query.command[0] == 'hw' || query.command[0] == 'homework') {
-    await onTodoHW(query, event, user);
-    return;
+    return onTodoHW({ query, event, user });
   }
 
   // CRUD operations
 
   if (query.command[0] === 'edit' || query.command[0] === 'update') {
-    await onTodoEdit(query, event, user);
-    await onTodoAll(query, event, user);
+    let x = await onTodoEdit({ query, event, user });
+    let y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
-    return;
+    return [x, y];
   }
   
   if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') {
-    await onTodoAdd(query, event, user);
-    await onTodoAll(query, event, user);
+    let x = await onTodoAdd({ query, event, user });
+    let y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
-    return;
+    return [x, y];
   }
 
   if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') {
-    await onTodoRemove(query, event, user);
-    await onTodoAll(query, event, user);
+    let x = await onTodoRemove({ query, event, user });
+    let y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
-    return;
+    return [x, y];
   }
 
   await addEmoji(event.ts, event.channel, 'sad');
+  return [];
 }
 
 export default onTodo;

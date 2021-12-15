@@ -1,34 +1,34 @@
 import { emoji, message } from '../../etc/theme';
 import { replyMessage } from '../../etc/postMessage';
 import isAttack from '../isAttack';
+import { MessageRouter } from '../router';
+import { SlackReplyMessageCommand } from '../../slack/replyMessage';
 
-const onYourMark = async (event: any) => {
+const onYourMark: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);
-  if (attack) {
-      await attack.exec();
-      return;
-  }
+  if (attack) return [attack];
   
-  const text : string = event.text;
+  const text = event.text;
   
-  if(text.slice(0, 12).toLowerCase() === 'on your mark'){
-      await replyMessage(event, undefined, {
+  if (text.slice(0, 12).toLowerCase() === 'on your mark') {
+      return new SlackReplyMessageCommand(event, undefined, {
           text: message('go', 'mark'),
           channel: event.channel,
           icon_emoji: emoji('go', 'mark'),
           username: 'Get Set...',
       });
-      return;
   }
-  if(text.slice(0, 12).toLowerCase() === 'on your marx'){
-      await replyMessage(event, undefined, {
+
+  if (text.slice(0, 12).toLowerCase() === 'on your marx') {
+      return new SlackReplyMessageCommand(event, undefined, {
           text: message('go', 'marx'),
           channel: event.channel,
           icon_emoji: emoji('go', 'marx'),
           username: 'Gyet Syet...',
       });
-      return;
   }
+
+  return [];
 }
 
 export default onYourMark;

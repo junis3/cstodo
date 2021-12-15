@@ -7,8 +7,10 @@ import { replyMessage, replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 import { QueryType } from '../../etc/parseQuery';
 import { SlackMessageEvent } from '../../slack/event';
+import { TodoRouter } from '../router';
+import { SlackReplyMessageCommand } from '../../slack/replyMessage';
 
-const onTodoAll = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoAll: TodoRouter = async ({ event, user }) => {
     const cstodo = await getCstodos(user.id);
 
     if (cstodo.length > 0) {
@@ -17,7 +19,7 @@ const onTodoAll = async (query: QueryType, event: SlackMessageEvent, user: UserT
                                             {"type": "mrkdwn", "text": `${timeToString(todo.due)}`}]
             }
         ));
-        await replyMessage(event, user, {
+        return new SlackReplyMessageCommand(event, user, {
             text: "",
             attachments: [{
                 blocks: blocks,
@@ -30,7 +32,7 @@ const onTodoAll = async (query: QueryType, event: SlackMessageEvent, user: UserT
     } else {
         await replySuccess(event, user, `${user.name}님의 진행중인 일이 없습니다!`, 'add');
     }
-    return;
+    return [];
 }
 
 export default onTodoAll;

@@ -5,14 +5,15 @@ import { addEmoji, replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
 import axios from 'axios';
 import { SlackMessageEvent } from '../../slack/event';
+import { TodoRouter } from '../router';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
-const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoSet: TodoRouter = async ({ event, user, query: { args }}) => {
 
     if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user != 'UV8DYMMV5') {
         addEmoji(event.ts, event.channel, 'sad');
-        return;
+        return [];
     }
 
     const useDue = getArg(['-use-due', '--use-due', '-useDue', '--useDue'], args);
@@ -80,7 +81,7 @@ const onTodoSet = async ({ command, args }: QueryType, event: SlackMessageEvent,
         }
     }
 //    await replySuccess(event, user, message, 'default');
-    return;
+    return [];
 }
 
 export default onTodoSet;

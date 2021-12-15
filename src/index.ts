@@ -6,7 +6,7 @@ import onTest from './module/onTest';
 import axios from "axios";
 import mongoose from 'mongoose';
 import { initiateAlarms } from './database/alarm';
-import { webClient } from './slack/command';
+import { runCommands, webClient } from './slack/command';
 
 if (logWebhook) {
     const consoleToSlack = require('console-to-slack');
@@ -40,7 +40,11 @@ export const slackEvents = createEventAdapter(signingSecret);
   });
 })();
 
-slackEvents.on('message', onMessage);
+slackEvents.on('message', (event) => {
+  Promise.resolve(onMessage(event)).then((commands) => {
+    runCommands(commands);
+  })
+});
 
 initiateAlarms();
 

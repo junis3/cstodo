@@ -3,6 +3,8 @@ import { emoji } from '../../etc/theme';
 import { QueryType } from '../../etc/parseQuery';
 import { replyMessage } from '../../etc/postMessage';
 import { SlackMessageEvent } from '../../slack/event';
+import { SlackReplyMessageCommand } from '../../slack/replyMessage';
+import { TodoRouter } from '../router';
 
 // TODO: Add subcommands and add argument details
 
@@ -18,8 +20,8 @@ const helpText = (user: UserType) => {
 \`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.`
 }
   
-const onTodoHelp = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
-    await replyMessage(event, user, {
+const onTodoHelp: TodoRouter = async ({ event, user }) => {
+    return new SlackReplyMessageCommand(event, user, {
       text: helpText(user),
       channel: event.channel,
       icon_emoji: emoji('help', user.theme),

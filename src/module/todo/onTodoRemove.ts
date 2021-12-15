@@ -26,10 +26,8 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command }}) => {
 
       if (!content) continue;
       if (!isInteger(content)) {
-        if (!todo.find((item) => item.content === content)) {
-          await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 빼면 똑떨이에요...`);
-          return [];
-        }
+        await replyDdokddul(event, user, `할 일을 제거할 땐 제거할 일의 번호를 주셔야 해요...`);
+        return [];
       } else {
         let x = Number.parseInt(content);
 

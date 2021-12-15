@@ -86,35 +86,26 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   } 
 
 
-  let contents = new Set<string>();
+  let content = command.slice(1).join(' ').trim();
 
-  for (let s of command.slice(1).join(' ').split(',')) {
-    let content = s.trim();
+  if (!isInteger(content)) {
+    await replyDdokddul(event, user, `할 일을 수정할 때엔 수정할 일의 번호를 주셔야 해요...`)
+    return [];
+  } else {
+    let x = Number.parseInt(content);
 
-    if (!isInteger(content)) {
-      if (!todo.find((item) => item.content === content)) {
-        await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`)
-        return [];
-      }
-    } else {
-      let x = Number.parseInt(content);
-
-      if (x <= 0 || x > todo.length) {
-        await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`)
-        return [];
-      }
-      
-      content = todo[x-1].content;
+    if (x <= 0 || x > todo.length) {
+      await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`)
+      return [];
     }
-    contents.add(content);
+    
+    content = todo[x-1].content;
   }
 
-  for(let content of Array.from(contents)) {
-    if (await editCstodo(content, change)) {
-      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', { forceMuteType: ForceMuteType.Unmute });
-    } else {
-      await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
-    }
+  if (await editCstodo(content, change)) {
+    await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', { forceMuteType: ForceMuteType.Unmute });
+  } else {
+    await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
   }
 
   return [];

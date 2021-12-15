@@ -42,7 +42,7 @@ export const slackEvents = createEventAdapter(signingSecret);
 
 slackEvents.on('message', (event) => {
   if (!event) return;
-  Promise.resolve(onMessage(event)).then((commands) => {
+  Promise.resolve(onMessage({ event })).then((commands) => {
     runCommands(commands);
   })
 });

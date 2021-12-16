@@ -68,6 +68,7 @@ const onTodoAdd: TodoRouter = async ({ event, user, query: { command, args } }) 
       content,
       owner: user.id,
       due,
+      createdBy: event.user,
     });
 
     await replySuccess(event, user, `${user.name}님의 할 일에 *${content}* 를 추가했어요!`, 'add', 

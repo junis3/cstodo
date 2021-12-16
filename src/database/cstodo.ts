@@ -11,6 +11,7 @@ export interface CstodoType {
     isPublic: boolean;
     createdAt: number;
     updatedAt: number;
+    createdBy: string;
 }
 
 export type CstodoDocument = Document & CstodoType;
@@ -22,7 +23,8 @@ const cstodoSchema = new Schema({
     due: { type: Number, default: new Date().getTime() },
     isPublic: { type: Boolean, default: true },
     createdAt: { type: Number, default: new Date().getTime() },
-    updatedAt: { type: Number, default: new Date().getTime() }
+    updatedAt: { type: Number, default: new Date().getTime() },
+    createdBy: { type: String, default: "unknown" }
 });
 
 cstodoSchema.index({ owner: true, content: true }, { unique: true });

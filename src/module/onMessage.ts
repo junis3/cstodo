@@ -1,5 +1,5 @@
 import { csGod, cstodoChannel, cstodoTestChannel, isTesting } from '../config';
-import onEcho from './echo';
+// import onEcho from './echo';
 import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
@@ -41,13 +41,13 @@ const onMessage: MessageRouter = async ({ event }) => {
     if (event.channel === cstodoTestChannel && command === 'restart' && (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5')) {
       process.exit();
     }
-    if (command === 'echo' && tokens.length > 1) {
-      if (tokens.length < 5 || !([0, 1, 2, 3, 4].every((i) => tokens[i].toLowerCase() === 'echo'))) {
-        return onEcho({ event });
-      }
-    }
-    else if (command === 'code' && tokens.length > 1) return onCode({ event });
-    else if (command === 'on') return onYourMark({ event });
+    // if (command === 'echo' && tokens.length > 1) {
+    //   if (tokens.length < 5 || !([0, 1, 2, 3, 4].every((i) => tokens[i].toLowerCase() === 'echo'))) {
+    //     await runCommands(onEcho(event));
+    //   }
+    // }
+    else if (command === 'code' && tokens.length > 1) await onCode(event);
+    else if (command === 'on') await onYourMark(event);
 
     // Todo commands
     let user = await getUser(command);

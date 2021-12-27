@@ -9,7 +9,6 @@ import onTodoOverflow from './onTodoOverflow';
 import onTodoSet from './onTodoSet';
 import onTodoTheme from './onTodoTheme';
 import onTodoMute from './onTodoMute';
-import onTodoFuck from './onTodoFuck';
 import onTodoHW from './onTodoHW';
 import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
@@ -60,11 +59,6 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
 
   if (query.command[0].length === 0) {
     return onTodoAll({ event, user, query });
-  }
-
-
-  if (query.command[0] === 'fuck') {
-    return onTodoFuck({ query, event, user });
   }
 
   if (query.command[0] === 'mute' || query.command[0] === 'unmute') {

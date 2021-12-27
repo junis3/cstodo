@@ -46,8 +46,8 @@ const onMessage: MessageRouter = async ({ event }) => {
     //     await runCommands(onEcho(event));
     //   }
     // }
-    else if (command === 'code' && tokens.length > 1) await onCode(event);
-    else if (command === 'on') await onYourMark(event);
+    else if (command === 'code' && tokens.length > 1) return onCode({event});
+    else if (command === 'on') return onYourMark({event});
 
     // Todo commands
     let user = await getUser(command);

@@ -2,15 +2,18 @@ import { ChatPostMessageArguments } from "@slack/web-api";
 import { SlackCommand, webClient } from "./command";
 import { UserType } from "../database/user";
 import { SlackMessageEvent } from "./event";
-import { addEmoji, ForceMuteType, Options } from "../etc/postMessage";
+import { addEmoji } from "../etc/postMessage";
 
-export class SlackReplyMessageCommand implements SlackCommand {
+export interface SlackReplyOptions {
+    muted?: boolean;
+}
+
+export class SlackReplyCommand implements SlackCommand {
     private _props: ChatPostMessageArguments;
     private _muted: boolean;
     private _user: string;
     private _channel: string;
     private _ts: string;
-    private _options?: Options;
 
     public get props(): ChatPostMessageArguments {
         return this._props;
@@ -32,22 +35,13 @@ export class SlackReplyMessageCommand implements SlackCommand {
         return this._ts;
     }
 
-    public get options(): Options | undefined {
-        return this._options;
-    }
-
-    constructor(event: SlackMessageEvent, user: UserType | undefined, props: ChatPostMessageArguments, options?: Options) {
+    constructor(event: SlackMessageEvent, props: ChatPostMessageArguments, options?: SlackReplyOptions) {
         this._props = props;
-        this._muted = !!user?.muted;
-
-        if (options?.forceMuteType === ForceMuteType.Mute) this._muted = true;
-        else if (options?.forceMuteType === ForceMuteType.Unmute) this._muted = false;
+        this._muted = options?.muted ?? false;
 
         this._user = event.user;
         this._channel = event.channel;
         this._ts = event.ts;
-
-        this._options = options;
     }
 
     public async exec(): Promise<void> {

@@ -1,10 +1,8 @@
 import { emoji } from '../../etc/theme';
-import { replyDdokddul, replyMessage, replySuccess } from '../../etc/postMessage';
-import { QueryType } from '../../etc/parseQuery';
+import { replyDdokddul } from '../../etc/postMessage';
 import { isThemeType, setTheme, UserType } from '../../database/user';
 import preprocessContent from '../../etc/preprocessContent';
-import { SlackMessageEvent } from '../../slack/event';
-import { SlackReplyMessageCommand } from '../../slack/replyMessage';
+import { TodoReplyCommand } from './reply';
 import { TodoRouter } from '../router';
 
   
@@ -18,7 +16,7 @@ const onTodoTheme: TodoRouter = async ({ event, user, query: { command } }) => {
 
     await setTheme(user.command, newTheme);
     
-    return new SlackReplyMessageCommand(event, user, {
+    return new TodoReplyCommand(event, user, {
       text: `${user.command}봇의 프로필이 *${newTheme}* 모드로 바뀌었습니다!`,
       channel: event.channel,
       icon_emoji: emoji('default', newTheme),

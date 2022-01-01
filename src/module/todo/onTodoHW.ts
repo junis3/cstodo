@@ -1,10 +1,5 @@
-import { UserType } from '../../database/user';
-import { getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
-import { QueryType } from '../../etc/parseQuery';
 import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../../database/greengold';
-import { SlackMessageEvent } from '../../slack/event';
 import { TodoRouter } from '../router';
 
   

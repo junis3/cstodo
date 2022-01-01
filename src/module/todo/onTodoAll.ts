@@ -1,14 +1,9 @@
-
-
-import { UserType } from '../../database/user';
 import { getCstodos } from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { replyMessage, replySuccess } from '../../etc/postMessage';
+import { replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
-import { QueryType } from '../../etc/parseQuery';
-import { SlackMessageEvent } from '../../slack/event';
 import { TodoRouter } from '../router';
-import { SlackReplyMessageCommand } from '../../slack/replyMessage';
+import { TodoReplyCommand } from './reply';
 
 const onTodoAll: TodoRouter = async ({ event, user }) => {
     const cstodo = await getCstodos(user.id);
@@ -19,7 +14,7 @@ const onTodoAll: TodoRouter = async ({ event, user }) => {
                                             {"type": "mrkdwn", "text": `${timeToString(todo.due)}`}]
             }
         ));
-        return new SlackReplyMessageCommand(event, user, {
+        return new TodoReplyCommand(event, user, {
             text: "",
             attachments: [{
                 blocks: blocks,

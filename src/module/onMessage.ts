@@ -12,7 +12,7 @@ import { addMessage } from '../database/message';
 import { SlackMessageEvent } from '../slack/event';
 import { runCommands } from '../slack/command';
 import { MessageRouter } from './router';
-import { SlackReplyMessageCommand } from '../slack/replyMessage';
+import { SlackReplyCommand } from '../slack/replyMessage';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -75,7 +75,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
       let profile: any = profileResult.profile;
 
-      return new SlackReplyMessageCommand(event, user, {
+      return new SlackReplyCommand(event, {
         text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
         channel: event.channel,
         icon_url: profile.image_512,

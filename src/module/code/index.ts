@@ -1,6 +1,6 @@
 import { replyMessage } from '../../etc/postMessage';
 import { SlackMessageEvent } from '../../slack/event';
-import { SlackReplyMessageCommand } from '../../slack/replyMessage';
+import { SlackReplyCommand } from '../../slack/replyMessage';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
 
@@ -17,7 +17,7 @@ const onCode: MessageRouter = async ({ event }) => {
     const right2 = message.slice(left).indexOf('>');
     const right = right1 == -1 ? right2 : Math.min(right1, right2);
     if (right != -1) {
-        return new SlackReplyMessageCommand(event, undefined, {
+        return new SlackReplyCommand(event, {
             text: message.slice(left+1, left+right),
             channel: event.channel,
         });

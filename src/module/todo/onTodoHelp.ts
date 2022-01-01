@@ -1,9 +1,6 @@
 import { UserType } from '../../database/user';
 import { emoji } from '../../etc/theme';
-import { QueryType } from '../../etc/parseQuery';
-import { replyMessage } from '../../etc/postMessage';
-import { SlackMessageEvent } from '../../slack/event';
-import { SlackReplyMessageCommand } from '../../slack/replyMessage';
+import { TodoReplyCommand } from './reply';
 import { TodoRouter } from '../router';
 
 // TODO: Add subcommands and add argument details
@@ -21,7 +18,7 @@ const helpText = (user: UserType) => {
 }
   
 const onTodoHelp: TodoRouter = async ({ event, user }) => {
-    return new SlackReplyMessageCommand(event, user, {
+    return new TodoReplyCommand(event, user, {
       text: helpText(user),
       channel: event.channel,
       icon_emoji: emoji('help', user.theme),

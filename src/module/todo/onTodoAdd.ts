@@ -1,12 +1,8 @@
-import { UserType } from '../../database/user';
 import { addCstodo, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
 import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessage';
-import { getArg, QueryType } from '../../etc/parseQuery';
+import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
-import { reduceEachTrailingCommentRange } from 'typescript';
 import preprocessContent from '../../etc/preprocessContent';
-import { SlackMessageEvent } from '../../slack/event';
 import { TodoRouter } from '../router';
 
 let isSlackDecoration = (text: string) => {

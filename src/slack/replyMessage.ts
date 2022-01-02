@@ -1,59 +1,61 @@
-import { ChatPostMessageArguments } from "@slack/web-api";
-import { SlackCommand, webClient } from "./command";
-import { UserType } from "../database/user";
-import { SlackMessageEvent } from "./event";
-import { addEmoji } from "../etc/postMessage";
+import { ChatPostMessageArguments } from '@slack/web-api';
+import { SlackCommand, webClient } from './command';
+import { UserType } from '../database/user';
+import { SlackMessageEvent } from './event';
+import { addEmoji } from '../etc/postMessage';
 
 export interface SlackReplyOptions {
     muted?: boolean;
 }
 
 export class SlackReplyCommand implements SlackCommand {
-    private _props: ChatPostMessageArguments;
-    private _muted: boolean;
-    private _user: string;
-    private _channel: string;
-    private _ts: string;
+  private _props: ChatPostMessageArguments;
 
-    public get props(): ChatPostMessageArguments {
-        return this._props;
-    }
+  private _muted: boolean;
 
-    public get muted(): boolean {
-        return this._muted;
-    }
+  private _user: string;
 
-    public get user(): string {
-        return this._user;
-    }
+  private _channel: string;
 
-    public get channel(): string {
-        return this._channel;
-    }
+  private _ts: string;
 
-    public get ts(): string {
-        return this._ts;
-    }
+  public get props(): ChatPostMessageArguments {
+    return this._props;
+  }
 
-    constructor(event: SlackMessageEvent, props: ChatPostMessageArguments, options?: SlackReplyOptions) {
-        this._props = props;
-        this._muted = options?.muted ?? false;
+  public get muted(): boolean {
+    return this._muted;
+  }
 
-        this._user = event.user;
-        this._channel = event.channel;
-        this._ts = event.ts;
-    }
+  public get user(): string {
+    return this._user;
+  }
 
-    public async exec(): Promise<void> {
-        if (this.muted) {
-            await webClient.chat.postEphemeral({
-                ...this.props,
-                user: this.user,
-            });
+  public get channel(): string {
+    return this._channel;
+  }
 
-            await addEmoji(this.ts, this.channel, 'blobokhand');
-        }
+  public get ts(): string {
+    return this._ts;
+  }
 
-        else await webClient.chat.postMessage(this.props);
-    }
+  constructor(event: SlackMessageEvent, props: ChatPostMessageArguments, options?: SlackReplyOptions) {
+    this._props = props;
+    this._muted = options?.muted ?? false;
+
+    this._user = event.user;
+    this._channel = event.channel;
+    this._ts = event.ts;
+  }
+
+  public async exec(): Promise<void> {
+    if (this.muted) {
+      await webClient.chat.postEphemeral({
+        ...this.props,
+        user: this.user,
+      });
+
+      await addEmoji(this.ts, this.channel, 'blobokhand');
+    } else await webClient.chat.postMessage(this.props);
+  }
 }

@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { model, Schema, Document } from 'mongoose';
 
 export interface HistoryType {
     id: number;
@@ -11,10 +11,10 @@ export interface HistoryType {
 export type HistoryDocument = Document & HistoryType;
 
 const historySchema = new Schema<HistoryDocument>({
-    id: { type: Number, required: true, unique: true },
-    title: { type: String },
-    source: { type: String },
-    solveDate: { type: Number, default: Date.now }
+  id: { type: Number, required: true, unique: true },
+  title: { type: String },
+  source: { type: String },
+  solveDate: { type: Number, default: Date.now },
 });
 
 const History = model('history', historySchema, 'histories');
@@ -22,31 +22,27 @@ export default History;
 
 export const getHistories = async () => (await History.find()).map((doc) => doc.toObject() as HistoryType);
 
-export const getHistoryInfo = async (id : number) => {
-    return await History.findOne({ id }) as HistoryType | null;
-}
+export const getHistoryInfo = async (id : number) => await History.findOne({ id }) as HistoryType | null;
 
-export const addHistory = async ({id, title, source} : HistoryType) => {
-    const nowTimestamp = Date.now();
+export const addHistory = async ({ id, title, source } : HistoryType) => {
+  const nowTimestamp = Date.now();
 
-    if (await getHistoryInfo(id)) return false;
+  if (await getHistoryInfo(id)) return false;
 
-    await new History({
-        id, 
-        title: title || '', 
-        source: source || '', 
-        solveTimestamp: nowTimestamp,
-    }).save();
+  await new History({
+    id,
+    title: title || '',
+    source: source || '',
+    solveTimestamp: nowTimestamp,
+  }).save();
 
-    return true;
-}
+  return true;
+};
 
 export const removeHistory = async (id : number) => {
-    if (!id) return;
-    
-    await History.deleteOne({ id });
-}
+  if (!id) return;
 
-export const history2Href = (problem: HistoryType) => {
-    return `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;
-}
+  await History.deleteOne({ id });
+};
+
+export const history2Href = (problem: HistoryType) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;

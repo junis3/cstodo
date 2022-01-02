@@ -1,32 +1,31 @@
-import axios from "axios";
-import cheerioModule from "cheerio";
-import voca from "voca";
+import axios from 'axios';
+import cheerioModule from 'cheerio';
+import voca from 'voca';
 
 const getHTML = async (username = 'cs71107') => {
-    try {
-        return await axios.get(`https://www.acmicpc.net/user/${username}`);
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+  try {
+    return await axios.get(`https://www.acmicpc.net/user/${username}`);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
 const getCurrentHistory = async (username = 'cs71107') => {
-    const result = await getHTML(username);
+  const result = await getHTML(username);
 
-    console.log('Loaded currently solved problem with status ' + result.status);
-    
-    const $ = cheerioModule.load(result.data);
+  console.log(`Loaded currently solved problem with status ${result.status}`);
 
-    const $history = $('div.panel-body');
+  const $ = cheerioModule.load(result.data);
 
-    let history = $history.eq(1).text();
+  const $history = $('div.panel-body');
 
-    history = voca.replaceAll(history, '\t', '');
-    history = voca.trim(history);
-    
-    return history.split(' ').map((idString) => Number.parseInt(idString));
-}
+  let history = $history.eq(1).text();
 
+  history = voca.replaceAll(history, '\t', '');
+  history = voca.trim(history);
+
+  return history.split(' ').map((idString) => Number.parseInt(idString));
+};
 
 export default getCurrentHistory;

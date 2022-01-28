@@ -31,7 +31,7 @@ const onMessage: MessageRouter = async ({ event }) => {
     nowUser = event.user;
   }
 
-  const text : string = event.text.replace(/[^ -~가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
+  const text: string = event.text.replace(/[^ -~가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
   const tokens = text.split(' ').filter((str) => str.length > 0);
 
   if (tokens.length < 1) return [];
@@ -74,7 +74,9 @@ const onMessage: MessageRouter = async ({ event }) => {
 
     if (!profileResult.ok) return [];
 
-    const { profile } = profileResult;
+    const { _profile } = profileResult;
+
+    const profile = _profile as any;
 
     return new SlackReplyCommand(event, {
       text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,

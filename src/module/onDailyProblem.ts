@@ -1,23 +1,22 @@
 import getCurrentHistory from '../etc/getCurrentHistory';
 import getProblemInfo from '../etc/getProblemInfo';
-import { cstodoChannel } from '../config';
+import { csGod, cstodoChannel } from '../config';
 import { emoji } from '../etc/theme';
 import { addHistory, getHistories, removeHistory } from '../database/history';
-import { postMessage, replyDdokddul } from '../etc/postMessage';
+import { postMessage } from '../etc/postMessage';
 
-const emptyMessage = () => [
-  emoji('sob').repeat(23),
-  '없었습니다!!!! :tada: :tada: :tada: 오늘 cs님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:',
-  `저 오늘 우체국 가서 싸우고 왔어요... cs님의 PS 실력을 박스에 담아서 부치려고 했더니 그렇게 큰 박스는 없다는 거 있죠....... 내일은 실력 보여주실 수 있으시죠? ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
-//    `Hello, I am @realPrseidentTrmup. Today's BOJ record is a fraud. I know CS has solved 520 diamonds today. THEY STOLE THE RECORD. CS WON THE ELECTION!!`,
+const diamondEmptyMessages = () => [
+  `히잉.... <@${csGod}>님이 오늘 다이아를 안 푸셔서 슬랙봇 마음이 너무 아파요... 내일은 꼭 다이아 풀어주시는 거죠? ${emoji('sob')} ${emoji('sob')} ${emoji('sob')} ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
+  `<@${csGod}>님은 유모차세요? 어쩜 오늘도 다이아를 안 풀어서 저를 이렇게 '애타게' 만드세요..`,
+  `<@${csGod}>님의 PS실력을 구경하다가 여름이 가버렸어요... '더 위'가 없어서...... 코로나가 끝날 때쯤이면 cs님의 루비 학살을 볼 수 있겠죠..?`,
+  `헉.. 대박.... <@${csGod}>님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????`,
 ];
 
-const diamondEmptyMessage = () => [
-  `히잉.... cs님이 오늘 다이아를 안 푸셔서 슬랙봇 마음이 너무 아파요... 내일은 꼭 다이아 풀어주시는 거죠? ${emoji('sob')} ${emoji('sob')} ${emoji('sob')} ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
-  'cs님은 유모차세요? 어쩜 오늘도 다이아를 안 풀어서 저를 이렇게 \'애타게\' 만드세요..',
-  'cs님의 PS실력을 구경하다가 여름이 가버렸어요... \'더 위\'가 없어서...... 코로나가 끝날 때쯤이면 cs님의 루비 학살을 볼 수 있겠죠..?',
-//    `헉.. 대박.... cs님이 저번에 MBTI 검사했을 때 RUBY 나오셨다면서요???? 얼마 안 있어 cs님의 루비 학살쇼를 볼 수 있겠죠???????`,
-];
+const emptyMessages = () => [
+  emoji(`<@${csGod}>`).repeat(23),
+  `없었습니다!!!! :tada: :tada: :tada: 오늘 <@${csGod}>님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:`,
+  `저 오늘 우체국 가서 싸우고 왔어요... <@${csGod}>님의 PS 실력을 박스에 담아서 부치려고 했더니 그렇게 큰 박스는 없다는 거 있죠....... 내일은 실력 보여주실 수 있으시죠? ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
+].concat(...diamondEmptyMessages());
 
 function randomChoice<Type>(array: Type[]) {
   return array[Math.floor(Math.random() * array.length)];
@@ -28,10 +27,14 @@ const dailyProblem = async () => {
   const currentHistory = await getCurrentHistory();
 
   const todayRemove = history.filter((history) => !currentHistory.find((id) => history.id === id));
-  const todayAdd = await Promise.all(currentHistory.filter((id) => !history.find((history) => history.id === id)).map((id) => getProblemInfo(id)));
+  const todayAdd = await Promise.all(
+    currentHistory
+      .filter((id) => !history.find((history) => history.id === id))
+      .map((id) => getProblemInfo(id)),
+  );
 
-  await Promise.all(todayRemove.map(async (history) => await removeHistory(history.id)));
-  await Promise.all(todayAdd.map(async (history) => await addHistory({
+  await Promise.all(todayRemove.map(async (history) => removeHistory(history.id)));
+  await Promise.all(todayAdd.map(async (history) => addHistory({
     id: history.id,
     title: history.title,
     source: history.source,
@@ -59,13 +62,13 @@ const dailyProblem = async () => {
 
     if (todayAdd.length === 0) {
       await postMessage({
-        text: randomChoice(emptyMessage().concat(diamondEmptyMessage())),
+        text: randomChoice(emptyMessages().concat(diamondEmptyMessages())),
         channel: cstodoChannel,
         icon_emoji: emoji('sob'),
       });
     } else if (diamonds.length === 0 && rubys.length === 0) {
       await postMessage({
-        text: randomChoice(diamondEmptyMessage()),
+        text: randomChoice(diamondEmptyMessages()),
         channel: cstodoChannel,
         icon_emoji: emoji('sob'),
       });

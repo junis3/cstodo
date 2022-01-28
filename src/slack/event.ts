@@ -1,4 +1,3 @@
-
 export interface SlackMessageEvent {
     type: 'message';
     channel: string;

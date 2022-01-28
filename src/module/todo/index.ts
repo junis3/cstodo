@@ -18,37 +18,34 @@ import { SlackMessageEvent } from '../../slack/event';
 import { MessageRouter } from '../router';
 
 const isQualified = (event: SlackMessageEvent, user: UserType) => {
-  
-    const isUserQualified = (() => {
-        if (user.userControl === 'whitelist') {
-            if (!user.userWhitelist) return false;
-            // FIXME : give authority to users
-            else if (event.user === 'UV8DYMMV5' || event.user == 'UV6HYQD3J') return true;
-            else return user.userWhitelist.find((user) => user === event.user) !== undefined;
-        } else {
-            if (!user.userBlacklist) return true;
-            else return user.userBlacklist.find((user) => user === event.user) === undefined;
-        }
-    })();
+  const isUserQualified = (() => {
+    if (user.userControl === 'whitelist') {
+      if (!user.userWhitelist) return false;
+      // FIXME : give authority to users
+      if (event.user === 'UV8DYMMV5' || event.user == 'UV6HYQD3J') return true;
+      return user.userWhitelist.find((user) => user === event.user) !== undefined;
+    }
+    if (!user.userBlacklist) return true;
+    return user.userBlacklist.find((user) => user === event.user) === undefined;
+  })();
 
-    const isChannelQualified = (() => {
-        if (user.channelControl === 'whitelist') {
-            if (!user.channelWhitelist) return false;
-            else return user.channelWhitelist.find((channel) => channel === event.channel) !== undefined;
-        } else {
-            if (!user.channelBlacklist) return true;
-            else return user.channelBlacklist.find((channel) => channel === event.channel) === undefined;
-        }
-    })();
+  const isChannelQualified = (() => {
+    if (user.channelControl === 'whitelist') {
+      if (!user.channelWhitelist) return false;
+      return user.channelWhitelist.find((channel) => channel === event.channel) !== undefined;
+    }
+    if (!user.channelBlacklist) return true;
+    return user.channelBlacklist.find((channel) => channel === event.channel) === undefined;
+  })();
 
-    return isUserQualified && isChannelQualified;
-}
+  return isUserQualified && isChannelQualified;
+};
 
 const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
   const attack = isAttack(event);
   if (attack) return [attack];
 
-  const text : string = event.text;
+  const { text } = event;
   const tokens = text.split(' ').map((token) => token.trim());
   const query = parseQuery(tokens.slice(1).join(' '));
 
@@ -96,28 +93,28 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
   // CRUD operations
 
   if (query.command[0] === 'edit' || query.command[0] === 'update') {
-    let x = await onTodoEdit({ query, event, user });
-    let y = await onTodoAll({ query, event, user });
+    const x = await onTodoEdit({ query, event, user });
+    const y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
     return [x, y];
   }
-  
+
   if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') {
-    let x = await onTodoAdd({ query, event, user });
-    let y = await onTodoAll({ query, event, user });
+    const x = await onTodoAdd({ query, event, user });
+    const y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
     return [x, y];
   }
 
   if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') {
-    let x = await onTodoRemove({ query, event, user });
-    let y = await onTodoAll({ query, event, user });
+    const x = await onTodoRemove({ query, event, user });
+    const y = await onTodoAll({ query, event, user });
     while (await onTodoOverflow(query, event, user));
     return [x, y];
   }
 
   await addEmoji(event.ts, event.channel, 'sad');
   return [];
-}
+};
 
 export default onTodo;

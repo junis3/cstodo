@@ -1,9 +1,8 @@
-
 interface StringMap {
   [key: string]: string;
 }
 interface NestedStringMap {
-  [key: string]: StringMap; 
+  [key: string]: StringMap;
 }
 
 const EmojiMap: NestedStringMap = {
@@ -44,28 +43,28 @@ const EmojiMap: NestedStringMap = {
     weeb: ':weebyay:',
   },
   sob: {
-      blob: ':blobsob:',
-      weeb: ':weebcry2:',
+    blob: ':blobsob:',
+    weeb: ':weebcry2:',
   },
   cry: {
-      blob: ':blobcry:',
-      weeb: ':weebcry:',
+    blob: ':blobcry:',
+    weeb: ':weebcry:',
   },
   hug: {
-      blob: ':blobhug:',
-      weeb: ':weebyay2:',
+    blob: ':blobhug:',
+    weeb: ':weebyay2:',
   },
   aww: {
-      blob: ':blobaww:',
-      weeb: ':weebsugoi:'
+    blob: ':blobaww:',
+    weeb: ':weebsugoi:',
   },
   communism: {
-      blob: ':blobcommunism:',
-      weeb: ':hammer_and_sickle:'
+    blob: ':blobcommunism:',
+    weeb: ':hammer_and_sickle:',
   },
   go: {
-      mark: ':blobimfine:',
-      marx: ':blobcommunism:',
+    mark: ':blobimfine:',
+    marx: ':blobcommunism:',
   },
 
   bar_ready: {
@@ -83,12 +82,10 @@ const EmojiMap: NestedStringMap = {
   hw: {
     blob: ':blobmath:',
     weeb: ':weebehh:',
-  }
+  },
 };
 
-export const emoji = (name: string = '', theme = 'blob') => {
-  return EmojiMap[name][theme] || ':시신:';
-}
+export const emoji = (name: string = '', theme = 'blob') => EmojiMap[name][theme] || ':시신:';
 
 const MessageMap : NestedStringMap = {
   go: {
@@ -97,6 +94,4 @@ const MessageMap : NestedStringMap = {
   },
 };
 
-export const message = (name: string = '', theme: string) => {
-  return MessageMap[name][theme] || ':시신:';
-}
+export const message = (name: string = '', theme: string) => MessageMap[name][theme] || ':시신:';

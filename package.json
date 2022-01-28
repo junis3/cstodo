@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "npx ts-node ./src/index.ts",
-    "watch": "nodemon --exec ts-node ./src/index.ts"
+    "watch": "nodemon --exec ts-node ./src/index.ts",
+    "lint": "yarn eslint ./src --ext .ts --fix"
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +35,12 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.3",
     "jest": "^27.2.5",
     "ts-jest": "^27.0.7"
   }

@@ -1,7 +1,11 @@
 import { getUser, UserType } from '../../database/user';
-import { addCstodo, CstodoType, editCstodo, getCstodos } from '../../database/cstodo';
+import {
+  addCstodo, CstodoType, editCstodo, getCstodos,
+} from '../../database/cstodo';
 import { emoji } from '../../etc/theme';
-import { ForceMuteType, replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
+import {
+  ForceMuteType, replyDdokddul, replyFail, replySuccess,
+} from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
@@ -10,14 +14,14 @@ import { SlackMessageEvent } from '../../slack/event';
 import { TodoRouter } from '../router';
 
 const isInteger = (s: string) => {
-  for (let c of s.split('')) {
+  for (const c of s.split('')) {
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].find((x) => x === c) === undefined) return false;
   }
   return true;
-}
+};
 
 const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } }) => {
-  let todo = await getCstodos(user.id);
+  const todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
@@ -27,7 +31,7 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyDdokddul(event, user, `제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...`);
+      await replyDdokddul(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
       return [];
     }
     newDue = time;
@@ -45,7 +49,7 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`)
+    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`);
     return [];
   }
 
@@ -55,11 +59,10 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
 
   if (typeof userArg === 'string') {
     if (newDue || newContent) {
-      await replyDdokddul(event, user, `저는 똑떨이에요...`)
+      await replyDdokddul(event, user, '저는 똑떨이에요...');
       return [];
-    } else {
-      newUser = await getUser(userArg) || newUser;
     }
+    newUser = await getUser(userArg) || newUser;
   }
 
   const change: Partial<CstodoType> = { due: newDue, content: newContent, owner: newUser.id };
@@ -71,36 +74,34 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
 
   if (newDue) changeString += `마감 시한을 ${timeToString(newDue)}까지로, `;
   if (newContent) changeString += `내용을 *${newContent}* 로, `;
-  if (newUser.id !== user.id) changeString += `주인을 ${newUser.command}로, `
+  if (newUser.id !== user.id) changeString += `주인을 ${newUser.command}로, `;
 
   if (changeString.length === 0) {
-    await replyDdokddul(event, user, `바꿀 게 없어서 똑떨이에요...`);
+    await replyDdokddul(event, user, '바꿀 게 없어서 똑떨이에요...');
     return [];
   }
 
   changeString = changeString.slice(0, changeString.length - 2);
 
   if (command.length === 1) {
-    await replyDdokddul(event, user, `edit 쿼리에 인자가 없으면 똑떨이에요...`)
+    await replyDdokddul(event, user, 'edit 쿼리에 인자가 없으면 똑떨이에요...');
     return [];
-  } 
-
+  }
 
   let content = command.slice(1).join(' ').trim();
 
   if (!isInteger(content)) {
-    await replyDdokddul(event, user, `할 일을 수정할 때엔 수정할 일의 번호를 주셔야 해요...`)
+    await replyDdokddul(event, user, '할 일을 수정할 때엔 수정할 일의 번호를 주셔야 해요...');
     return [];
-  } else {
-    let x = Number.parseInt(content);
-
-    if (x <= 0 || x > todo.length) {
-      await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`)
-      return [];
-    }
-    
-    content = todo[x-1].content;
   }
+  const x = Number.parseInt(content);
+
+  if (x <= 0 || x > todo.length) {
+    await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`);
+    return [];
+  }
+
+  content = todo[x - 1].content;
 
   if (await editCstodo(content, change)) {
     await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', { forceMuteType: ForceMuteType.Unmute });
@@ -109,6 +110,6 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   }
 
   return [];
-}
+};
 
 export default onTodoEdit;

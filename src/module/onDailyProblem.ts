@@ -13,7 +13,7 @@ const diamondEmptyMessages = () => [
 ];
 
 const emptyMessages = () => [
-  emoji(`<@${csGod}>`).repeat(23),
+  `<@${csGod}>`.repeat(23),
   `없었습니다!!!! :tada: :tada: :tada: 오늘 <@${csGod}>님은 BOJ에서 문제를 풀지 않으셨습니다!!!! :tada: :tada: :tada:`,
   `저 오늘 우체국 가서 싸우고 왔어요... <@${csGod}>님의 PS 실력을 박스에 담아서 부치려고 했더니 그렇게 큰 박스는 없다는 거 있죠....... 내일은 실력 보여주실 수 있으시죠? ${emoji('cry')} ${emoji('hug')} ${emoji('cs')}`,
 ].concat(...diamondEmptyMessages());

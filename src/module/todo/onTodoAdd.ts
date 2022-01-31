@@ -12,7 +12,9 @@ const isSlackDecoration = (text: string) => {
 
 const MAX_LENGTH = 200;
 
-const isQueryValid = (text: string) => text.length > 0 && text.length <= MAX_LENGTH && !isSlackDecoration(text);
+const isQueryValid = (text: string) => text.length > 0
+  && text.length <= MAX_LENGTH
+  && !isSlackDecoration(text);
 
 const isContentValid = (content: string) => {
   if (!isQueryValid(content)) {
@@ -29,22 +31,24 @@ const onTodoAdd: TodoRouter = async ({ event, user, query: { command, args } }) 
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
-  let _due = 0;
-  if (!dueArg) {
-    _due = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 6).getTime();
-  } else if (typeof dueArg === 'string') {
+  let due = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate() + 1,
+    6,
+  ).getTime();
+
+  if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
       await replyDdokddul(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
       return [];
     }
-    _due = time;
-  } else {
+    due = time;
+  } else if (dueArg) {
     await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
     return [];
   }
-
-  const due = _due;
 
   const content = preprocessContent(command.slice(1).join(' ').trim());
 

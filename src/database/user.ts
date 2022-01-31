@@ -1,6 +1,4 @@
 import { model, Schema, Document } from 'mongoose';
-import { addAlarm } from './alarm';
-import { getCstodos } from './cstodo';
 
 export const themeList = ['weeb', 'blob'] as const;
 export type ThemeType = typeof themeList[number];
@@ -11,33 +9,33 @@ export type ControlType = typeof controlList[number];
 export const useFeatureList = ['always', 'optional', 'never'] as const;
 export type UseFeatureType = typeof useFeatureList[number];
 
-export function isThemeType(str: string) : str is ThemeType {
+export function isThemeType(str: string): str is ThemeType {
   return themeList.find((value) => value === str) !== undefined;
 }
 
 export interface UserType {
-    id: string;
-    name: string;
-    command: string;
-    owner?: string;
-    home?: string;
-    taskType: 'todo' | 'bar';
-    userControl: ControlType;
-    userWhitelist?: string[];
-    userBlacklist?: string[];
-    channelControl: ControlType;
-    channelWhitelist?: string[];
-    channelBlacklist?: string[];
-    useDue: UseFeatureType;
-    usePriority: UseFeatureType;
-    useBar: UseFeatureType;
-    useAlarm: UseFeatureType;
-    autoRemove: boolean;
-    muted: boolean;
-    theme: ThemeType;
-    bojHandle?: string;
-    hwQuery?: string;
-    numProbsPerCycle?: number;
+  id: string;
+  name: string;
+  command: string;
+  owner?: string;
+  home?: string;
+  taskType: 'todo' | 'bar';
+  userControl: ControlType;
+  userWhitelist?: string[];
+  userBlacklist?: string[];
+  channelControl: ControlType;
+  channelWhitelist?: string[];
+  channelBlacklist?: string[];
+  useDue: UseFeatureType;
+  usePriority: UseFeatureType;
+  useBar: UseFeatureType;
+  useAlarm: UseFeatureType;
+  autoRemove: boolean;
+  muted: boolean;
+  theme: ThemeType;
+  bojHandle?: string;
+  hwQuery?: string;
+  numProbsPerCycle?: number;
 }
 
 export type UserDocument = Document & UserType;
@@ -77,7 +75,10 @@ export const getUser = async (command: string) => {
   return undefined;
 };
 
-export const getAllUsers = async () => (await User.find({ })).map((userDocument) => userDocument.toObject() as UserType);
+export const getAllUsers = async () => {
+  const result = await User.find({});
+  return result.map((userDocument) => userDocument.toObject() as UserType);
+};
 
 export const setOwner = async (command: string, owner: string) => {
   await User.findOneAndUpdate({ command }, { owner }, { useFindAndModify: true });
@@ -112,8 +113,8 @@ export const setUseBar = async (command: string, useBar: UseFeatureType) => {
 };
 
 export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => {
-//    const user = await User.findOne({ command });
-//    if (!user) return;
+  //    const user = await User.findOne({ command });
+  //    if (!user) return;
 
   //    const oriUseAlarm = user.useAlarm;
   await User.findOneAndUpdate({ command }, { useAlarm }, { useFindAndModify: true });

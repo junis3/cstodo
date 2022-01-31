@@ -1,11 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 import { ChatPostMessageArguments } from '@slack/web-api';
 import { SlackCommand, webClient } from './command';
-import { UserType } from '../database/user';
 import { SlackMessageEvent } from './event';
 import { addEmoji } from '../etc/postMessage';
 
 export interface SlackReplyOptions {
-    muted?: boolean;
+  muted?: boolean;
 }
 
 export class SlackReplyCommand implements SlackCommand {
@@ -39,7 +39,11 @@ export class SlackReplyCommand implements SlackCommand {
     return this._ts;
   }
 
-  constructor(event: SlackMessageEvent, props: ChatPostMessageArguments, options?: SlackReplyOptions) {
+  constructor(
+    event: SlackMessageEvent,
+    props: ChatPostMessageArguments,
+    options?: SlackReplyOptions,
+  ) {
     this._props = props;
     this._muted = options?.muted ?? false;
 

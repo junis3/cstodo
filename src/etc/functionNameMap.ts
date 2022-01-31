@@ -6,14 +6,14 @@ import checkAllTodoAlarms from './checkAllTodoAlarms';
 const cstodoTestChannel = 'C01JER4T7AN';
 
 interface FunctionNameData {
-    name: string;
-    callback: (fireDate: Date, ...params: string[]) => void;
+  name: string;
+  callback: (fireDate: Date, ...params: string[]) => void;
 }
 
 export const functionNameMap: FunctionNameData[] = [
   {
     name: 'test',
-    callback: async (fireDate, ...params) => {
+    callback: async (fireDate) => {
       await webClient.chat.postMessage({
         text: `현재 시간: ${fireDate}. 이 메시지는 25초마다 한 번씩 발송됩니다.`,
         icon_emoji: ':cs71107:',

@@ -12,6 +12,7 @@ import { runCommands, webClient } from './slack/command';
 import { SlackMessageEvent } from './slack/event';
 
 if (logWebhook) {
+  // eslint-disable-next-line global-require
   const consoleToSlack = require('console-to-slack');
   consoleToSlack.init(logWebhook, 2);
   consoleToSlack.init(logWebhook, 3);
@@ -21,13 +22,16 @@ mongoose.connect(mongodbUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-}).then((res) => {
+}).then(() => {
+  // eslint-disable-next-line no-console
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
 }).catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(`Failed to connect to ${mongoose.connection.host}`);
   throw err;
 });
 
+// eslint-disable-next-line import/prefer-default-export
 export const slackEvents = createEventAdapter(signingSecret);
 
 (async () => {
@@ -57,4 +61,5 @@ if (isTesting) onTest();
 const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
+// eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Running slackbot on port ${port}.`));

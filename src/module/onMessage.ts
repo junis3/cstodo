@@ -1,32 +1,28 @@
-import {
-  csGod, cstodoChannel, cstodoTestChannel, isTesting,
-} from '../config';
-// import onEcho from './echo';
+import { csGod, cstodoChannel, cstodoTestChannel } from '../config';
 import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
 import onYourMark from './yourMark';
 import { getUser } from '../database/user';
-import { webClient, runCommands } from '../slack/command';
+import { webClient } from '../slack/command';
 import { emoji } from '../etc/theme';
-import { replyMessage } from '../etc/postMessage';
 import { addMessage } from '../database/message';
-import { SlackMessageEvent } from '../slack/event';
 import { MessageRouter } from './router';
 import { SlackReplyCommand } from '../slack/replyMessage';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
+// eslint-disable-next-line no-unused-vars
 let lastUser: string;
 let nowUser: string;
 
 const onMessage: MessageRouter = async ({ event }) => {
   if (Number(event.ts) < turnOnTimestamp) return [];
-  //    if (isTesting && event.channel !== cstodoTestChannel) return;
   if (!event.text || !event.user) return [];
   if (event.thread_ts) return [];
 
-  if (nowUser != event.user) {
+  if (nowUser !== event.user) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     lastUser = nowUser;
     nowUser = event.user;
   }
@@ -39,16 +35,22 @@ const onMessage: MessageRouter = async ({ event }) => {
   const command = tokens[0].toLowerCase();
 
   // Special commands
-  if (event.channel === cstodoTestChannel && command === 'restart' && (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5')) {
-    process.exit();
+
+  if (event.channel === cstodoTestChannel) {
+    if (command === 'restart' && (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5')) {
+      process.exit();
+    }
   }
+
   // if (command === 'echo' && tokens.length > 1) {
+  // eslint-disable-next-line max-len
   //   if (tokens.length < 5 || !([0, 1, 2, 3, 4].every((i) => tokens[i].toLowerCase() === 'echo'))) {
   //     await runCommands(onEcho(event));
   //   }
   // }
-  else if (command === 'code' && tokens.length > 1) return onCode({ event });
-  else if (command === 'on') return onYourMark({ event });
+
+  if (command === 'code' && tokens.length > 1) return onCode({ event });
+  if (command === 'on') return onYourMark({ event });
 
   // Todo commands
   const user = await getUser(command);

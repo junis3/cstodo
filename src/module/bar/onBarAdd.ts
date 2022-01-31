@@ -5,7 +5,7 @@ import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { addBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 
 const isSlackDecoration = (text: string) => {
   const match = text.match(/[~_]+/);

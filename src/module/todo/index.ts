@@ -14,7 +14,7 @@ import parseQuery from '../../etc/parseQuery';
 import isAttack from '../isAttack';
 import { isThemeType, UserType } from '../../database/user';
 import { addEmoji } from '../../etc/postMessage';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 import { MessageRouter } from '../router';
 
 const isQualified = (event: SlackMessageEvent, user: UserType) => {

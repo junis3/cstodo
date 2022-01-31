@@ -4,11 +4,11 @@ import onTodo from './todo';
 import onBar from './bar';
 import onYourMark from './yourMark';
 import { getUser } from '../database/user';
-import { webClient } from '../slack/command';
+import { webClient } from '../command';
 import { emoji } from '../etc/theme';
 import { addMessage } from '../database/message';
 import { MessageRouter } from './router';
-import { SlackReplyCommand } from '../slack/replyMessage';
+import { SlackReplyCommand } from '../command/replyMessage';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 

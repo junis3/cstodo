@@ -2,7 +2,7 @@ import { UserType } from '../../database/user';
 import { getCstodos, removeCstodo } from '../../database/cstodo';
 import { replyMessage } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 
 const onTodoOverflow = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
   const cstodo = await getCstodos(user.id);

@@ -1,8 +1,7 @@
 import { emoji, message } from '../../etc/theme';
-import { replyMessage } from '../../etc/postMessage';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
-import { SlackReplyCommand } from '../../slack/replyMessage';
+import { SlackReplyCommand } from '../../command/replyMessage';
 
 const onYourMark: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);

@@ -1,13 +1,13 @@
 import { ChatPostMessageArguments } from '@slack/web-api';
 import { UserType } from '../../database/user';
 import { emoji } from '../../etc/theme';
-import { SlackMessageEvent } from '../../slack/event';
-import { SlackReplyCommand } from '../../slack/replyMessage';
+import { SlackMessageEvent } from '../../command/event';
+import { SlackReplyCommand } from '../../command/replyMessage';
 
 type ForceMuteType = 'mute' | 'unmute';
 
 interface TodoReplyOptions {
-    forceMute?: ForceMuteType;
+  forceMute?: ForceMuteType;
 }
 
 export class TodoReplyCommand extends SlackReplyCommand {
@@ -22,7 +22,7 @@ export class TodoReplyCommand extends SlackReplyCommand {
 }
 
 interface SuccessfulTodoReplyOptions extends TodoReplyOptions {
-    iconEmoji?: string;
+  iconEmoji?: string;
 }
 
 export class SuccessfulTodoReplyCommand extends TodoReplyCommand {

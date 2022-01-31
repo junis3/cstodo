@@ -8,8 +8,8 @@ import {
 import onMessage from './module/onMessage';
 import onTest from './module/onTest';
 import { initiateAlarms } from './database/alarm';
-import { runCommands, webClient } from './slack/command';
-import { SlackMessageEvent } from './slack/event';
+import { runCommands, webClient } from './command';
+import { SlackMessageEvent } from './command/event';
 
 if (logWebhook) {
   // eslint-disable-next-line global-require

@@ -3,8 +3,8 @@ import { accessToken } from '../config';
 
 export const webClient = new WebClient(accessToken);
 
-export interface SlackCommand {
-    exec(): Promise<void>;
+export interface Command {
+  exec(): Promise<void>;
 }
 
 export type ArrayPile<T> = T | ArrayPile<T>[];
@@ -14,6 +14,10 @@ export function depile<T>(pile: ArrayPile<T>): T[] {
   return [pile];
 }
 
-export async function runCommands(commands: ArrayPile<SlackCommand>): Promise<void> {
-  await Promise.all(depile(commands).map((c) => c.exec()));
+export async function runCommands(commands: ArrayPile<Command>): Promise<void> {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const command of depile(commands)) {
+    // eslint-disable-next-line no-await-in-loop
+    await command.exec();
+  }
 }

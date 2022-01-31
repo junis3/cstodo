@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import { ChatPostMessageArguments } from '@slack/web-api';
-import { SlackCommand, webClient } from './command';
+import { Command, webClient } from '.';
 
 // eslint-disable-next-line import/prefer-default-export
-export class SlackPostMessageCommand implements SlackCommand {
+export class SlackPostMessageCommand implements Command {
   private _props: ChatPostMessageArguments;
 
   public get props() {

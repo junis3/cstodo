@@ -5,7 +5,7 @@ import { QueryType } from '../../etc/parseQuery';
 import { formatBar } from './barFormatter';
 import { replyMessage, replySuccess } from '../../etc/postMessage';
 import { emoji } from '../../etc/theme';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 
 const bulletEmoji = [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:'];
 
@@ -18,7 +18,7 @@ const onBarDefault = async (query: QueryType, event: SlackMessageEvent, user: Us
       {
         type: 'section',
         fields: [{ type: 'mrkdwn', text: `*${k + 1}. ${bar.content}*` },
-          { type: 'mrkdwn', text: `${formatBar(bar, user)}` }],
+        { type: 'mrkdwn', text: `${formatBar(bar, user)}` }],
       }
     ));
     if (bars.length < allBars.length) {

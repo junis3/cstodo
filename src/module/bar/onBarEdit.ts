@@ -7,7 +7,7 @@ import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { BarType, editBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 
 const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   const bars = await getBars(user.id);
@@ -49,7 +49,7 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
 
   const contentArg = getArg(['--content', '-c'], args);
 
-  let newContent : string | undefined;
+  let newContent: string | undefined;
 
   if (!contentArg) {
     newContent = undefined;

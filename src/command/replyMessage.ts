@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { ChatPostMessageArguments } from '@slack/web-api';
-import { SlackCommand, webClient } from './command';
+import { Command, webClient } from '.';
 import { SlackMessageEvent } from './event';
 import { addEmoji } from '../etc/postMessage';
 
@@ -8,7 +8,7 @@ export interface SlackReplyOptions {
   muted?: boolean;
 }
 
-export class SlackReplyCommand implements SlackCommand {
+export class SlackReplyCommand implements Command {
   private _props: ChatPostMessageArguments;
 
   private _muted: boolean;

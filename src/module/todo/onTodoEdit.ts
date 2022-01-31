@@ -10,7 +10,7 @@ import { getArg, QueryType } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 import { TodoRouter } from '../router';
 
 const isInteger = (s: string) => {
@@ -42,7 +42,7 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
 
   const contentArg = getArg(['--content', '-c'], args);
 
-  let newContent : string | undefined;
+  let newContent: string | undefined;
 
   if (!contentArg) {
     newContent = undefined;

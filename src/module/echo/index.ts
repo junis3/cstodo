@@ -1,4 +1,4 @@
-import { SlackReplyCommand } from '../../command/replyMessage';
+import { ReplyMessageCommand } from '../../command/replyMessage';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
 
@@ -16,7 +16,7 @@ const onEcho: MessageRouter = ({ event }) => {
 
   const query = preprocessQuery(tokens.slice(1).join(' '));
 
-  return new SlackReplyCommand(event, {
+  return new ReplyMessageCommand(event, {
     text: query,
     channel: event.channel,
     thread_ts: event.thread_ts,

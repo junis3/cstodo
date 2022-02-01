@@ -12,22 +12,21 @@ export interface ReplyMessageOptions {
 export class ReplyMessageCommand extends JoinCommand {
   constructor(
     event: SlackMessageEvent,
-    props: ChatPostMessageArguments,
+    args: ChatPostMessageArguments,
     options?: ReplyMessageOptions,
   ) {
     const { channel, user, ts: timestamp } = event;
-    const { text } = props;
 
     const muted = options?.muted ?? false;
 
     if (muted) {
       super(
-        new PostEphemeralCommand({ channel, text, user }),
+        new PostEphemeralCommand({ ...args, channel, user }),
         new AddReactionCommand({ name: 'blobokhand', timestamp, channel }),
       );
     } else {
       super(
-        new PostMessageCommand({ channel, text }),
+        new PostMessageCommand({ ...args, channel }),
       );
     }
   }

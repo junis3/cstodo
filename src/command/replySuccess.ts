@@ -42,7 +42,7 @@ export class ReplySuccessCommand extends JoinCommand {
           user: event.user,
         }),
         new AddReactionCommand({
-          name: ':blobokhand:',
+          name: 'blobokhand',
           timestamp: event.ts,
           channel: event.channel,
         }),

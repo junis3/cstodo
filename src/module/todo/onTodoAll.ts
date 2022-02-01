@@ -1,9 +1,7 @@
 import { getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
-import { replySuccess } from '../../etc/postMessage';
 import timeToString from '../../etc/timeToString';
 import { TodoRouter } from '../router';
-import { TodoReplyCommand } from './reply';
+import { ReplySuccessCommand } from '../../command/replySuccess';
 
 const onTodoAll: TodoRouter = async ({ event, user }) => {
   const cstodo = await getCstodos(user.id);
@@ -12,24 +10,15 @@ const onTodoAll: TodoRouter = async ({ event, user }) => {
     const blocks = cstodo.map((todo, k) => (
       {
         type: 'section',
-        fields: [{ type: 'mrkdwn', text: `*${k + 1}. ${todo.content}*` },
-          { type: 'mrkdwn', text: `${timeToString(todo.due)}` }],
+        fields: [
+          { type: 'mrkdwn', text: `*${k + 1}. ${todo.content}*` },
+          { type: 'mrkdwn', text: `${timeToString(todo.due)}` },
+        ],
       }
     ));
-    return new TodoReplyCommand(event, user, {
-      text: '',
-      attachments: [{
-        blocks,
-        color: 'good',
-      }],
-      channel: event.channel,
-      icon_emoji: emoji('aww', user.theme),
-      username: `${user.name}님의 비서`,
-    });
+    return new ReplySuccessCommand(event, user, blocks, { iconEmoji: 'aww' });
   }
-  await replySuccess(event, user, `${user.name}님의 진행중인 일이 없습니다!`, 'add');
-
-  return [];
+  return new ReplySuccessCommand(event, user, `${user.name}님의 진행중인 일이 없습니다!`, { iconEmoji: 'add' });
 };
 
 export default onTodoAll;

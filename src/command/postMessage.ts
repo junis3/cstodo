@@ -1,17 +1,12 @@
-/* eslint-disable no-underscore-dangle */
 import { ChatPostMessageArguments } from '@slack/web-api';
 import { Command, webClient } from '.';
 
 // eslint-disable-next-line import/prefer-default-export
-export class SlackPostMessageCommand implements Command {
-  private _props: ChatPostMessageArguments;
-
-  public get props() {
-    return this._props;
-  }
+export class PostMessageCommand implements Command {
+  private props: ChatPostMessageArguments;
 
   constructor(props: ChatPostMessageArguments) {
-    this._props = props;
+    this.props = props;
   }
 
   public async exec(): Promise<void> {

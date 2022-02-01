@@ -6,9 +6,10 @@ import onYourMark from './yourMark';
 import { getUser } from '../database/user';
 import { webClient } from '../command';
 import { emoji } from '../etc/theme';
-import { addMessage } from '../database/message';
 import { MessageRouter } from './router';
-import { SlackReplyCommand } from '../command/replyMessage';
+import { ReplyMessageCommand } from '../command/replyMessage';
+import { ShutdownCommand } from '../command/shutdown';
+import { ReplyFailureCommand } from '../command/replyFailure';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -37,8 +38,19 @@ const onMessage: MessageRouter = async ({ event }) => {
   // Special commands
 
   if (event.channel === cstodoTestChannel) {
-    if (command === 'restart' && (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5')) {
-      process.exit();
+    if (command === 'restart') {
+      if (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5') {
+        return [
+          new ReplyMessageCommand(event, {
+            text: `안녕히 계세요 여러분!
+전 이 세상의 모든 굴레와 속박을 벗어 던지고 제 행복을 찾아 떠납니다!
+여러분도 행복하세요~~!`,
+            channel: event.channel,
+          }),
+          new ShutdownCommand(),
+        ];
+      }
+      return new ReplyFailureCommand(event);
     }
   }
 
@@ -67,7 +79,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   const blobawwFired = Math.random() < percentage;
 
-  addMessage({ event, blobawwFired });
+  //  addMessage({ event, blobawwFired });
 
   if (blobawwFired) {
     const profileResult = await webClient.users.profile.get({
@@ -80,7 +92,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
     const profile = _profile as any;
 
-    return new SlackReplyCommand(event, {
+    return new ReplyMessageCommand(event, {
       text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
       channel: event.channel,
       icon_url: profile.image_512,

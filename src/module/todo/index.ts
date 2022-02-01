@@ -22,7 +22,7 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
     if (user.userControl === 'whitelist') {
       if (!user.userWhitelist) return false;
       // FIXME : give authority to users
-      if (event.user === 'UV8DYMMV5' || event.user == 'UV6HYQD3J') return true;
+      if (event.user === 'UV8DYMMV5' || event.user === 'UV6HYQD3J') return true;
       return user.userWhitelist.find((user) => user === event.user) !== undefined;
     }
     if (!user.userBlacklist) return true;
@@ -86,7 +86,7 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
     return onTodoSet({ query, event, user });
   }
 
-  if (query.command[0] == 'hw' || query.command[0] == 'homework') {
+  if (query.command[0] === 'hw' || query.command[0] === 'homework') {
     return onTodoHW({ query, event, user });
   }
 

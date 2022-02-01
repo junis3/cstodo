@@ -21,3 +21,15 @@ export async function runCommands(commands: ArrayPile<Command>): Promise<void> {
     await command.exec();
   }
 }
+
+export class JoinCommand implements Command {
+  commands: Command[];
+
+  constructor(...commands: Command[]) {
+    this.commands = commands;
+  }
+
+  public async exec(): Promise<void> {
+    await Promise.all(this.commands.map((command) => command.exec()));
+  }
+}

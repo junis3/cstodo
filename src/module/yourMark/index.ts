@@ -1,7 +1,7 @@
 import { emoji, message } from '../../etc/theme';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
-import { SlackReplyCommand } from '../../command/replyMessage';
+import { ReplyMessageCommand } from '../../command/replyMessage';
 
 const onYourMark: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);
@@ -10,7 +10,7 @@ const onYourMark: MessageRouter = async ({ event }) => {
   const { text } = event;
 
   if (text.slice(0, 12).toLowerCase() === 'on your mark') {
-    return new SlackReplyCommand(event, {
+    return new ReplyMessageCommand(event, {
       text: message('go', 'mark'),
       channel: event.channel,
       icon_emoji: emoji('go', 'mark'),
@@ -19,7 +19,7 @@ const onYourMark: MessageRouter = async ({ event }) => {
   }
 
   if (text.slice(0, 12).toLowerCase() === 'on your marx') {
-    return new SlackReplyCommand(event, {
+    return new ReplyMessageCommand(event, {
       text: message('go', 'marx'),
       channel: event.channel,
       icon_emoji: emoji('go', 'marx'),

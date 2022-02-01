@@ -9,7 +9,7 @@ import { emoji } from '../etc/theme';
 export class ReplyFailureCommand extends JoinCommand {
   constructor(event: SlackMessageEvent, user?: UserType, message?: string) {
     const addReactionCommand = new AddReactionCommand({
-      name: ':sad:',
+      name: 'sad',
       timestamp: event.ts,
       channel: event.channel,
     });

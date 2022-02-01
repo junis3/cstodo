@@ -23,7 +23,7 @@ export class ReplyMessageCommand extends JoinCommand {
     if (muted) {
       super(
         new PostEphemeralCommand({ channel, text, user }),
-        new AddReactionCommand({ name: ':blobokhand:', timestamp, channel }),
+        new AddReactionCommand({ name: 'blobokhand', timestamp, channel }),
       );
     } else {
       super(

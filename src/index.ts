@@ -22,6 +22,7 @@ mongoose.connect(mongodbUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModify: false,
 }).then(() => {
   // eslint-disable-next-line no-console
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);

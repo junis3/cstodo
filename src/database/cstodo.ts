@@ -54,14 +54,14 @@ export const addCstodo = async (cstodo: Partial<CstodoType>) => {
 };
 
 export const editCstodo = async (content: string, change: Partial<CstodoType>) => {
-  const result = await Cstodo.findOneAndUpdate({ content }, change, { useFindAndModify: true });
+  const result = await Cstodo.findOneAndUpdate({ content }, change);
   return result;
 };
 
 export const removeCstodo = async (cstodo: Partial<CstodoType>) => {
   if (!cstodo.owner || !cstodo.content) return false;
 
-  const result = await Cstodo.findOneAndDelete(cstodo, { useFindAndModify: true });
+  const result = await Cstodo.findOneAndDelete(cstodo);
   return result;
 };
 
@@ -80,5 +80,5 @@ export const updateCstodo = async (content: string, cstodo: Partial<CstodoType>)
       ...cstodo,
       updatedAt: new Date().getTime(),
     },
-  }, { useFindAndModify: true });
+  });
 };

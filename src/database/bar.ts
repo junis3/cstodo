@@ -51,14 +51,14 @@ export const addBar = async (bar: Partial<BarType>) => {
 };
 
 export const editBar = async (content: string, change: Partial<BarType>) => {
-  const result = await BarModel.findOneAndUpdate({ content }, change, { useFindAndModify: true });
+  const result = await BarModel.findOneAndUpdate({ content }, change);
   return result;
 };
 
 export const removeBar = async (bar: Partial<BarType>) => {
   if (!bar.owner || !bar.content) return null;
 
-  const result = await BarModel.findOneAndDelete(bar, { useFindAndModify: true });
+  const result = await BarModel.findOneAndDelete(bar);
   return result;
 };
 
@@ -77,5 +77,5 @@ export const updateBar = async (content: string, bar: Partial<BarType>) => {
       ...bar,
       updatedAt: new Date().getTime(),
     },
-  }, { useFindAndModify: true });
+  });
 };

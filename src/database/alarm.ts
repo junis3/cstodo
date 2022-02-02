@@ -29,7 +29,7 @@ export const addAlarm = async (alarm: Omit<AlarmType, 'id'>) => {
 };
 
 export const removeAlarm = async (id: string) => {
-  await Alarm.findOneAndRemove({ id }, { useFindAndModify: true });
+  await Alarm.findOneAndRemove({ id });
 };
 
 // This function MUST be executed EXACTLY once after bot execution

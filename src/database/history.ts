@@ -42,7 +42,7 @@ export const addHistory = async ({ id, title, source }: HistoryType) => {
 export const removeHistory = async (id: number) => {
   if (!id) return;
 
-  await History.findOneAndDelete({ id }, { useFindAndModify: true });
+  await History.findOneAndDelete({ id });
 };
 
 export const history2Href = (problem: HistoryType) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;

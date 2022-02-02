@@ -11,7 +11,7 @@ export class ParallelCommand implements CommandInterface {
   public async exec() {
     const results = await Promise.all(this.commands.map((command) => command.exec()));
 
-    const signals = results.filter((result) => result) as CommandSignal[];
+    const signals = results.filter((result) => result !== null) as CommandSignal[];
 
     if (signals.length > 0) return signals[0];
     return null;

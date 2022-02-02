@@ -1,4 +1,4 @@
-import { getCstodos, removeCstodo } from '../../database/cstodo';
+import { CstodoType, getCstodos, removeCstodo } from '../../database/cstodo';
 import preprocessContent from '../../etc/preprocessContent';
 import { isInteger } from '../../etc/isInteger';
 import { TodoRouter } from '../../router';
@@ -13,11 +13,11 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => 
     return new ReplyFailureCommand(event, user, 'remove 쿼리에 인자가 없으면 똑떨이에요...');
   }
 
-  const contents = new Set<string>();
+  const todos = new Set<CstodoType>();
 
   // eslint-disable-next-line no-restricted-syntax
   for (const s of command.slice(1).join(' ').split(',')) {
-    let content = preprocessContent(s);
+    const content = preprocessContent(s);
 
     // eslint-disable-next-line no-continue
     if (!content) continue;
@@ -31,21 +31,17 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => 
       return new ReplyFailureCommand(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요...`);
     }
 
-    content = todo[x - 1].content;
-
-    contents.add(content);
+    todos.add(todo[x - 1]);
   }
 
-  // eslint-disable-next-line no-restricted-syntax
-
-  return new ParallelCommand(...await Promise.all(Array.from(contents).map(async (content) => {
-    if (await removeCstodo({ owner: user.id, content })) {
-      return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`, {
+  return new ParallelCommand(...await Promise.all(Array.from(todos).map(async (todo) => {
+    if (await removeCstodo(todo)) {
+      return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${todo.content}* 를 제거했어요!`, {
         muted: false,
         iconEmoji: 'remove',
       });
     }
-    return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`);
+    return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${todo.content}* 를 제거하는 데 실패했어요...`);
   })));
 };
 

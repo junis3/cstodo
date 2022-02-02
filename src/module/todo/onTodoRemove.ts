@@ -34,15 +34,17 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => 
     todos.add(todo[x - 1]);
   }
 
-  return new ParallelCommand(...await Promise.all(Array.from(todos).map(async (todo) => {
-    if (await removeCstodo(todo)) {
-      return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${todo.content}* 를 제거했어요!`, {
-        muted: false,
-        iconEmoji: 'remove',
-      });
-    }
-    return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${todo.content}* 를 제거하는 데 실패했어요...`);
-  })));
+  return new ParallelCommand(...await Promise.all(Array.from(todos).map(
+    async ({ content, owner, createdAt }) => {
+      if (await removeCstodo({ content, owner, createdAt })) {
+        return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`, {
+          muted: false,
+          iconEmoji: 'remove',
+        });
+      }
+      return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`);
+    },
+  )));
 };
 
 export default onTodoRemove;

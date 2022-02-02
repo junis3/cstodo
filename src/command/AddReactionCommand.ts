@@ -17,6 +17,8 @@ export class AddReactionCommand implements CommandInterface {
     try {
       await webClient.reactions.add(this.props);
     } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
       if (!isAcceptableError(e)) throw e;
     }
     return null;

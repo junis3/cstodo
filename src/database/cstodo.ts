@@ -27,7 +27,7 @@ const cstodoSchema = new Schema({
   createdBy: { type: String, default: 'unknown' },
 });
 
-cstodoSchema.index({ owner: true, content: true }, { unique: true });
+// cstodoSchema.index({ owner: true, content: true }, { unique: true });
 
 const Cstodo = model<CstodoDocument>('cstodo', cstodoSchema, 'cstodos');
 export default Cstodo;

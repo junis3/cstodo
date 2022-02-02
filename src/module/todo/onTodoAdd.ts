@@ -21,7 +21,7 @@ const validateContent = (text: string) => {
 };
 
 const onTodoAdd: TodoRouter = async ({ event, user, query: { command, args } }) => {
-  const todo = await getCstodos(user.id);
+  //  const todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
@@ -49,9 +49,9 @@ const onTodoAdd: TodoRouter = async ({ event, user, query: { command, args } }) 
     return new ReplyFailureCommand(event, user, validateError);
   }
 
-  if (todo.find((item) => item.content === content)) {
-    return new ReplyFailureCommand(event, user, `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`);
-  }
+  //  if (todo.find((item) => item.content === content)) {
+  //    return new ReplyFailureCommand(event, user, `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`);
+  //  }
 
   await addCstodo({
     content,

@@ -3,20 +3,24 @@ import {
   setBojHandle, setHome, setOwner, setUseAlarm,
 } from '../../database/user';
 import { getArg } from '../../etc/parseQuery';
-import { addEmoji, replyDdokddul, replySuccess } from '../../etc/postMessage';
+import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { PassCommand } from '../../command/PassCommand';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
 const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
-  if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user != 'UV8DYMMV5') {
-    addEmoji(event.ts, event.channel, 'sad');
-    return [];
+  if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5') {
+    return new ReplyFailureCommand(event, user);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const useDue = getArg(['-use-due', '--use-due', '-useDue', '--useDue'], args);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const usePriority = getArg(['-use-priority', '--use-priority', '-usePriority', '--usePriority'], args);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const useBar = getArg(['-use-bar', '--use-bar', '-useBar', '--useBar'], args);
   const useAlarm = getArg(['-use-alarm', '--use-alarm', '-useAlarm', '--useAlarm'], args);
   const rawOwner = getArg(['--owner'], args);
@@ -37,11 +41,13 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
   if (typeof rawHome === 'string') {
     const home = rawHome;
     if (event.channel !== home) {
+      // eslint-disable-next-line no-console
       console.warn(`target ${home}과 event ${event.channel}이 다릅니다.`);
       await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
     } else {
       await setHome(user.command, home);
       await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`);
+      // eslint-disable-next-line no-console
       console.warn(`${user.command} 봇의 위치가 <#${home}>으로 설정되었습니다.`);
     }
   }
@@ -62,16 +68,18 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
         const resp = await axios.get(`https://acmicpc.net/user/${bojHandle}`);
         return resp.status;
       } catch (error) {
-        console.log(error);
+        // eslint-disable-next-line no-console
+        console.error(error);
         return 500;
       }
     })();
-    if (bojResp != 200) {
+    if (bojResp !== 200) {
       await replyDdokddul(event, user, `${bojHandle}이라는 유저가 백준에서 확인되지 않아 똑떨이에요...`);
     } else {
       const isChanged = await setBojHandle(user.command, bojHandle);
       if (isChanged) {
         await replySuccess(event, user, `${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다!`);
+        // eslint-disable-next-line no-console
         console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다. 실제와 다른 경우 제재가 가해질 수 있습니다.`);
       } else {
         replyDdokddul(event, user, `${user.name}님의 백준 아이디는 이미 ${user.bojHandle!!}로 설정되어 있어요...`);
@@ -79,7 +87,7 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
     }
   }
   //    await replySuccess(event, user, message, 'default');
-  return [];
+  return new PassCommand();
 };
 
 export default onTodoSet;

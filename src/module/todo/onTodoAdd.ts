@@ -1,9 +1,10 @@
 import { addCstodo, getCstodos } from '../../database/cstodo';
-import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessage';
 import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import preprocessContent from '../../etc/preprocessContent';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 
 const isSlackDecoration = (text: string) => {
   const match = text.match(/[~_]+/);
@@ -12,67 +13,59 @@ const isSlackDecoration = (text: string) => {
 
 const MAX_LENGTH = 200;
 
-const isQueryValid = (text: string) => text.length > 0 && text.length <= MAX_LENGTH && !isSlackDecoration(text);
-
-const isContentValid = (content: string) => {
-  if (!isQueryValid(content)) {
-    return `${content.length}개의 쿼리 중에 다음과 같이 이상한 게 있으면 저는 똑떨이에요...
-:one: 텍스트의 길이가 [1, ${MAX_LENGTH}]을 벗어나는 경우
-:two: 텍스트가 underscore(_)나 물결(~)로만 구성된 경우
-:three: 개발자가 잘못 짠 경우`;
-  }
-  return '';
+const validateContent = (text: string) => {
+  if (text.length === 0) return '쿼리를 넣어주세요!';
+  if (text.length > MAX_LENGTH) return `쿼리가 ${MAX_LENGTH}글자를 넘어서 똑떨이에요..`;
+  if (isSlackDecoration(text)) return '개같은 쿼리를 넣으면 똑떨이에요..';
+  return null;
 };
 
 const onTodoAdd: TodoRouter = async ({ event, user, query: { command, args } }) => {
-  const todo = await getCstodos(user.id);
+  //  const todo = await getCstodos(user.id);
 
   const dueArg = getArg(['--due', '-d', '--time', '-t'], args);
 
-  let _due = 0;
-  if (!dueArg) {
-    _due = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 6).getTime();
-  } else if (typeof dueArg === 'string') {
+  let due = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate() + 1,
+    6,
+  ).getTime();
+
+  if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyDdokddul(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
-      return [];
+      return new ReplyFailureCommand(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
     }
-    _due = time;
-  } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
-    return [];
+    due = time;
+  } else if (dueArg) {
+    return new ReplyFailureCommand(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
   }
-
-  const due = _due;
 
   const content = preprocessContent(command.slice(1).join(' ').trim());
 
-  const contentValidateErrMsg = isContentValid(content);
-  if (contentValidateErrMsg !== '') {
-    await replyDdokddul(event, user, contentValidateErrMsg);
-    return [];
+  const validateError = validateContent(content);
+  if (validateError !== null) {
+    return new ReplyFailureCommand(event, user, validateError);
   }
 
-  if (todo.find((item) => item.content === content)) {
-    await replyDdokddul(event, user, `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`);
-  } else {
-    await addCstodo({
-      content,
-      owner: user.id,
-      due,
-      createdBy: event.user,
-    });
+  //  if (todo.find((item) => item.content === content)) {
+  //    return new ReplyFailureCommand(event, user, `이미 할 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`);
+  //  }
 
-    await replySuccess(
-      event,
-      user,
-      `${user.name}님의 할 일에 *${content}* 를 추가했어요!`,
-      'add',
-      { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined },
-    );
-  }
-  return [];
+  await addCstodo({
+    content,
+    owner: user.id,
+    due,
+    createdBy: event.user,
+  });
+
+  return new ReplySuccessCommand(
+    event,
+    user,
+    `${user.name}님의 할 일에 *${content}* 를 추가했어요!`,
+    { iconEmoji: 'add' },
+  );
 };
 
 export default onTodoAdd;

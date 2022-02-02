@@ -5,7 +5,7 @@ import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
 import { addBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
-import { SlackMessageEvent } from '../../slack/event';
+import { SlackMessageEvent } from '../../command/event';
 
 const isSlackDecoration = (text: string) => {
   const match = text.match(/[~_]+/);
@@ -78,24 +78,20 @@ const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, 
   }
 
   await Promise.all(contents.map(async (content) => {
-    if (bars.find((item) => item.content === content)) {
-      await replyDdokddul(event, user, `이미 진행중인 일에 있는 *${content}* 를 다시 추가하면 똑떨이에요...`);
-    } else {
-      await addBar({
-        content,
-        owner: user.id,
-        progress: prog,
-        goal,
-      });
+    await addBar({
+      content,
+      owner: user.id,
+      progress: prog,
+      goal,
+    });
 
-      await replySuccess(
-        event,
-        user,
-        `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`,
-        'add',
-        { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined },
-      );
-    }
+    await replySuccess(
+      event,
+      user,
+      `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`,
+      'add',
+      { forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined },
+    );
   }));
 };
 

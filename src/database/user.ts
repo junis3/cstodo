@@ -1,6 +1,4 @@
 import { model, Schema, Document } from 'mongoose';
-import { addAlarm } from './alarm';
-import { getCstodos } from './cstodo';
 
 export const themeList = ['weeb', 'blob'] as const;
 export type ThemeType = typeof themeList[number];
@@ -11,33 +9,33 @@ export type ControlType = typeof controlList[number];
 export const useFeatureList = ['always', 'optional', 'never'] as const;
 export type UseFeatureType = typeof useFeatureList[number];
 
-export function isThemeType(str: string) : str is ThemeType {
+export function isThemeType(str: string): str is ThemeType {
   return themeList.find((value) => value === str) !== undefined;
 }
 
 export interface UserType {
-    id: string;
-    name: string;
-    command: string;
-    owner?: string;
-    home?: string;
-    taskType: 'todo' | 'bar';
-    userControl: ControlType;
-    userWhitelist?: string[];
-    userBlacklist?: string[];
-    channelControl: ControlType;
-    channelWhitelist?: string[];
-    channelBlacklist?: string[];
-    useDue: UseFeatureType;
-    usePriority: UseFeatureType;
-    useBar: UseFeatureType;
-    useAlarm: UseFeatureType;
-    autoRemove: boolean;
-    muted: boolean;
-    theme: ThemeType;
-    bojHandle?: string;
-    hwQuery?: string;
-    numProbsPerCycle?: number;
+  id: string;
+  name: string;
+  command: string;
+  owner?: string;
+  home?: string;
+  taskType: 'todo' | 'bar';
+  userControl: ControlType;
+  userWhitelist?: string[];
+  userBlacklist?: string[];
+  channelControl: ControlType;
+  channelWhitelist?: string[];
+  channelBlacklist?: string[];
+  useDue: UseFeatureType;
+  usePriority: UseFeatureType;
+  useBar: UseFeatureType;
+  useAlarm: UseFeatureType;
+  autoRemove: boolean;
+  muted: boolean;
+  theme: ThemeType;
+  bojHandle?: string;
+  hwQuery?: string;
+  numProbsPerCycle?: number;
 }
 
 export type UserDocument = Document & UserType;
@@ -77,52 +75,55 @@ export const getUser = async (command: string) => {
   return undefined;
 };
 
-export const getAllUsers = async () => (await User.find({ })).map((userDocument) => userDocument.toObject() as UserType);
+export const getAllUsers = async () => {
+  const result = await User.find({});
+  return result.map((userDocument) => userDocument.toObject() as UserType);
+};
 
 export const setOwner = async (command: string, owner: string) => {
-  await User.findOneAndUpdate({ command }, { owner }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { owner });
 };
 
 export const setHome = async (command: string, home: string) => {
-  await User.findOneAndUpdate({ command }, { home }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { home });
 };
 
 export const setTheme = async (command: string, theme: ThemeType) => {
-  await User.findOneAndUpdate({ command }, { theme }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { theme });
 };
 
 export const setMuted = async (command: string, muted: boolean) => {
-  await User.findOneAndUpdate({ command }, { muted }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { muted });
 };
 
 export const setAutoRemove = async (command: string, autoRemove: boolean) => {
-  await User.findOneAndUpdate({ command }, { autoRemove }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { autoRemove });
 };
 
 export const setUseDue = async (command: string, useDue: UseFeatureType) => {
-  await User.findOneAndUpdate({ command }, { useDue }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { useDue });
 };
 
 export const setUsePriority = async (command: string, usePriority: UseFeatureType) => {
-  await User.findOneAndUpdate({ command }, { usePriority }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { usePriority });
 };
 
 export const setUseBar = async (command: string, useBar: UseFeatureType) => {
-  await User.findOneAndUpdate({ command }, { useBar }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { useBar });
 };
 
 export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => {
-//    const user = await User.findOne({ command });
-//    if (!user) return;
+  //    const user = await User.findOne({ command });
+  //    if (!user) return;
 
   //    const oriUseAlarm = user.useAlarm;
-  await User.findOneAndUpdate({ command }, { useAlarm }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { useAlarm });
 };
 
 export const setBojHandle = async (command: string, bojHandle: string) => {
   const user = await User.findOne({ command });
   if (user?.bojHandle) return false;
-  await User.findOneAndUpdate({ command }, { bojHandle }, { useFindAndModify: true });
+  await User.findOneAndUpdate({ command }, { bojHandle });
   return true;
 };
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.

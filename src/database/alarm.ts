@@ -1,14 +1,13 @@
 import { model, Schema, Document } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
-import { HistoryType } from './history';
 import { getFunctionByName } from '../etc/functionNameMap';
 
 export interface AlarmType {
-    id: string,
-    initialTime: number,
-    repeatTime: number,
-    function: string,
-    params: string[],
+  id: string,
+  initialTime: number,
+  repeatTime: number,
+  function: string,
+  params: string[],
 }
 
 export type AlarmDocument = Document & AlarmType;
@@ -30,7 +29,7 @@ export const addAlarm = async (alarm: Omit<AlarmType, 'id'>) => {
 };
 
 export const removeAlarm = async (id: string) => {
-  await Alarm.findOneAndRemove({ id }, { useFindAndModify: true });
+  await Alarm.findOneAndRemove({ id });
 };
 
 // This function MUST be executed EXACTLY once after bot execution
@@ -48,25 +47,20 @@ export const initiateAlarms = async () => {
     const nextFireTime = (fromTime: number) => {
       if (alarm.repeatTime <= 0) return alarm.initialTime;
       if (fromTime < alarm.initialTime) return alarm.initialTime;
-      return alarm.initialTime + alarm.repeatTime * Math.ceil((fromTime - alarm.initialTime) / alarm.repeatTime);
+      return alarm.initialTime
+        + alarm.repeatTime * Math.ceil((fromTime - alarm.initialTime) / alarm.repeatTime);
     };
 
     const callback = (fireDate: Date) => {
       const fireTime = fireDate.getTime();
 
-      if (alarm.repeatTime > 0) {
-        console.log(alarm.function, alarm.params);
-        console.log(nextFireTime(fireTime + 1));
-        scheduleJob(nextFireTime(fireTime + 1), callback);
-      }
+      if (alarm.repeatTime > 0) scheduleJob(nextFireTime(fireTime + 1), callback);
 
       const f = getFunctionByName(alarm.function);
 
       if (f) f(fireDate, ...alarm.params);
     };
 
-    console.log(alarm.function, alarm.params);
-    console.log(nextFireTime(nowTime));
     scheduleJob(nextFireTime(nowTime), callback);
   });
 };

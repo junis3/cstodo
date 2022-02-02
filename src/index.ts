@@ -8,10 +8,11 @@ import {
 import onMessage from './module/onMessage';
 import onTest from './module/onTest';
 import { initiateAlarms } from './database/alarm';
-import { runCommands, webClient } from './slack/command';
-import { SlackMessageEvent } from './slack/event';
+import { webClient } from './command';
+import { SlackMessageEvent } from './command/event';
 
 if (logWebhook) {
+  // eslint-disable-next-line global-require
   const consoleToSlack = require('console-to-slack');
   consoleToSlack.init(logWebhook, 2);
   consoleToSlack.init(logWebhook, 3);
@@ -21,13 +22,17 @@ mongoose.connect(mongodbUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-}).then((res) => {
+  useFindAndModify: false,
+}).then(() => {
+  // eslint-disable-next-line no-console
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
 }).catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(`Failed to connect to ${mongoose.connection.host}`);
   throw err;
 });
 
+// eslint-disable-next-line import/prefer-default-export
 export const slackEvents = createEventAdapter(signingSecret);
 
 (async () => {
@@ -44,8 +49,8 @@ export const slackEvents = createEventAdapter(signingSecret);
 })();
 
 slackEvents.on('message', (event: SlackMessageEvent) => {
-  Promise.resolve(onMessage({ event })).then((commands) => {
-    runCommands(commands);
+  Promise.resolve(onMessage({ event })).then((command) => {
+    command.exec();
   });
 });
 
@@ -57,4 +62,5 @@ if (isTesting) onTest();
 const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
+// eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Running slackbot on port ${port}.`));

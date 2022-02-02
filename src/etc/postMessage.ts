@@ -1,9 +1,9 @@
 import { ChatPostMessageArguments } from '@slack/web-api';
-import { webClient } from '../slack/command';
+import { webClient } from '../command';
 import { emoji } from './theme';
 import { cstodoChannel, cstodoTestChannel } from '../config';
 import { UserType } from '../database/user';
-import { SlackMessageEvent } from '../slack/event';
+import { SlackMessageEvent } from '../command/event';
 
 export const postMessage = async (props: ChatPostMessageArguments) => {
   await webClient.chat.postMessage(props);
@@ -22,12 +22,12 @@ export const addEmoji = async (ts: string, channel: string, emojiName: string) =
 };
 
 export enum ForceMuteType {
-    Unmute,
-    Mute
+  Unmute,
+  Mute
 }
 
 export interface Options {
-    forceMuteType?: ForceMuteType;
+  forceMuteType?: ForceMuteType;
 }
 
 export const replyDdokddul = async (event: SlackMessageEvent, user: UserType, message: string, options?: Options) => {

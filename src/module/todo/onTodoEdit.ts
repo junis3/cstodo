@@ -1,24 +1,18 @@
-import { getUser, UserType } from '../../database/user';
+import { getUser } from '../../database/user';
 import {
-  addCstodo, CstodoType, editCstodo, getCstodos,
+  CstodoType, editCstodo, getCstodos,
 } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
-import {
-  ForceMuteType, replyDdokddul, replyFail, replySuccess,
-} from '../../etc/postMessage';
-import { getArg, QueryType } from '../../etc/parseQuery';
+import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
-import { SlackMessageEvent } from '../../slack/event';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
-const isInteger = (s: string) => {
-  for (const c of s.split('')) {
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].find((x) => x === c) === undefined) return false;
-  }
-  return true;
-};
+const isInteger = (s: string) => s.split('').every(
+  (c) => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].find((x) => x === c) !== undefined,
+);
 
 const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } }) => {
   const todo = await getCstodos(user.id);
@@ -31,26 +25,23 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   } else if (typeof dueArg === 'string') {
     const time = stringToTime(dueArg);
     if (!time) {
-      await replyDdokddul(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
-      return [];
+      return new ReplyFailureCommand(event, user, '제가 너무 바보같아서 말씀하신 시간을 잘 이해를 못했어요... 죄송합니다...');
     }
     newDue = time;
   } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${dueArg.message}`);
-    return [];
+    return new ReplyFailureCommand(event, user, `저는 똑떨이에요...\n${dueArg.message}`);
   }
 
   const contentArg = getArg(['--content', '-c'], args);
 
-  let newContent : string | undefined;
+  let newContent: string | undefined;
 
   if (!contentArg) {
     newContent = undefined;
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`);
-    return [];
+    return new ReplyFailureCommand(event, user, `저는 똑떨이에요...\n${contentArg.message}`);
   }
 
   const userArg = getArg(['--dangerous-user'], args);
@@ -59,8 +50,7 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
 
   if (typeof userArg === 'string') {
     if (newDue || newContent) {
-      await replyDdokddul(event, user, '저는 똑떨이에요...');
-      return [];
+      return new ReplyFailureCommand(event, user, '저는 똑떨이에요...');
     }
     newUser = await getUser(userArg) || newUser;
   }
@@ -70,46 +60,39 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   if (!newDue) delete change.due;
   if (!newContent) delete change.content;
 
-  let changeString = '';
+  const changes: string[] = [];
 
-  if (newDue) changeString += `마감 시한을 ${timeToString(newDue)}까지로, `;
-  if (newContent) changeString += `내용을 *${newContent}* 로, `;
-  if (newUser.id !== user.id) changeString += `주인을 ${newUser.command}로, `;
+  if (newDue) changes.push(`마감 시한을 ${timeToString(newDue)}까지로`);
+  if (newContent) changes.push(`내용을 *${newContent}* 로`);
+  if (newUser.id !== user.id) changes.push(`주인을 ${newUser.command}로`);
+
+  const changeString = changes.join(', ');
 
   if (changeString.length === 0) {
-    await replyDdokddul(event, user, '바꿀 게 없어서 똑떨이에요...');
-    return [];
+    return new ReplyFailureCommand(event, user, '바꿀 게 없어서 똑떨이에요...');
   }
 
-  changeString = changeString.slice(0, changeString.length - 2);
-
   if (command.length === 1) {
-    await replyDdokddul(event, user, 'edit 쿼리에 인자가 없으면 똑떨이에요...');
-    return [];
+    return new ReplyFailureCommand(event, user, 'edit 쿼리에 인자가 없으면 똑떨이에요...');
   }
 
   let content = command.slice(1).join(' ').trim();
 
   if (!isInteger(content)) {
-    await replyDdokddul(event, user, '할 일을 수정할 때엔 수정할 일의 번호를 주셔야 해요...');
-    return [];
+    return new ReplyFailureCommand(event, user, '할 일을 수정할 때엔 수정할 일의 번호를 주셔야 해요...');
   }
-  const x = Number.parseInt(content);
+  const x = Number.parseInt(content, 10);
 
   if (x <= 0 || x > todo.length) {
-    await replyDdokddul(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`);
-    return [];
+    return new ReplyFailureCommand(event, user, `할 일이 ${todo.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`);
   }
 
   content = todo[x - 1].content;
 
   if (await editCstodo(content, change)) {
-    await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', { forceMuteType: ForceMuteType.Unmute });
-  } else {
-    await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
+    return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, { iconEmoji: 'edit', muted: false });
   }
-
-  return [];
+  return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
 };
 
 export default onTodoEdit;

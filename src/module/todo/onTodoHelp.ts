@@ -1,7 +1,6 @@
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { UserType } from '../../database/user';
-import { emoji } from '../../etc/theme';
-import { TodoReplyCommand } from './reply';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 
 // TODO: Add subcommands and add argument details
 
@@ -17,11 +16,11 @@ const helpText = (user: UserType) => {
 \`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.`;
 };
 
-const onTodoHelp: TodoRouter = async ({ event, user }) => new TodoReplyCommand(event, user, {
-  text: helpText(user),
-  channel: event.channel,
-  icon_emoji: emoji('help', user.theme),
-  username: `친절한 ${user.name}님의 비서`,
-});
+const onTodoHelp: TodoRouter = async ({ event, user }) => new ReplySuccessCommand(
+  event,
+  user,
+  helpText(user),
+  { iconEmoji: 'help' },
+);
 
 export default onTodoHelp;

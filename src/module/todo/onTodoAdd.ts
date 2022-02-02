@@ -3,8 +3,8 @@ import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import preprocessContent from '../../etc/preprocessContent';
 import { TodoRouter } from '../router';
-import { ReplySuccessCommand } from '../../command/replySuccess';
-import { ReplyFailureCommand } from '../../command/replyFailure';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 
 const isSlackDecoration = (text: string) => {
   const match = text.match(/[~_]+/);

@@ -1,7 +1,7 @@
 import { emoji, message } from '../../etc/theme';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
-import { ReplyMessageCommand } from '../../command/replyMessage';
+import { ReplyMessageCommand } from '../../command/ReplyMessageCommand';
 
 const onYourMark: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);

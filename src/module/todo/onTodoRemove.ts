@@ -2,8 +2,8 @@ import { getCstodos, removeCstodo } from '../../database/cstodo';
 import preprocessContent from '../../etc/preprocessContent';
 import { isInteger } from '../../etc/isInteger';
 import { TodoRouter } from '../router';
-import { ReplyFailureCommand } from '../../command/replyFailure';
-import { ReplySuccessCommand } from '../../command/replySuccess';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
 const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => {
   const todo = await getCstodos(user.id);

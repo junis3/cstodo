@@ -1,7 +1,7 @@
 import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../../database/greengold';
 import { TodoRouter } from '../router';
-import { ReplyFailureCommand } from '../../command/replyFailure';
-import { ReplySuccessCommand } from '../../command/replySuccess';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
 const onTodoHW: TodoRouter = async ({ event, user }) => {
   const numProblems = user.numProbsPerCycle || 1;

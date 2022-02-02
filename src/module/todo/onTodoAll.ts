@@ -1,7 +1,7 @@
 import { getCstodos } from '../../database/cstodo';
 import timeToString from '../../etc/timeToString';
 import { TodoRouter } from '../router';
-import { ReplySuccessCommand } from '../../command/replySuccess';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
 const onTodoAll: TodoRouter = async ({ event, user }) => {
   const cstodo = await getCstodos(user.id);

@@ -6,7 +6,7 @@ import { getArg } from '../../etc/parseQuery';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
 import { TodoRouter } from '../router';
-import { ReplyFailureCommand } from '../../command/replyFailure';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 

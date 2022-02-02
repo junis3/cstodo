@@ -7,8 +7,8 @@ import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
 import { TodoRouter } from '../router';
-import { ReplyFailureCommand } from '../../command/replyFailure';
-import { ReplySuccessCommand } from '../../command/replySuccess';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
 const isInteger = (s: string) => s.split('').every(
   (c) => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].find((x) => x === c) !== undefined,

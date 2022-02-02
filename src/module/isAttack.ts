@@ -1,6 +1,6 @@
 import { emoji } from '../etc/theme';
 import { SlackMessageEvent } from '../command/event';
-import { ReplyMessageCommand } from '../command/replyMessage';
+import { ReplyMessageCommand } from '../command/ReplyMessageCommand';
 
 function isAttack(event: SlackMessageEvent): ReplyMessageCommand | undefined {
   const { text } = event;

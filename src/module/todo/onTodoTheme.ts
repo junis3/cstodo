@@ -1,8 +1,8 @@
 import { isThemeType, setTheme } from '../../database/user';
 import preprocessContent from '../../etc/preprocessContent';
 import { TodoRouter } from '../router';
-import { ReplySuccessCommand } from '../../command/replySuccess';
-import { ReplyFailureCommand } from '../../command/replyFailure';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
+import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 
 const onTodoTheme: TodoRouter = async ({ event, user, query: { command } }) => {
   const newTheme = preprocessContent(command[0]);

@@ -1,15 +1,16 @@
 import { ReactionsAddArguments } from '@slack/web-api';
-import { Command, webClient } from '.';
+import { CommandInterface, webClient } from '.';
 
 // eslint-disable-next-line import/prefer-default-export
-export class AddReactionCommand implements Command {
+export class AddReactionCommand implements CommandInterface {
   private props: ReactionsAddArguments;
 
   constructor(props: ReactionsAddArguments) {
     this.props = props;
   }
 
-  public async exec(): Promise<void> {
+  public async exec() {
     await webClient.reactions.add(this.props);
+    return null;
   }
 }

@@ -1,4 +1,4 @@
-import { ReplyMessageCommand } from '../../command/replyMessage';
+import { ReplyMessageCommand } from '../../command/ReplyMessageCommand';
 import isAttack from '../isAttack';
 import { MessageRouter } from '../router';
 

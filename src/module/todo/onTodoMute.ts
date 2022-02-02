@@ -1,4 +1,4 @@
-import { ReplySuccessCommand } from '../../command/replySuccess';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { setMuted } from '../../database/user';
 import { TodoRouter } from '../router';
 

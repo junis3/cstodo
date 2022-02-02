@@ -1,15 +1,15 @@
 import { ChatPostMessageArguments } from '@slack/web-api';
-import { JoinCommand } from '.';
+import { SerialCommand } from './SerialCommand';
 import { SlackMessageEvent } from './event';
-import { PostMessageCommand } from './postMessage';
-import { AddReactionCommand } from './addReaction';
-import { PostEphemeralCommand } from './postEphemeral';
+import { PostMessageCommand } from './PostMessageCommand';
+import { AddReactionCommand } from './AddReactionCommand';
+import { PostEphemeralCommand } from './PostEphemeralCommand';
 
 export interface ReplyMessageOptions {
   muted?: boolean;
 }
 
-export class ReplyMessageCommand extends JoinCommand {
+export class ReplyMessageCommand extends SerialCommand {
   constructor(
     event: SlackMessageEvent,
     args: ChatPostMessageArguments,

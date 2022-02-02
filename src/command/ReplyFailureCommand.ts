@@ -1,12 +1,13 @@
-import { JoinCommand } from '.';
-import { AddReactionCommand } from './addReaction';
-import { PostEphemeralCommand } from './postEphemeral';
+import { SerialCommand } from './SerialCommand';
+import { AbortCommand } from './AbortCommand';
+import { AddReactionCommand } from './AddReactionCommand';
+import { PostEphemeralCommand } from './PostEphemeralCommand';
 import { SlackMessageEvent } from './event';
 import { UserType } from '../database/user';
 import { emoji } from '../etc/theme';
 
 // eslint-disable-next-line import/prefer-default-export
-export class ReplyFailureCommand extends JoinCommand {
+export class ReplyFailureCommand extends SerialCommand {
   constructor(event: SlackMessageEvent, user?: UserType, message?: string) {
     const addReactionCommand = new AddReactionCommand({
       name: 'sad',
@@ -14,8 +15,13 @@ export class ReplyFailureCommand extends JoinCommand {
       channel: event.channel,
     });
 
+    const abortCommand = new AbortCommand();
+
     if (!message || !user) {
-      super(addReactionCommand);
+      super(
+        addReactionCommand,
+        abortCommand,
+      );
       return;
     }
 
@@ -33,6 +39,7 @@ export class ReplyFailureCommand extends JoinCommand {
     super(
       addReactionCommand,
       postEphemeralCommand,
+      abortCommand,
     );
   }
 }

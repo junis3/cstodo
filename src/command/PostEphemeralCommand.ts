@@ -1,15 +1,16 @@
 import { ChatPostEphemeralArguments } from '@slack/web-api';
-import { Command, webClient } from '.';
+import { CommandInterface, webClient } from '.';
 
 // eslint-disable-next-line import/prefer-default-export
-export class PostEphemeralCommand implements Command {
+export class PostEphemeralCommand implements CommandInterface {
   private props: ChatPostEphemeralArguments;
 
   constructor(props: ChatPostEphemeralArguments) {
     this.props = props;
   }
 
-  public async exec(): Promise<void> {
+  public async exec() {
     await webClient.chat.postEphemeral(this.props);
+    return null;
   }
 }

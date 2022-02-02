@@ -1,11 +1,11 @@
 import { UserType } from '../database/user';
 import { SlackMessageEvent } from '../command/event';
-import { ArrayPile, Command } from '../command';
+import { ArrayPile, CommandInterface } from '../command';
 import { QueryType } from '../etc/parseQuery';
 
 export type MessageRouter<Info = {}>
   = (context: { event: SlackMessageEvent } & Info)
-    => ArrayPile<Command> | PromiseLike<ArrayPile<Command>>;
+    => ArrayPile<CommandInterface> | PromiseLike<ArrayPile<CommandInterface>>;
 
 export type TodoRouter = MessageRouter<{ user: UserType, query: QueryType }>;
 

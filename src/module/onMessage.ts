@@ -7,9 +7,9 @@ import { getUser } from '../database/user';
 import { webClient } from '../command';
 import { emoji } from '../etc/theme';
 import { MessageRouter } from './router';
-import { ReplyMessageCommand } from '../command/replyMessage';
-import { ShutdownCommand } from '../command/shutdown';
-import { ReplyFailureCommand } from '../command/replyFailure';
+import { ReplyMessageCommand } from '../command/ReplyMessageCommand';
+import { ShutdownCommand } from '../command/ShutdownCommand';
+import { ReplyFailureCommand } from '../command/ReplyFailureCommand';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 

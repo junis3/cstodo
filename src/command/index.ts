@@ -3,8 +3,12 @@ import { accessToken } from '../config';
 
 export const webClient = new WebClient(accessToken);
 
-export interface Command {
-  exec(): Promise<void>;
+export enum CommandSignal {
+  Abort,
+}
+
+export interface CommandInterface {
+  exec(): Promise<null | CommandSignal>;
 }
 
 export type ArrayPile<T> = T | ArrayPile<T>[];
@@ -14,22 +18,28 @@ export function depile<T>(pile: ArrayPile<T>): T[] {
   return [pile];
 }
 
-export async function runCommands(commands: ArrayPile<Command>): Promise<void> {
+export async function runCommands(
+  commands: ArrayPile<CommandInterface>,
+): Promise<null | CommandSignal> {
   // eslint-disable-next-line no-restricted-syntax
   for (const command of depile(commands)) {
     // eslint-disable-next-line no-await-in-loop
-    await command.exec();
+    const result = await command.exec();
+
+    if (result === CommandSignal.Abort) break;
   }
+  return null;
 }
 
-export class JoinCommand implements Command {
-  commands: Command[];
+export class Command implements CommandInterface {
+  promiseGenerator: () => Promise<null | CommandSignal>;
 
-  constructor(...commands: Command[]) {
-    this.commands = commands;
+  constructor(promiseGenerator: () => Promise<null | CommandSignal>) {
+    this.promiseGenerator = promiseGenerator;
   }
 
-  public async exec(): Promise<void> {
-    await Promise.all(this.commands.map((command) => command.exec()));
+  async exec() {
+    const result = await this.promiseGenerator();
+    return result;
   }
 }

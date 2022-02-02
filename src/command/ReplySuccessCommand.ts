@@ -1,11 +1,11 @@
 import { Block, KnownBlock } from '@slack/web-api';
-import { JoinCommand } from '.';
+import { SerialCommand } from './SerialCommand';
 import { UserType } from '../database/user';
 import { emoji } from '../etc/theme';
-import { AddReactionCommand } from './addReaction';
+import { AddReactionCommand } from './AddReactionCommand';
 import { SlackMessageEvent } from './event';
-import { PostMessageCommand } from './postMessage';
-import { PostEphemeralCommand } from './postEphemeral';
+import { PostMessageCommand } from './PostMessageCommand';
+import { PostEphemeralCommand } from './PostEphemeralCommand';
 
 interface ReplySuccessOptions {
   iconEmoji?: string;
@@ -13,7 +13,7 @@ interface ReplySuccessOptions {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export class ReplySuccessCommand extends JoinCommand {
+export class ReplySuccessCommand extends SerialCommand {
   constructor(
     event: SlackMessageEvent,
     user: UserType,

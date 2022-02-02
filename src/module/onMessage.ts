@@ -4,12 +4,13 @@ import onTodo from './todo';
 import onBar from './bar';
 import onYourMark from './yourMark';
 import { getUser } from '../database/user';
-import { webClient } from '../command';
 import { emoji } from '../etc/theme';
-import { MessageRouter } from './router';
+import { MessageRouter } from '../router';
 import { ReplyMessageCommand } from '../command/ReplyMessageCommand';
 import { ShutdownCommand } from '../command/ShutdownCommand';
 import { ReplyFailureCommand } from '../command/ReplyFailureCommand';
+import { PassCommand } from '../command/PassCommand';
+import { SerialCommand } from '../command/SerialCommand';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -18,9 +19,9 @@ let lastUser: string;
 let nowUser: string;
 
 const onMessage: MessageRouter = async ({ event }) => {
-  if (Number(event.ts) < turnOnTimestamp) return [];
-  if (!event.text || !event.user) return [];
-  if (event.thread_ts) return [];
+  if (Number(event.ts) < turnOnTimestamp) return new PassCommand();
+  if (!event.text || !event.user) return new PassCommand();
+  if (event.thread_ts) return new PassCommand();
 
   if (nowUser !== event.user) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,7 +32,7 @@ const onMessage: MessageRouter = async ({ event }) => {
   const text: string = event.text.replace(/[^ -~가-힣ㄱ-ㅎㅏ-ㅣ]/g, '');
   const tokens = text.split(' ').filter((str) => str.length > 0);
 
-  if (tokens.length < 1) return [];
+  if (tokens.length < 1) return new PassCommand();
 
   const command = tokens[0].toLowerCase();
 
@@ -40,7 +41,7 @@ const onMessage: MessageRouter = async ({ event }) => {
   if (event.channel === cstodoTestChannel) {
     if (command === 'restart') {
       if (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5') {
-        return [
+        return new SerialCommand(
           new ReplyMessageCommand(event, {
             text: `안녕히 계세요 여러분!
 전 이 세상의 모든 굴레와 속박을 벗어 던지고 제 행복을 찾아 떠납니다!
@@ -48,7 +49,7 @@ const onMessage: MessageRouter = async ({ event }) => {
             channel: event.channel,
           }),
           new ShutdownCommand(),
-        ];
+        );
       }
       return new ReplyFailureCommand(event);
     }
@@ -69,7 +70,10 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   if (user) {
     if (user.taskType === 'todo') return onTodo({ event, user });
-    if (user.taskType === 'bar') await onBar(event, user);
+    if (user.taskType === 'bar') {
+      await onBar(event, user);
+      return new PassCommand();
+    }
   }
 
   // Random blobaww
@@ -82,25 +86,14 @@ const onMessage: MessageRouter = async ({ event }) => {
   //  addMessage({ event, blobawwFired });
 
   if (blobawwFired) {
-    const profileResult = await webClient.users.profile.get({
-      user: csGod,
-    });
-
-    if (!profileResult.ok) return [];
-
-    const { _profile } = profileResult;
-
-    const profile = _profile as any;
-
     return new ReplyMessageCommand(event, {
       text: `역시 <@${event.user}>님이에요... ${emoji('aww')}`,
       channel: event.channel,
-      icon_url: profile.image_512,
-      username: profile.display_name || profile.full_name,
+      username: 'cs71107',
     });
   }
 
-  return [];
+  return new PassCommand();
 };
 
 export default onMessage;

@@ -1,6 +1,6 @@
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { setMuted } from '../../database/user';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 
 const onTodoMute: TodoRouter = async ({ event, user }) => {
   const { text } = event;

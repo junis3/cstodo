@@ -8,7 +8,7 @@ import {
 import onMessage from './module/onMessage';
 import onTest from './module/onTest';
 import { initiateAlarms } from './database/alarm';
-import { runCommands, webClient } from './command';
+import { webClient } from './command';
 import { SlackMessageEvent } from './command/event';
 
 if (logWebhook) {
@@ -49,8 +49,8 @@ export const slackEvents = createEventAdapter(signingSecret);
 })();
 
 slackEvents.on('message', (event: SlackMessageEvent) => {
-  Promise.resolve(onMessage({ event })).then((commands) => {
-    runCommands(commands);
+  Promise.resolve(onMessage({ event })).then((command) => {
+    command.exec();
   });
 });
 

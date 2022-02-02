@@ -1,11 +1,12 @@
 import { emoji, message } from '../../etc/theme';
 import isAttack from '../isAttack';
-import { MessageRouter } from '../router';
+import { MessageRouter } from '../../router';
 import { ReplyMessageCommand } from '../../command/ReplyMessageCommand';
+import { PassCommand } from '../../command/PassCommand';
 
 const onYourMark: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);
-  if (attack) return [attack];
+  if (attack) return attack;
 
   const { text } = event;
 
@@ -27,7 +28,7 @@ const onYourMark: MessageRouter = async ({ event }) => {
     });
   }
 
-  return [];
+  return new PassCommand();
 };
 
 export default onYourMark;

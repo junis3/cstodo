@@ -5,8 +5,9 @@ import {
 import { getArg } from '../../etc/parseQuery';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
 import { cstodoTestChannel } from '../../config';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
+import { PassCommand } from '../../command/PassCommand';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
@@ -86,7 +87,7 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
     }
   }
   //    await replySuccess(event, user, message, 'default');
-  return [];
+  return new PassCommand();
 };
 
 export default onTodoSet;

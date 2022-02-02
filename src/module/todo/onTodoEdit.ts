@@ -6,7 +6,7 @@ import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import timeToString from '../../etc/timeToString';
 import preprocessContent from '../../etc/preprocessContent';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 

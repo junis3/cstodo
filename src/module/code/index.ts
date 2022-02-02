@@ -1,10 +1,11 @@
 import { ReplyMessageCommand } from '../../command/ReplyMessageCommand';
 import isAttack from '../isAttack';
-import { MessageRouter } from '../router';
+import { MessageRouter } from '../../router';
+import { PassCommand } from '../../command/PassCommand';
 
 const onCode: MessageRouter = async ({ event }) => {
   const attack = isAttack(event);
-  if (attack) return [attack];
+  if (attack) return attack;
 
   const { text } = event;
   const tokens = text.split(' ').map((token) => token.trim());
@@ -21,7 +22,7 @@ const onCode: MessageRouter = async ({ event }) => {
     });
   }
 
-  return [];
+  return new PassCommand();
 };
 
 export default onCode;

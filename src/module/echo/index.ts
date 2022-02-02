@@ -1,10 +1,10 @@
-import { ReplyMessageCommand } from '../../command/replyMessage';
+import { ReplyMessageCommand } from '../../command/ReplyMessageCommand';
 import isAttack from '../isAttack';
-import { MessageRouter } from '../router';
+import { MessageRouter } from '../../router';
 
 const onEcho: MessageRouter = ({ event }) => {
   const attack = isAttack(event);
-  if (attack) return [attack];
+  if (attack) return attack;
   // eslint-disable-next-line max-len
   //    if (event.thread_ts && Number.parseFloat(event.thread_ts) < (new Date().getTime() / 1000) - 5 * 60) return;
 

@@ -1,9 +1,10 @@
 import { getCstodos, removeCstodo } from '../../database/cstodo';
 import preprocessContent from '../../etc/preprocessContent';
 import { isInteger } from '../../etc/isInteger';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
+import { ParallelCommand } from '../../command/ParallelCommand';
 
 const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => {
   const todo = await getCstodos(user.id);
@@ -37,7 +38,7 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => 
 
   // eslint-disable-next-line no-restricted-syntax
 
-  return Promise.all(Array.from(contents).map(async (content) => {
+  return new ParallelCommand(...await Promise.all(Array.from(contents).map(async (content) => {
     if (await removeCstodo({ owner: user.id, content })) {
       return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거했어요!`, {
         muted: false,
@@ -45,7 +46,7 @@ const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => 
       });
     }
     return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`);
-  }));
+  })));
 };
 
 export default onTodoRemove;

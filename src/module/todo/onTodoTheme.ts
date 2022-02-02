@@ -1,6 +1,6 @@
 import { isThemeType, setTheme } from '../../database/user';
 import preprocessContent from '../../etc/preprocessContent';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 

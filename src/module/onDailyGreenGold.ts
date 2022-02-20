@@ -10,7 +10,7 @@ import { getUser, UserType } from '../database/user';
 
 export const validateThenChooseProblem = async (todoCommand: string) => {
   await validateProblem(todoCommand);
-  chooseProblem(todoCommand);
+  await chooseProblem(todoCommand);
 }
 
 export const chooseProblem = async (todoCommand = 'greentodo') => {

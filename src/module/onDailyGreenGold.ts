@@ -8,11 +8,15 @@ import getCurrentHistory from '../etc/getCurrentHistory';
 import getProblemInfo from '../etc/getProblemInfo';
 import { getUser, UserType } from '../database/user';
 
+export const validateThenChooseProblem = async (todoCommand: string) => {
+  await validateProblem(todoCommand);
+  chooseProblem(todoCommand);
+}
+
 export const chooseProblem = async (todoCommand = 'greentodo') => {
   const user = await getUser(todoCommand);
   if (!user) return;
-  const numProblems = user.numProbsPerCycle || 1;
-  const problems = await recommendProblem(todoCommand, numProblems);
+  const problems = await recommendProblem(todoCommand);
   const username = user.name;
   const home = user.home!!;
 

@@ -12,7 +12,7 @@ import { PassCommand } from '../../command/PassCommand';
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
 const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
-  if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5') {
+  if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {
     return new ReplyFailureCommand(event, user);
   }
 

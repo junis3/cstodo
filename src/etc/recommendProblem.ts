@@ -23,18 +23,17 @@ const parseLevel = (levelNum: number) => {
   return 'unranked';
 };
 
-const recommendProblem = async (todoCommand: string = 'greentodo', numProblems = 1) => {
-  const query = await (async () => {
-    const user = await getUser(todoCommand);
-    if (user) {
-      return user.hwQuery;
-    }
-    return '';
-  })();
+const recommendProblem = async (todoCommand: string = 'greentodo') => {
+  const user = await getUser(todoCommand);
+  if (!user) return Array<HistoryType>();
+  if(!user.hwQuery) return Array<HistoryType>();
+  
+  const query = user ? user.hwQuery || '' : '';
+  const numProblems = user.numProbsPerCycle || 1;
 
   const result = await querySolvedAC(query);
   const problems = result.data.items.slice(0, numProblems);
-  const id : number = 0;
+
   return problems.map((problem: { problemId: any; titleKo: any; level: number; }) => ({
     id: problem.problemId,
     title: problem.titleKo,

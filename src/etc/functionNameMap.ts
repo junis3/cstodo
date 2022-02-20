@@ -57,7 +57,7 @@ export const functionNameMap: FunctionNameData[] = [
   {
     name: 'checkAndGiveHW',
     callback: (fireDate, ...params)  => validateThenChooseProblem(params[0]),
-  }
+  },
 ];
 
 export const getFunctionByName = (name: string) => {

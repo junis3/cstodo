@@ -28,7 +28,8 @@ mongoose.connect(mongodbUri, {
   console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
 }).catch((err) => {
   // eslint-disable-next-line no-console
-  console.error(`Failed to connect to ${mongoose.connection.host}`);
+  console.error(`[CSTODO] Uri: ${mongodbUri}`)
+  console.error(`[CSTODO] Failed to connect to ${mongoose.connection.host}`);
   throw err;
 });
 
@@ -63,4 +64,4 @@ const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
 // eslint-disable-next-line no-console
-app.listen(port, () => console.log(`Running slackbot on port ${port}.`));
+app.listen(port, () => console.log(`[CSTODO] Running slackbot on port ${port}.`));

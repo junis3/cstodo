@@ -1,5 +1,5 @@
 import { webClient } from '../command';
-import { chooseProblem, validateProblem } from '../module/onDailyGreenGold';
+import { chooseProblem, validateProblem, validateThenChooseProblem } from '../module/onDailyGreenGold';
 import onDailyProblem from '../module/onDailyProblem';
 import checkAllTodoAlarms from './checkAllTodoAlarms';
 
@@ -54,6 +54,10 @@ export const functionNameMap: FunctionNameData[] = [
     name: 'checkHW',
     callback: (fireDate, ...params) => validateProblem(params[0]),
   },
+  {
+    name: 'checkAndGiveHW',
+    callback: (fireDate, ...params)  => validateThenChooseProblem(params[0]),
+  }
 ];
 
 export const getFunctionByName = (name: string) => {

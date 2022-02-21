@@ -7,7 +7,7 @@ import { validateThenChooseProblem } from '../onDailyGreenGold';
 
 const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) => {
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
-  if(forceRefreshArg) {
+  if(typeof forceRefreshArg == 'string') {
     if(event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {
       return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자만 할 수 있어요...`)
     }

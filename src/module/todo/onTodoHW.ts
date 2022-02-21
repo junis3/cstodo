@@ -5,7 +5,7 @@ import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { getArg } from '../../etc/parseQuery';
 import { validateThenChooseProblem } from '../onDailyGreenGold';
 
-const onTodoHW: TodoRouter = async ({ event, user, query: { command, args } }) => {
+const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) => {
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
   if(forceRefreshArg) {
     if(event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {

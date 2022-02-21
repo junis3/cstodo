@@ -2,8 +2,18 @@ import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../.
 import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
+import { getArg } from '../../etc/parseQuery';
+import { validateThenChooseProblem } from '../onDailyGreenGold';
 
-const onTodoHW: TodoRouter = async ({ event, user }) => {
+const onTodoHW: TodoRouter = async ({ event, user, query: { command, args } }) => {
+  const forceRefreshArg = getArg(['--refresh', '-r'], args);
+  if(forceRefreshArg) {
+    if(event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {
+      return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자만 할 수 있어요...`)
+    }
+    validateThenChooseProblem(user.command);
+    return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
+  }
   const numProblems = user.numProbsPerCycle || 1;
   const problems = await getLatestGreenGolds(user.command, numProblems);
   if (problems === null

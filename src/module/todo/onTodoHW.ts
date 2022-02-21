@@ -11,7 +11,7 @@ const onTodoHW: TodoRouter = async ({ event, user, query: { command, args } }) =
     if(event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {
       return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자만 할 수 있어요...`)
     }
-    validateThenChooseProblem(user.command);
+    await validateThenChooseProblem(user.command);
     return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
   }
   const numProblems = user.numProbsPerCycle || 1;

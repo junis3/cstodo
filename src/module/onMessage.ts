@@ -40,7 +40,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   if (event.channel === cstodoTestChannel) {
     if (command === 'restart') {
-      if (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5') {
+      if (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5' || event.user === 'U02QVE5EDE0') {
         return new SerialCommand(
           new ReplyMessageCommand(event, {
             text: `안녕히 계세요 여러분!

@@ -5,7 +5,11 @@ import { HistoryType } from '../database/history';
 const getProblemInfo = async (id: number) => {
   const [solvedResp, bojResp] = await Promise.all([
     axios.get(`https://solved.ac/api/v3/problem/show?problemId=${id}`),
-    axios.get(`https://www.acmicpc.net/problem/${id}`),
+    axios.get(`https://www.acmicpc.net/problem/${id}`, {
+      headers: {
+        'User-Agent': 'cstodo'
+      },
+    }),
   ]);
 
   if (solvedResp.status != 200) throw new Error(`Solved.ac api returned non-200 status: ${solvedResp.status} ${solvedResp.statusText}`);

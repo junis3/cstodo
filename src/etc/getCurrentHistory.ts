@@ -4,7 +4,11 @@ import voca from 'voca';
 
 const getHTML = async (username = 'cs71107') => {
   try {
-    return await axios.get(`https://www.acmicpc.net/user/${username}`);
+    return await axios.get(`https://www.acmicpc.net/user/${username}`, {
+      headers: {
+        'User-Agent': 'cstodo'
+      },
+    });
   } catch (error) {
     console.log(error);
     throw error;

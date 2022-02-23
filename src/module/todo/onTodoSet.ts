@@ -65,7 +65,11 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
   if (typeof bojHandle === 'string') {
     const bojResp = await (async () => {
       try {
-        const resp = await axios.get(`https://acmicpc.net/user/${bojHandle}`);
+        const resp = await axios.get(`https://acmicpc.net/user/${bojHandle}`, {
+          headers: {
+            'User-Agent': 'cstodo'
+          },
+        });
         return resp.status;
       } catch (error) {
         // eslint-disable-next-line no-console

@@ -4,6 +4,7 @@ import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { getArg } from '../../etc/parseQuery';
 import { validateThenChooseProblem } from '../onDailyGreenGold';
+import isAdmin from '../../etc/isAdmin';
 
 const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) => {
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
@@ -17,8 +18,7 @@ const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) =
   }
 
   if(typeof forceRefreshArg == 'string') {
-    if(event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0'
-    && event.user != user.owner) {
+    if(!isAdmin(event.user) && event.user != user.owner) {
       return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자와 주인만 할 수 있어요...`)
     }
     await validateThenChooseProblem(user.command);

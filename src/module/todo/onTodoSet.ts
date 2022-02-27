@@ -8,11 +8,12 @@ import { cstodoTestChannel } from '../../config';
 import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { PassCommand } from '../../command/PassCommand';
+import isAdmin from '../../etc/isAdmin';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
 
 const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
-  if (event.user !== user.owner && event.user !== 'UV6HYQD3J' && event.user !== 'UV8DYMMV5' && event.user != 'U02QVE5EDE0') {
+  if (event.user !== user.owner && !isAdmin(event.user)) {
     return new ReplyFailureCommand(event, user);
   }
 

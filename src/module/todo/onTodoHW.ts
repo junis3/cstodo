@@ -44,8 +44,8 @@ const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, e
   const numProblemsArg = getArgFromRawArgString(['-n', '--num'], rawArgString);
   if (typeof numProblemsArg === 'string') {
     const numProblems = parseInt(numProblemsArg, 10);
-    if (isNaN(numProblems) || numProblems < 1) {
-      return new ReplyFailureCommand(event, user, `숙제 개수는 양의 정수로 입력해주세요...`);
+    if (isNaN(numProblems) || numProblems < 1 || numProblems > 5) {
+      return new ReplyFailureCommand(event, user, `숙제 개수는 1-5 사이의 양의 정수로 입력해주세요...`);
     }
     await setNumProbsPerCycle(user.command, numProblems);
     return new ReplySuccessCommand(event, user, `${user.command}님의 숙제 개수를 ${numProblems}개로 설정했어요!`, { iconEmoji: 'hw' });

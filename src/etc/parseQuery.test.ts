@@ -1,4 +1,4 @@
-import parseQuery, { QueryType } from './parseQuery';
+import parseQuery, { getArgFromRawArgString, QueryType } from './parseQuery';
 
 test('argument with single chars', () => {
   const pq : QueryType = parseQuery('cmd subcmd -a va -b vb -c');
@@ -23,3 +23,4 @@ test('multiple boolean flags', () => {
   expect(pq.args.find((arg) => arg.key === '-a')!.value).toBe(null);
   expect(pq.args.find((arg) => arg.key === '-b')!.value).toBe(null);
 });
+

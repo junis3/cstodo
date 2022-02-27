@@ -6,7 +6,7 @@ export interface Arg {
 export interface QueryType {
     command: string[],
     args: Arg[],
-    rawArgString?: string,
+    rawArgString: string,
 }
 
 // Argument set with key : the key
@@ -31,20 +31,25 @@ const findFlagFromRawArgString = (flag: string, rawArgString: string) => {
 
   if (idx === -1) return undefined;
 
-  const nextQuotedIndex = rawArgString.indexOf('"', idx + flag.length);
-  if (nextQuotedIndex !== -1) {
-    const nextQuoteCloser = rawArgString.indexOf('"', nextQuotedIndex + 1);
-    if (nextQuoteCloser === -1) return null;
-    return rawArgString.slice(nextQuotedIndex + 1, nextQuoteCloser);
-  }
-
   const nextIdx = rawArgString.indexOf(' ', idx + flag.length);
 
   if (nextIdx === -1) return null;
 
+  const nextQuoteOpener = rawArgString.indexOf('"', nextIdx);
+  if (nextQuoteOpener !== -1 && rawArgString.slice(nextIdx, nextQuoteOpener).trim() === '') {
+    const nextQuoteCloser = rawArgString.indexOf('"', nextIdx + 2);
+    if (nextQuoteCloser === -1) return null;
+    return rawArgString.slice(nextQuoteOpener + 1, nextQuoteCloser);
+  }
+
   const nextSpaceIdx = rawArgString.indexOf(' ', nextIdx + 1);
   if (nextSpaceIdx === -1) return rawArgString.slice(nextIdx + 1);
-  return rawArgString.slice(nextIdx + 1, nextSpaceIdx);
+  const value = rawArgString.slice(nextIdx + 1, nextSpaceIdx).trim();
+
+  if(value.startsWith('-')) {
+    return '';
+  }
+  return value;
 }
 
 export const getArgFromRawArgString = (flags: string[], rawArgString: string) => {

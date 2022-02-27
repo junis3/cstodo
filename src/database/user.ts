@@ -126,5 +126,13 @@ export const setBojHandle = async (command: string, bojHandle: string) => {
   await User.findOneAndUpdate({ command }, { bojHandle });
   return true;
 };
+
+export const setNumProbsPerCycle = async (command: string, numProbsPerCycle: number) => {
+  await User.findOneAndUpdate({ command }, { numProbsPerCycle });
+}
+
+export const setHWQuery = async (command: string, hwQuery: string) => {
+  await User.findOneAndUpdate({ command }, { hwQuery });
+}
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.
 // KKOWA?

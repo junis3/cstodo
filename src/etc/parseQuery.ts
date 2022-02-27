@@ -6,6 +6,7 @@ export interface Arg {
 export interface QueryType {
     command: string[],
     args: Arg[],
+    rawArgString?: string,
 }
 
 // Argument set with key : the key
@@ -24,6 +25,40 @@ export const getArg = (flags: string[], args: Arg[]) => {
 
   return args.find((arg) => arg.key === name)!.value || '';
 };
+
+const findFlagFromRawArgString = (flag: string, rawArgString: string) => {
+  const idx = rawArgString.indexOf(flag);
+
+  if (idx === -1) return undefined;
+
+  const nextQuotedIndex = rawArgString.indexOf('"', idx + flag.length);
+  if (nextQuotedIndex !== -1) {
+    const nextQuoteCloser = rawArgString.indexOf('"', nextQuotedIndex + 1);
+    if (nextQuoteCloser === -1) return null;
+    return rawArgString.slice(nextQuotedIndex + 1, nextQuoteCloser);
+  }
+
+  const nextIdx = rawArgString.indexOf(' ', idx + flag.length);
+
+  if (nextIdx === -1) return null;
+
+  const nextSpaceIdx = rawArgString.indexOf(' ', nextIdx + 1);
+  if (nextSpaceIdx === -1) return rawArgString.slice(nextIdx + 1);
+  return rawArgString.slice(nextIdx + 1, nextSpaceIdx);
+}
+
+export const getArgFromRawArgString = (flags: string[], rawArgString: string) => {
+  const flagsWithoutDuplicates = flags.filter((name, idx) => flags.indexOf(name) === idx);
+  const argsMatched = flagsWithoutDuplicates.map((flag) => findFlagFromRawArgString(flag, rawArgString))
+                      .filter((arg) => arg !== undefined);
+  if (argsMatched.length === 1) {
+    return argsMatched[0];
+  }
+  if (argsMatched.length > 1) {
+    return new Error(`중복되는 인자가 있습니다.`);
+  }
+  return new Error(`요청한 인자가 없습니다.`);
+}
 
 const parseQuery = (rawCommand: string) => {
   const arr = rawCommand.split(' -');
@@ -44,10 +79,12 @@ const parseQuery = (rawCommand: string) => {
       value: str.slice(idx + 1).trim(),
     };
   });
+  const rawArgString = '-' + arr.slice(1).join(' -');
 
   return {
     command,
     args,
+    rawArgString,
   } as QueryType;
 };
 

@@ -3,26 +3,25 @@ import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { getArg } from '../../etc/parseQuery';
-import { validateThenChooseProblem } from '../onDailyGreenGold';
+import { chooseProblem, validateThenChooseProblem } from '../onDailyGreenGold';
 import isAdmin from '../../etc/isAdmin';
 
-const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) => {
-  const forceRefreshArg = getArg(['--refresh', '-r'], args);
+const onTodoHWRefresh: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
+  if(!isAdmin(event.user) && event.user != user.owner) {
+    return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자와 주인만 할 수 있어요...`)
+  }
+  await validateThenChooseProblem(user.command);
+  return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
+}
 
+const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
   const numProblems = user.numProbsPerCycle || 1;
   const problems = await getLatestGreenGolds(user.command, numProblems);
   if (problems === null
     || !problems.every((problem) => problem !== undefined)
-    || problems.length < numProblems) {
-    return new ReplyFailureCommand(event, user, `${user.name}님은 숙제를 받은 적이 없어요... 관리자에게 다음 정보를 주시면 생성해드릴 거예요...\n- 숙제를 받고 싶은 주기와 시점\n- 숙제를 뽑는 solved.ac 쿼리\n- 한번에 받을 숙제 개수\n관리자가 귀찮아하면 지연될 수 있어요...`);
-  }
-
-  if(typeof forceRefreshArg == 'string') {
-    if(!isAdmin(event.user) && event.user != user.owner) {
-      return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자와 주인만 할 수 있어요...`)
-    }
-    await validateThenChooseProblem(user.command);
-    return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
+    || problems.length < numProblems) {  
+      await chooseProblem(user.command);    
+      return new ReplySuccessCommand(event, user, `${user.command}님의 숙제가 조건과 맞지 않아 갱신되었어요!`);
   }
 
   const hrefs = await Promise.all(
@@ -33,6 +32,28 @@ const onTodoHW: TodoRouter = async ({ query: { command, args }, event, user }) =
   const href = hrefs.join(', ');
   const josa = hrefs.length > 1 ? '들은' : '는';
   return new ReplySuccessCommand(event, user, `${user.name}님의 최근 숙제${josa} ${href}입니다!`, { iconEmoji: 'hw' });
+}
+
+const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, event, user }) => {
+  if (
+    user.hwQuery === undefined ||
+    user.hwQuery.length === 0 ||
+    user.bojHandle === undefined ||
+    user.bojHandle.length === 0 ||
+    user.home === undefined ||
+    user.home.length === 0 ||
+    user.owner === undefined ||
+    user.owner.length === 0
+  ) {
+    return new ReplyFailureCommand(event, user, `${user.name}님의 숙제가 등록되지 않은 것 같아요... cstodo-dev 채널에 문의해주세요.`);
+  }
+
+  const forceRefreshArg = getArg(['--refresh', '-r'], args);
+  if(typeof forceRefreshArg == 'string') {
+    return await onTodoHWRefresh({ query: {command, args, rawArgString}, event, user});
+  }
+
+  return await onTodoHWQuery({ query: {command, args, rawArgString}, event, user});
 };
 
 export default onTodoHW;

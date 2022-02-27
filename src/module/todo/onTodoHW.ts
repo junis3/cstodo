@@ -33,7 +33,7 @@ const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString},
   );
   const href = hrefs.join(', ');
   const josa = hrefs.length > 1 ? '들은' : '는';
-  return new ReplySuccessCommand(event, user, `[debug] command: ${command} ${user.name}님의 최근 숙제${josa} ${href}입니다!`, { iconEmoji: 'hw' });
+  return new ReplySuccessCommand(event, user, `${command} ${user.name}님의 최근 숙제${josa} ${href}입니다!`, { iconEmoji: 'hw' });
 }
 
 const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
@@ -83,7 +83,7 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
     return await onTodoHWRefresh({ query: {command, args, rawArgString}, event, user});
   }
 
-  if (command.length > 2 && command[2] === 'set') {
+  if (command.length > 1 && command[1] === 'set') {
     return await onTodoHWSet({ query: {command, args, rawArgString}, event, user});
   }
 

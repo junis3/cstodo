@@ -33,14 +33,14 @@ const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString},
   );
   const href = hrefs.join(', ');
   const josa = hrefs.length > 1 ? '들은' : '는';
-  return new ReplySuccessCommand(event, user, `${user.name}님의 최근 숙제${josa} ${href}입니다!`, { iconEmoji: 'hw' });
+  return new ReplySuccessCommand(event, user, `[debug] command: ${command} ${user.name}님의 최근 숙제${josa} ${href}입니다!`, { iconEmoji: 'hw' });
 }
 
 const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
   if (!isAdmin(event.user) && event.user != user.owner) {
     return new ReplyFailureCommand(event, user, `숙제 설정은 관리자와 주인만 바꿀 수 있어요...`);
   }
-  
+
   const numProblemsArg = getArgFromRawArgString(['-n', '--num'], rawArgString);
   if (typeof numProblemsArg === 'string') {
     const numProblems = parseInt(numProblemsArg, 10);

@@ -13,8 +13,7 @@ export const isTesting = !process.env.IS_PRODUCTION;
 export const csGod = 'UV78YL6TW';
 export const cstodoTestChannel = process.env.CSTODO_TEST_CHANNEL || 'C01JER4T7AN';
 export const cstodoChannel = isTesting ? cstodoTestChannel : (process.env.CSTODO_CHANNEL || 'C01H4RY69CL');
-
-// export const green55 = '';
-// export const green55Channel = cstodoTestChannel;
+const admin_str = process.env.CSTODO_ADMINS || (isTesting ? 'UV6HYQD3J:UV8DYMMV5' : 'U02QVE5EDE0');
+export const admins = admin_str.split(':');
 
 export const defaultBarOwner = 'testbar';

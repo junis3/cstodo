@@ -1,22 +1,6 @@
-import axios from 'axios';
-import cheerioModule from 'cheerio';
-import voca from 'voca';
-import fs from 'fs';
 import { HistoryType } from '../database/history';
 import { getUser } from '../database/user';
-
-const querySolvedAC = async (query = '') => {
-  try {
-    return await axios.get(`https://solved.ac/api/v3/search/problem?query=${query}&sort=random`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+import querySolvedAC from './querySolvedAC';
 
 const parseLevel = (levelNum: number) => {
   if (levelNum > 0) return `${['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum - 1) / 5 + 0.000001)]}${5 - (levelNum - 1) % 5}`;

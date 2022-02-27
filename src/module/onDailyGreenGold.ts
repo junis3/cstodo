@@ -31,7 +31,7 @@ export const chooseProblem = async (todoCommand = 'greentodo') => {
   );
 
   const href = hrefs.join(', ');
-  const josa = href.length > 1 ? '들은' : '는';
+  const josa = hrefs.length > 1 ? '들은' : '는';
   await postMessage({
     text: `${username}님, 오늘의 문제${josa} ${href}입니다!`,
     channel: home,

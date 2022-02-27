@@ -9,7 +9,7 @@ const globalFlags : Arg[] = [
 
 test('single argument', () => {
   const arg = getArg(['-a'], globalFlags);
-  expect(arg).toBe(null);
+  expect(arg).toBe('');
 });
 
 test('nonexistent argument', () => {

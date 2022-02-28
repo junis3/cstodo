@@ -5,4 +5,5 @@ export interface SlackMessageEvent {
     text: string;
     ts: string;
     thread_ts?: string;
+    command?: string;
 }

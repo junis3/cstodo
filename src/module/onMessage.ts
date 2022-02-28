@@ -11,6 +11,7 @@ import { ShutdownCommand } from '../command/ShutdownCommand';
 import { ReplyFailureCommand } from '../command/ReplyFailureCommand';
 import { PassCommand } from '../command/PassCommand';
 import { SerialCommand } from '../command/SerialCommand';
+import { addMessage } from '../database/message';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -83,7 +84,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   const blobawwFired = Math.random() < percentage;
 
-  //  addMessage({ event, blobawwFired });
+  if(event.command) addMessage({ event, blobawwFired });
 
   if (blobawwFired) {
     return new ReplyMessageCommand(event, {

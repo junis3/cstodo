@@ -55,6 +55,7 @@ export const addCstodo = async (cstodo: Partial<CstodoType>) => {
 
 export const editCstodo = async (cstodo: Partial<CstodoType>, change: Partial<CstodoType>) => {
   if (!cstodo.content || !cstodo.owner || !cstodo.createdAt) return false;
+  console.log(cstodo);
   
   const result = await Cstodo.findOneAndUpdate({content: cstodo.content, owner: cstodo.owner, createdAt: cstodo.createdAt}, change);
   return result;

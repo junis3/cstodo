@@ -21,7 +21,7 @@ export class AddReactionCommand implements CommandInterface {
 
   public async exec() {
     try {
-      if(this.props.command) await webClient.reactions.add(this.props);
+      if(this.props.command === undefined) await webClient.reactions.add(this.props);
     } catch (e) {
       if (!isAcceptableError(e)) throw e;
     }

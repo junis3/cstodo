@@ -33,7 +33,7 @@ async function checkAllTodoAlarms(date: Date) {
               {
                 channel,
                 text,
-                user: username,
+                user: user.owner!!,
               }
             ).exec();
           } else {
@@ -41,7 +41,7 @@ async function checkAllTodoAlarms(date: Date) {
               {
                 channel,
                 text,
-                user: username,
+                username: username,
                 icon_emoji: emoji('remove', user.theme),
               }
             ).exec();

@@ -13,6 +13,7 @@ export class ReplyFailureCommand extends SerialCommand {
       name: 'sad',
       timestamp: event.ts,
       channel: event.channel,
+      command: event.command,
     });
 
     const abortCommand = new AbortCommand();

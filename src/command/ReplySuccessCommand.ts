@@ -45,6 +45,7 @@ export class ReplySuccessCommand extends SerialCommand {
           name: 'blobokhand',
           timestamp: event.ts,
           channel: event.channel,
+          command: event.command,
         }),
       );
     } else {

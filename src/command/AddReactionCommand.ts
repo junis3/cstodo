@@ -5,17 +5,23 @@ const isAcceptableError = (e: unknown) => typeof e === 'object' && e !== null
   && 'message' in e
   && (e as any).message === 'An API error occurred: already_reacted';
 
+interface CustomReactionsAddArguments {
+  command?: string;
+};
+
+type ExtendedReactionsAddArguments = CustomReactionsAddArguments & ReactionsAddArguments;
+
 // eslint-disable-next-line import/prefer-default-export
 export class AddReactionCommand implements CommandInterface {
-  private props: ReactionsAddArguments;
+  private props: ExtendedReactionsAddArguments;
 
-  constructor(props: ReactionsAddArguments) {
+  constructor(props: ExtendedReactionsAddArguments) {
     this.props = props;
   }
 
   public async exec() {
     try {
-      await webClient.reactions.add(this.props);
+      if(this.props.command) await webClient.reactions.add(this.props);
     } catch (e) {
       if (!isAcceptableError(e)) throw e;
     }

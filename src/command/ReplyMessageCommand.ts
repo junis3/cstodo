@@ -22,7 +22,7 @@ export class ReplyMessageCommand extends SerialCommand {
     if (muted) {
       super(
         new PostEphemeralCommand({ ...args, channel, user }),
-        new AddReactionCommand({ name: 'blobokhand', timestamp, channel }),
+        new AddReactionCommand({ name: 'blobokhand', timestamp, channel, command: event.command }),
       );
     } else {
       super(

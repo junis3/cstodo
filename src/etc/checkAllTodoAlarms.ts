@@ -8,7 +8,7 @@ import { emoji } from './theme';
 import timeToString from './timeToString';
 
 const minute = 60000;
-const day_per_minute = 1440;
+const minutes_per_day = 1440;
 
 async function checkAllTodoAlarms(date: Date) {
   const users = await getAllUsers();
@@ -20,9 +20,9 @@ async function checkAllTodoAlarms(date: Date) {
       const todos = await getCstodos(user.id);
 
       todos.forEach(async (todo) => {
-        if (!todo.due || !todo.content || todo.due > time) return;
-        const todo_minute = Math.floor((todo.due - time) / minute) % day_per_minute;
-        const now_minute = Math.floor(time / minute) % day_per_minute;
+        if (!todo.due || !todo.content || todo.due > time + (minutes_per_day + 1) * minute) return;
+        const todo_minute = Math.floor(todo.due / minute) % minutes_per_day;
+        const now_minute = Math.floor(time / minute) % minutes_per_day;
         if (todo_minute === now_minute) {
           const text = `${user.name}님의 할 일 알림입니다!\n*${todo.content}*\n마감 일시: ${timeToString(todo.due)}`;
           const channel = user.home!!;

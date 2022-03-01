@@ -88,8 +88,9 @@ const onTodoEdit: TodoRouter = async ({ event, user, query: { command, args } })
   }
 
   content = todo[x - 1].content;
+  const createdAt = todo[x - 1].createdAt;
 
-  if (await editCstodo(content, change)) {
+  if (await editCstodo({content: content, owner: newUser.id, createdAt: createdAt}, change)) {
     return new ReplySuccessCommand(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, { iconEmoji: 'edit', muted: false });
   }
   return new ReplyFailureCommand(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);

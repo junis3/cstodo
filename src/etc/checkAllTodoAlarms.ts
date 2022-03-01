@@ -12,7 +12,7 @@ async function checkAllTodoAlarms(date: Date) {
   users.forEach(async (user) => {
     if (!user.home) return;
     if (user.useAlarm === 'always') {
-      const todos = await getCstodos(user.command);
+      const todos = await getCstodos(user.id);
 
       todos.forEach(async (todo) => {
         if (Math.floor(todo.due / minute) === Math.floor(time / minute)) {

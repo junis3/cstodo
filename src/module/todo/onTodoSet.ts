@@ -9,9 +9,10 @@ import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { PassCommand } from '../../command/PassCommand';
 import isAdmin from '../../etc/isAdmin';
+import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 
 const negativeWords = ['off', 'no', 'none', 'false', '0', 'never'];
-
+const positiveWords = ['on', 'yes', 'true', '1'];
 const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
   if (event.user !== user.owner && !isAdmin(event.user)) {
     return new ReplyFailureCommand(event, user);
@@ -55,11 +56,26 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
 
   if (typeof useAlarm === 'string') {
     if (negativeWords.find((x) => useAlarm === x)) {
-      setUseAlarm(user.command, 'never');
-      await replySuccess(event, user, `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리지 않겠습니다..`);
+      await setUseAlarm(user.command, 'never');
+      return new ReplySuccessCommand(
+        event,
+        user,
+        `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리지 않겠습니다..`
+      );
+    } else if (positiveWords.some((x) => useAlarm === x)) {
+      await setUseAlarm(user.command, 'always');
+      return new ReplySuccessCommand(
+        event,
+        user,
+        `앞으로 ${user.name}님의 할 일의 마감 시간에 메시지를 드리겠습니다!`
+      );
     } else {
-      setUseAlarm(user.command, 'always');
-      await replySuccess(event, user, `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리겠습니다!`);
+      await setUseAlarm(user.command, 'mention');
+      return new ReplySuccessCommand(
+        event,
+        user,
+        `앞으로 ${user.name}님의 할 일 마감 시간에 멘션을 드리겠습니다. DM이나 채널읋 확인해주세요!`
+      );
     }
   }
 

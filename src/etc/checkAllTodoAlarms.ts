@@ -16,7 +16,7 @@ async function checkAllTodoAlarms(date: Date) {
 
   users.forEach(async (user) => {
     if (!user.home || !user.owner) return;
-    if (user.useAlarm === 'always') {
+    if (user.useAlarm === 'always' || user.useAlarm === 'mention') {
       const todos = await getCstodos(user.id);
 
       todos.forEach(async (todo) => {
@@ -28,23 +28,34 @@ async function checkAllTodoAlarms(date: Date) {
           const channel = user.home!!;
           const username = `${user.name}님의 똑똑한 비서`;
 
-          if (user.muted) {
-            await new PostEphemeralCommand(
-              {
-                channel,
-                text,
-                user: user.owner!!,
-              }
-            ).exec();
-          } else {
-            await new PostMessageCommand(
-              {
-                channel,
-                text,
-                username: username,
-                icon_emoji: emoji('remove', user.theme),
-              }
-            ).exec();
+          if (user.useAlarm === 'mention') {
+            const mentionText = `<@${user.owner}>님, ${text}`;
+            const mentionChannel = (user.muted ? user.owner!! : channel);
+            await new PostMessageCommand({
+              channel: mentionChannel,
+              text: mentionText,
+              username: username,
+              icon_emoji: emoji('remove', user.theme),
+            }).exec();
+          } else { // user.useAlarm === 'always'
+            if (user.muted) {
+              await new PostEphemeralCommand(
+                {
+                  channel,
+                  text,
+                  user: user.owner!!,
+                }
+              ).exec();
+            } else {
+              await new PostMessageCommand(
+                {
+                  channel,
+                  text,
+                  username: username,
+                  icon_emoji: emoji('remove', user.theme),
+                }
+              ).exec();
+            } 
           }
         }
       });

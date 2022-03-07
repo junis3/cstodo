@@ -6,7 +6,7 @@ export type ThemeType = typeof themeList[number];
 export const controlList = ['whitelist', 'blacklist'] as const;
 export type ControlType = typeof controlList[number];
 
-export const useFeatureList = ['always', 'optional', 'never'] as const;
+export const useFeatureList = ['always', 'optional', 'never', 'mention'] as const;
 export type UseFeatureType = typeof useFeatureList[number];
 
 export function isThemeType(str: string): str is ThemeType {

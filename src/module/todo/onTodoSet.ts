@@ -62,7 +62,7 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
         user,
         `앞으로 ${user.name}님의 할 일의 마감 시간에 알림을 드리지 않겠습니다..`
       );
-    } else if (positiveWords.some((x) => useAlarm === x)) {
+    } else if (useAlarm === 'always' || positiveWords.some((x) => useAlarm === x)) {
       await setUseAlarm(user.command, 'always');
       return new ReplySuccessCommand(
         event,

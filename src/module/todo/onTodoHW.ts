@@ -30,7 +30,7 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   const sourcedHWLength = latestHW.length;
   const solvedHW = latestHW.filter(hw => currentHistory.some((id) => id === hw.id));
   const solvedHWLength = solvedHW.length;
-
+  console.warn(`loaded ${solvedHWLength} solved HW`)
   const removalResult = await Promise.all(solvedHW.map(async hw => (await removeGreenGold(hw)) ? true : false));
 
   const purgedHWLength = removalResult.filter(result => result).length;

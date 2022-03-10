@@ -39,7 +39,7 @@ export const addGreenGold = async (username: string, { id, title } : HistoryType
 
 export const removeGreenGold = async (greenGold: Partial<GreenGoldType>) => {
   if (!greenGold.id || !greenGold.username || !greenGold.sourcedTimestamp) return false;
-
+  console.warn(`required to remove ${greenGold}`);
   const result = await GreenGold.findOneAndDelete(greenGold);
   return result;
 };

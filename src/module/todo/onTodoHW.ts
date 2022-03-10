@@ -1,4 +1,4 @@
-import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType } from '../../database/greengold';
+import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType, removeGreenGold } from '../../database/greengold';
 import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
@@ -7,6 +7,7 @@ import { chooseProblem, validateThenChooseProblem } from '../onDailyGreenGold';
 import isAdmin from '../../etc/isAdmin';
 import { setHWQuery, setNumProbsPerCycle } from '../../database/user';
 import querySolvedAC from '../../etc/querySolvedAC';
+import getCurrentHistory from '../../etc/getCurrentHistory';
 
 const onTodoHWRefresh: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
   if(!isAdmin(event.user) && event.user != user.owner) {
@@ -14,6 +15,28 @@ const onTodoHWRefresh: TodoRouter = async ({ query: {command, args, rawArgString
   }
   await validateThenChooseProblem(user.command);
   return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
+}
+
+const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
+  if(!isAdmin(event.user) && event.user != user.owner) {
+    return new ReplyFailureCommand(event, user, `숙제 정리는 관리자와 주인만 할 수 있어요...`)
+  }
+  const latestHW = await getLatestGreenGolds(user.command, 100);
+  if(latestHW === null) {
+    return new ReplyFailureCommand(event, user, `정리할 숙제가 없어서 똑떨이에요...`);
+  }
+
+  const currentHistory = await getCurrentHistory(user.bojHandle!!);
+  const sourcedHWLength = latestHW.length;
+  const solvedHW = latestHW.filter(hw => currentHistory.some((id) => id === hw.id));
+  const solvedHWLength = solvedHW.length;
+
+  const removalResult = await Promise.all(solvedHW.map(async hw => (await removeGreenGold(hw)) ? true : false));
+
+  const purgedHWLength = removalResult.filter(result => result).length;
+  const msg = `숙제를 정리했어요! ${sourcedHWLength}개의 숙제를 검토해 정리 대상인 숙제는 ${solvedHWLength}개, 정리된 숙제는 ${purgedHWLength}개 입니다.`; 
+
+  return new ReplySuccessCommand(event, user, `정리를 완료했어요! 정리한 숙제는 ${solvedHWLength}개이고, 정리하지 않은 숙제는 ${sourcedHWLength - solvedHWLength}개입니다.`);
 }
 
 const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
@@ -81,6 +104,11 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
   if(typeof forceRefreshArg == 'string') {
     return await onTodoHWRefresh({ query: {command, args, rawArgString}, event, user});
+  }
+
+  const purgeArg = getArg(['--purge', '-p'], args);
+  if(typeof purgeArg == 'string') {
+    return await onTodoHWPurge({ query: {command, args, rawArgString}, event, user});
   }
 
   if (command.length > 1 && command[1] === 'set') {

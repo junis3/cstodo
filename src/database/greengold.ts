@@ -37,4 +37,10 @@ export const addGreenGold = async (username: string, { id, title } : HistoryType
   }).save();
 };
 
+export const removeGreenGold = async (greenGold: Partial<GreenGoldType>) => {
+  if (!greenGold.id || !greenGold.username || !greenGold.sourcedTimestamp) return false;
+  const result = await GreenGold.findOneAndDelete({ id: greenGold.id, username: greenGold.username, sourcedTimestamp: greenGold.sourcedTimestamp });
+  return result;
+};
+
 export const greenGoldToHrefNoLevel = (problem: GreenGoldType) => `<http://icpc.me/${problem.id}|${problem.title}>`;

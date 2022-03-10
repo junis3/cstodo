@@ -25,7 +25,7 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   if(latestHW === null) {
     return new ReplyFailureCommand(event, user, `정리할 숙제가 없어서 똑떨이에요...`);
   }
-
+  console.warn("숙제 정리를 시작합니다.")
   const currentHistory = await getCurrentHistory(user.bojHandle!!);
   const sourcedHWLength = latestHW.length;
   const solvedHW = latestHW.filter(hw => currentHistory.some((id) => id === hw.id));
@@ -36,7 +36,7 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   const purgedHWLength = removalResult.filter(result => result).length;
   const msg = `숙제를 정리했어요! ${sourcedHWLength}개의 숙제를 검토해 정리 대상인 숙제는 ${solvedHWLength}개, 정리된 숙제는 ${purgedHWLength}개 입니다.`; 
 
-  return new ReplySuccessCommand(event, user, `정리를 완료했어요! 정리한 숙제는 ${solvedHWLength}개이고, 정리하지 않은 숙제는 ${sourcedHWLength - solvedHWLength}개입니다.`);
+  return new ReplySuccessCommand(event, user, msg);
 }
 
 const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {

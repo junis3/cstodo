@@ -32,7 +32,7 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   const removalResult = await Promise.all(solvedHW.map(async hw => (await removeGreenGold(hw)) ? true : false));
 
   const purgedHWLength = removalResult.filter(result => result).length;
-  const msg = `숙제를 정리했어요! ${sourcedHWLength}개의 숙제를 검토해 정리 대상인 숙제는 ${solvedHWLength}개, 정리된 숙제는 ${purgedHWLength}개 입니다.`; 
+  const msg = `숙제를 정리했어요! ${sourcedHWLength}개의 숙제를 검토어요! 이미 푼 ${solvedHWLength}개 숙제 중 ${purgedHWLength}개를 성공적으로 제거했습니다.`; 
 
   return new ReplySuccessCommand(event, user, msg);
 }

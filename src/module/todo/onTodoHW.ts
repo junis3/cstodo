@@ -25,12 +25,10 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   if(latestHW === null) {
     return new ReplyFailureCommand(event, user, `정리할 숙제가 없어서 똑떨이에요...`);
   }
-  console.warn("숙제 정리를 시작합니다.")
   const currentHistory = await getCurrentHistory(user.bojHandle!!);
   const sourcedHWLength = latestHW.length;
   const solvedHW = latestHW.filter(hw => currentHistory.some((id) => id === hw.id));
   const solvedHWLength = solvedHW.length;
-  console.warn(`loaded ${solvedHWLength} solved HW`)
   const removalResult = await Promise.all(solvedHW.map(async hw => (await removeGreenGold(hw)) ? true : false));
 
   const purgedHWLength = removalResult.filter(result => result).length;

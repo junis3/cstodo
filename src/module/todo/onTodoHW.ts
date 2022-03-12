@@ -86,6 +86,11 @@ const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, e
 }
 
 const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, event, user }) => {
+  
+  if (command.length > 1 && command[1] === 'set') {
+    return await onTodoHWSet({ query: {command, args, rawArgString}, event, user});
+  }
+
   if (
     user.hwQuery === undefined ||
     user.hwQuery.length === 0 ||
@@ -107,10 +112,6 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
   const purgeArg = getArg(['--purge', '-p'], args);
   if(typeof purgeArg == 'string') {
     return await onTodoHWPurge({ query: {command, args, rawArgString}, event, user});
-  }
-
-  if (command.length > 1 && command[1] === 'set') {
-    return await onTodoHWSet({ query: {command, args, rawArgString}, event, user});
   }
 
   return await onTodoHWQuery({ query: {command, args, rawArgString}, event, user});

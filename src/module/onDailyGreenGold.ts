@@ -2,16 +2,11 @@ import recommendProblem from '../etc/recommendProblem';
 import { postMessage } from '../etc/postMessage';
 import { history2Href, HistoryType } from '../database/history';
 import {
-  addGreenGold, getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType,
+  addGreenGold, getLatestGreenGolds,
 } from '../database/greengold';
 import getCurrentHistory from '../etc/getCurrentHistory';
 import getProblemInfo from '../etc/getProblemInfo';
-import { getUser, UserType } from '../database/user';
-
-export const validateThenChooseProblem = async (todoCommand: string) => {
-  await validateProblem(todoCommand);
-  await chooseProblem(todoCommand);
-}
+import { getUser } from '../database/user';
 
 export const chooseProblem = async (todoCommand = 'greentodo') => {
   const user = await getUser(todoCommand);
@@ -40,13 +35,35 @@ export const chooseProblem = async (todoCommand = 'greentodo') => {
   });
 };
 
+const worshipSuccess = async (problem: HistoryType, home: string) => {
+  const href = history2Href(problem);
+  await postMessage({
+    text: `:white_check_mark: ${href}`,
+    channel: home,
+    icon_emoji: ':blobgreenorz:',
+    username: 'GreenGold',
+  });
+};
+
+const blameFail = async (problem: HistoryType, home: string) => {
+  const href = history2Href(problem);
+  await postMessage({
+    text: `:x: ${href} : `,
+    channel: home,
+    icon_emoji: ':blobgreensad:',
+    username: 'GreenGold',
+  });
+};
+
 export const validateProblem = async (todoCommand = 'greentodo') => {
   const user = await getUser(todoCommand);
   if (!user) return;
   const numProblems = user.numProbsPerCycle || 1;
-  const problems = await getLatestGreenGolds(user.command, numProblems);
+  const greenGolds = await getLatestGreenGolds(user.command, numProblems);
   const home = user.home!!;
-  if (problems === null || !problems.every((problem) => problem !== undefined) || problems.length < numProblems) {
+  if (greenGolds === null
+    || !greenGolds.every((problem) => problem !== undefined)
+    || greenGolds.length < numProblems) {
     await postMessage({
       text: '봇 똑바로 안 만들어? 숙제가 없다잖아요...',
       channel: home,
@@ -56,80 +73,52 @@ export const validateProblem = async (todoCommand = 'greentodo') => {
     return;
   }
 
-  const currentHistory = await getCurrentHistory(user.bojHandle!!);
+  const currentHistory = new Set(await getCurrentHistory(user.bojHandle!!));
 
-  const unsolvedProblems = problems.filter((problem) => !currentHistory.find((id) => id === problem.id));
-  if (unsolvedProblems.length > 0) {
-    const unsolvedInfos = await Promise.all(unsolvedProblems.map(async (problem: GreenGoldType) => await getProblemInfo(problem.id!!)));
-    const hrefs = await Promise.all(
-      unsolvedInfos.map(
-        (problem: HistoryType) => history2Href(problem),
-      ),
-    );
-    const href = hrefs.join(', ');
-    await blameFail(href, home);
-  } else {
-    const infos = await Promise.all(problems.map(async (problem: GreenGoldType) => await getProblemInfo(problem.id!!)));
-    const hrefs = await Promise.all(
-      infos.map(
-        (problem: HistoryType) => history2Href(problem),
-      ),
-    );
-    const href = hrefs.join(', ');
-    await worshipSuccess(href, home, user);
+  const problems = await Promise.all(greenGolds.map((problem) => getProblemInfo(problem.id!!)));
+
+  const problemStatus = problems.map((problem) => ({
+    problem,
+    solved: currentHistory.has(problem.id),
+  }));
+
+  await Promise.all(problemStatus.map(({ problem, solved }) => {
+    if (solved) return worshipSuccess(problem, home);
+    return blameFail(problem, home);
+  }));
+
+  if (problemStatus.every(({ solved }) => solved)) {
+    await postMessage({
+      text: ':dhk2:',
+      channel: home,
+      icon_emoji: ':blobgreenorz:',
+      username: 'GreenGold',
+    });
+    await postMessage({
+      text: `*역사상 최고, ${user.name.toUpperCase()}*`,
+      channel: home,
+      icon_emoji: ':blobgreenorz:',
+      username: 'GreenGold',
+    });
+  }
+
+  if (problemStatus.every(({ solved }) => solved)) {
+    await postMessage({
+      text: ':blobghostnotlikethis: 너무해 :blobghostnotlikethis:',
+      channel: home,
+      icon_emoji: ':blobgreensad:',
+      username: 'GreenGold',
+    });
+    await postMessage({
+      text: '어떻게 숙제를 안 할 수가 있어...',
+      channel: home,
+      icon_emoji: ':blobgreensad:',
+      username: 'GreenGold',
+    });
   }
 };
 
-const worshipSuccess = async (href : string, home : string, user: UserType) => {
-  await postMessage({
-    text: `${href} : `,
-    channel: home,
-    icon_emoji: ':blobgreenorz:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: ':dhk2:',
-    channel: home,
-    icon_emoji: ':blobgreenorz:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: `*역사상 최고, ${user.name.toUpperCase()}*`,
-    channel: home,
-    icon_emoji: ':blobgreenorz:',
-    username: 'GreenGold',
-  });
-};
-
-const blameFail = async (href: string, home: string) => {
-  await postMessage({
-    text: `${href} : `,
-    channel: home,
-    icon_emoji: ':blobgreensad:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: ':blobghostnotlikethis:',
-    channel: home,
-    icon_emoji: ':blobgreensad:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: '너무해',
-    channel: home,
-    icon_emoji: ':blobgreensad:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: ':blobghostnotlikethis:',
-    channel: home,
-    icon_emoji: ':blobgreensad:',
-    username: 'GreenGold',
-  });
-  await postMessage({
-    text: '어떻게 숙제를 안할 수가 있어',
-    channel: home,
-    icon_emoji: ':blobgreensad:',
-    username: 'GreenGold',
-  });
+export const validateThenChooseProblem = async (todoCommand: string) => {
+  await validateProblem(todoCommand);
+  await chooseProblem(todoCommand);
 };

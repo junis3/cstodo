@@ -48,7 +48,7 @@ const worshipSuccess = async (problem: HistoryType, home: string) => {
 const blameFail = async (problem: HistoryType, home: string) => {
   const href = history2Href(problem);
   await postMessage({
-    text: `:x: ${href} : `,
+    text: `:x: ${href}`,
     channel: home,
     icon_emoji: ':blobgreensad:',
     username: 'GreenGold',

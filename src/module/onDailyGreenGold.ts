@@ -102,7 +102,7 @@ export const validateProblem = async (todoCommand = 'greentodo') => {
     });
   }
 
-  if (problemStatus.every(({ solved }) => solved)) {
+  if (problemStatus.every(({ solved }) => !solved)) {
     await postMessage({
       text: ':blobghostnotlikethis: 너무해 :blobghostnotlikethis:',
       channel: home,

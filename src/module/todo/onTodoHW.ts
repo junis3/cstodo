@@ -104,6 +104,11 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
     return new ReplyFailureCommand(event, user, `${user.name}님의 숙제가 등록되지 않은 것 같아요... cstodo-dev 채널에 문의해주세요.`);
   }
 
+  const getQueryArg = getArg(['--query', '-q'], args);
+  if(typeof getQueryArg === 'string') {
+    return new ReplySuccessCommand(event, user, `${user.name}님의 숙제 쿼리는 \`${user.hwQuery!!}\` 입니다!`, { iconEmoji: 'hw' });
+  }
+
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
   if(typeof forceRefreshArg == 'string') {
     return await onTodoHWRefresh({ query: {command, args, rawArgString}, event, user});

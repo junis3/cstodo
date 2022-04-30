@@ -54,7 +54,7 @@ const onTodoHWList: TodoRouter = async({ query: {command, args, rawArgString}, e
     return new ReplyFailureCommand(event, user, `숙제 정보를 가져오는데 실패했습니다.`);
   }
   const problemTexts = problems.map(problem => greenGoldToPlainText(problem));
-  const txt2Display = `${user.name}님의 최근 ${problemTexts.length}개 숙제입니다!` + problemTexts.join('\n- ');
+  const txt2Display = `${user.name}님의 최근 ${problemTexts.length}개 숙제입니다!\n- ` + problemTexts.join('\n- ');
   return new ReplySuccessCommand(event, user, txt2Display);
 }
 

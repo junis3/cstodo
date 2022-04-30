@@ -44,3 +44,5 @@ export const removeGreenGold = async (greenGold: Partial<GreenGoldType>) => {
 };
 
 export const greenGoldToHrefNoLevel = (problem: GreenGoldType) => `<http://icpc.me/${problem.id}|${problem.title}>`;
+
+export const greenGoldToPlainText = (problem: GreenGoldType) => `*${problem.id}. ${problem.title}*`;

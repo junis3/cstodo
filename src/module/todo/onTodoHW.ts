@@ -1,4 +1,4 @@
-import { getLatestGreenGolds, greenGoldToHrefNoLevel, GreenGoldType, removeGreenGold } from '../../database/greengold';
+import { getLatestGreenGolds, greenGoldToHrefNoLevel, greenGoldToPlainText, GreenGoldType, removeGreenGold } from '../../database/greengold';
 import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
@@ -35,6 +35,27 @@ const onTodoHWPurge: TodoRouter = async ({ query: {command, args, rawArgString},
   const msg = `${sourcedHWLength}개의 숙제를 검토했습니다! 이미 푼 ${solvedHWLength}개 숙제 중 ${purgedHWLength}개를 성공적으로 제거했습니다.`; 
 
   return new ReplySuccessCommand(event, user, msg);
+}
+
+const onTodoHWList: TodoRouter = async({ query: {command, args, rawArgString}, event, user}) => {
+  const listArg = getArg(['--list', '-l'], args);
+  if(typeof listArg !== 'string') {
+    return new ReplyFailureCommand(event, user, `숙제 이력 조회를 위한 인자 (-l)을 확인해주세요...`);
+  }
+  const numProblems = parseInt(listArg, 10);
+  if (isNaN(numProblems) || numProblems < 1 || numProblems > 10) {
+    return new ReplyFailureCommand(event, user, `조회할 숙제 개수는 1-10 사이의 양의 정수로 입력해주세요...`);
+  }
+  const problems = await getLatestGreenGolds(user.command, numProblems);
+  if(problems === null || problems.length === 0) {
+    return new ReplySuccessCommand(event, user, `${user.name}님의 숙제가 없습니다!`);
+  }
+  if(!problems.every(problem => problem !== undefined)) {
+    return new ReplyFailureCommand(event, user, `숙제 정보를 가져오는데 실패했습니다.`);
+  }
+  const problemTexts = problems.map(problem => greenGoldToPlainText(problem));
+  const txt2Display = `${user.name}님의 최근 ${problemTexts.length}개 숙제입니다!` + problemTexts.join('\n- ');
+  return new ReplySuccessCommand(event, user, txt2Display);
 }
 
 const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {
@@ -110,13 +131,18 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
   }
 
   const forceRefreshArg = getArg(['--refresh', '-r'], args);
-  if(typeof forceRefreshArg == 'string') {
+  if(typeof forceRefreshArg === 'string') {
     return await onTodoHWRefresh({ query: {command, args, rawArgString}, event, user});
   }
 
   const purgeArg = getArg(['--purge', '-p'], args);
-  if(typeof purgeArg == 'string') {
+  if(typeof purgeArg === 'string') {
     return await onTodoHWPurge({ query: {command, args, rawArgString}, event, user});
+  }
+
+  const listArg = getArg(['--list', '-l'], args);
+  if(typeof listArg === 'string') {
+    return await onTodoHWList({ query : {command, args, rawArgString}, event, user});
   }
 
   return await onTodoHWQuery({ query: {command, args, rawArgString}, event, user});

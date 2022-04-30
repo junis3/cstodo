@@ -106,7 +106,7 @@ const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, ev
 
   const getQueryArg = getArg(['--query', '-q'], args);
   if(typeof getQueryArg === 'string') {
-    return new ReplySuccessCommand(event, user, `${user.name}님의 숙제 쿼리는 ${user.hwQuery!!}입니다!`, { iconEmoji: 'hw' });
+    return new ReplySuccessCommand(event, user, `${user.name}님의 숙제 쿼리는 \`${user.hwQuery!!}\` 입니다!`, { iconEmoji: 'hw' });
   }
 
   const forceRefreshArg = getArg(['--refresh', '-r'], args);

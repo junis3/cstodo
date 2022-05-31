@@ -2,7 +2,7 @@ import axios from "axios";
 
 const querySolvedAC = async (query = '') => {
     try {
-      const urlSafeQuery : string = query.split('&').join('%26').split('|').join('%7C')
+      const urlSafeQuery : string = query.split('&').join(' ').split('|').join('%7C')
       .split('(').join('%28').split(')').join('%29').split(':').join('%3A').split('.').join('%2E')
       .split('!').join('%21').split(' ').join('%20');
       console.log(urlSafeQuery)

@@ -4,8 +4,8 @@ const querySolvedAC = async (query = '') => {
     try {
       const urlSafeQuery : string = query.split('&').join(' ').split('|').join('%7C')
       .split('(').join('%28').split(')').join('%29').split(':').join('%3A').split('.').join('%2E')
-      .split('!').join('%21').split(' ').join('%20');
-      console.log(urlSafeQuery)
+      .split('!').join('%21');
+      console.warn(urlSafeQuery)
       return await axios.get(`https://solved.ac/api/v3/search/problem?query=${urlSafeQuery}&sort=random`, {
         headers: {
           'Content-Type': 'application/json',

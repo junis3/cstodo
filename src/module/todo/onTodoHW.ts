@@ -62,10 +62,12 @@ const onTodoHWQuery: TodoRouter = async ({ query: {command, args, rawArgString},
   const numProblems = user.numProbsPerCycle || 1;
   const problems = await getLatestGreenGolds(user.command, numProblems);
   if (problems === null
-    || !problems.every((problem) => problem !== undefined)
-    || problems.length < numProblems) {  
-      await chooseProblem(user.command);    
-      return new ReplySuccessCommand(event, user, `${user.command}님의 숙제가 조건과 맞지 않아 갱신되었어요!`);
+    || problems.length === 0) {  
+      return new ReplySuccessCommand(event, user, `${user.command}님의 남은 숙제가 없어요!`);
+  }
+
+  if(!problems.every(problem => problem !== undefined)) {
+    return new ReplyFailureCommand(event, user, `숙제 데이터에 문제가 생겼어요... 관리자에게 문의해주세요.`);
   }
 
   const hrefs = await Promise.all(
@@ -96,6 +98,7 @@ const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, e
   const hwQueryArg = getArgFromRawArgString(['-q', '--query'], rawArgString);
   if (typeof hwQueryArg === 'string') {
     const result = await querySolvedAC(hwQueryArg);
+    console.warn(`쿼리 ${hwQueryArg}을 만족하는 문제 개수는 ${result.data.count}개 입니다.`);
     if (result.data.count < 10) {
       return new ReplyFailureCommand(event, user, `설정하신 쿼리의 조건을 만족하는 문제가 10개 미만이에요...`);
     }

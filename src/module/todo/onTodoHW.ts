@@ -89,12 +89,14 @@ const onTodoHWTime: TodoRouter = async ({ query: {command, args, rawArgString}, 
   if(initialTime === undefined || initialTime === 0 || repeatTime === undefined || repeatTime === 0) {
     return new ReplyFailureCommand(event, user, `${user.name}님의 숙제 주기나 시점이 설정되지 않은 것 같아요...`);
   }
+  const day_per_milsec = 86400000;
   const nextFireTime = (fromTime: number) => {
-    if (repeatTime <= 0 || fromTime < initialTime) return initialTime;
-    return initialTime + repeatTime * Math.ceil((fromTime - initialTime) / repeatTime);
+    const repeatMilsec = repeatTime * day_per_milsec;
+    if (repeatMilsec <= 0 || fromTime < initialTime) return initialTime;
+    return initialTime + repeatMilsec * Math.ceil((fromTime - initialTime) / repeatMilsec);
   };
   const nextTime = nextFireTime(new Date().getTime());
-  return new ReplySuccessCommand(event, user, `${user.name}님의 다음 숙제는 ${timeToString(nextTime)}에 드리겠습니다! 지금은 ${repeatTime}마다 드리고 있어요.`);
+  return new ReplySuccessCommand(event, user, `${user.name}님의 다음 숙제는 ${timeToString(nextTime)}에 드리겠습니다! 지금은 ${repeatTime}일마다 드리고 있어요.`);
 }
 
 const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, event, user}) => {

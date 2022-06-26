@@ -30,7 +30,11 @@ export const chooseProblem = async (todoCommand = 'greentodo') => {
   const josa = hrefs.length > 1 ? '들은' : '는';
   await new PostMessageCommand({
     channel: home,
-    text: `${username}님, 오늘의 문제${josa} ${href}입니다!`,
+    text: '',
+    attachments: [{
+      text: `${username}님, 오늘의 문제${josa} ${href}입니다!`,
+      color: 'good',
+    }],
     username: 'GreenGold',
     icon_emoji: ':green55:',
   }).exec();
@@ -39,7 +43,11 @@ export const chooseProblem = async (todoCommand = 'greentodo') => {
 const worshipSuccess = async (problem: HistoryType, home: string) => {
   const href = history2Href(problem);
   await new PostMessageCommand({
-    text: `:white_check_mark: ${href}`,
+    text: '',
+    attachments: [{
+      text: `:white_check_mark: ${href}`,
+      color: 'danger',
+    }],
     channel: home,
     icon_emoji: ':blobgreenorz:',
     username: 'GreenGold',
@@ -49,7 +57,13 @@ const worshipSuccess = async (problem: HistoryType, home: string) => {
 const blameFail = async (problem: HistoryType, home: string) => {
   const href = history2Href(problem);
   await new PostMessageCommand({
-    text: `:x: ${href}`,
+    text: '',
+    attachments: [
+      {
+        text: `:x: ${href}`,
+        color: 'good',
+      }
+    ],
     channel: home,
     icon_emoji: ':blobgreensad:',
     username: 'GreenGold',

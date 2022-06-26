@@ -101,7 +101,7 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
       if (isChanged) {
         await replySuccess(event, user, `${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다!`);
         // eslint-disable-next-line no-console
-        console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다. 실제와 다른 경우 제재가 가해질 수 있습니다.`);
+        console.warn(`${user.name}님의 백준 아이디가 ${bojHandle}로 설정되었습니다.`);
       } else {
         replyDdokddul(event, user, `${user.name}님의 백준 아이디는 이미 ${user.bojHandle!!}로 설정되어 있어요...`);
       }

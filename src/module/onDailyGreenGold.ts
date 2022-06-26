@@ -46,7 +46,7 @@ const worshipSuccess = async (problem: HistoryType, home: string) => {
     text: '',
     attachments: [{
       text: `:white_check_mark: ${href}`,
-      color: 'danger',
+      color: 'good',
     }],
     channel: home,
     icon_emoji: ':blobgreenorz:',
@@ -61,7 +61,7 @@ const blameFail = async (problem: HistoryType, home: string) => {
     attachments: [
       {
         text: `:x: ${href}`,
-        color: 'good',
+        color: 'danger',
       }
     ],
     channel: home,

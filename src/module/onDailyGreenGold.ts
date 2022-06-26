@@ -12,6 +12,7 @@ import { PostMessageCommand } from '../command/PostMessageCommand';
 export const chooseProblem = async (todoCommand = 'greentodo') => {
   const user = await getUser(todoCommand);
   if (!user) return;
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime) return;
   const problems = await recommendProblem(todoCommand);
   const username = user.name;
   const home = user.home!!;
@@ -73,6 +74,7 @@ const blameFail = async (problem: HistoryType, home: string) => {
 export const validateProblem = async (todoCommand = 'greentodo') => {
   const user = await getUser(todoCommand);
   if (!user) return;
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime) return; 
   const numProblems = user.numProbsPerCycle || 1;
   const greenGolds = await getLatestGreenGolds(user.command, numProblems);
   const home = user.home!!;

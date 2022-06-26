@@ -15,7 +15,7 @@ const onTodoHWRefresh: TodoRouter = async ({ query: {command, args, rawArgString
   if(!isAdmin(event.user) && event.user != user.owner) {
     return new ReplyFailureCommand(event, user, `숙제 갱신은 관리자와 주인만 할 수 있어요...`)
   }
-  await validateThenChooseProblem(user.command);
+  await validateThenChooseProblem(user.command, forced=true);
   return new ReplySuccessCommand(event, user, `숙제 갱신이 완료되었어요!`);
 }
 

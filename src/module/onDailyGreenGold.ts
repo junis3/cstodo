@@ -9,10 +9,10 @@ import getProblemInfo from '../etc/getProblemInfo';
 import { getUser } from '../database/user';
 import { PostMessageCommand } from '../command/PostMessageCommand';
 
-export const chooseProblem = async (todoCommand = 'greentodo') => {
+export const chooseProblem = async (todoCommand = 'greentodo', forced = false) => {
   const user = await getUser(todoCommand);
   if (!user) return;
-  if (user.initialTime && user.initialTime > 0 && user.repeatTime) return;
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return;
   const problems = await recommendProblem(todoCommand);
   const username = user.name;
   const home = user.home!!;
@@ -71,10 +71,10 @@ const blameFail = async (problem: HistoryType, home: string) => {
   }).exec();
 };
 
-export const validateProblem = async (todoCommand = 'greentodo') => {
+export const validateProblem = async (todoCommand = 'greentodo', forced=false) => {
   const user = await getUser(todoCommand);
   if (!user) return;
-  if (user.initialTime && user.initialTime > 0 && user.repeatTime) return; 
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return; 
   const numProblems = user.numProbsPerCycle || 1;
   const greenGolds = await getLatestGreenGolds(user.command, numProblems);
   const home = user.home!!;
@@ -135,7 +135,7 @@ export const validateProblem = async (todoCommand = 'greentodo') => {
   }
 };
 
-export const validateThenChooseProblem = async (todoCommand: string) => {
-  await validateProblem(todoCommand);
-  await chooseProblem(todoCommand);
+export const validateThenChooseProblem = async (todoCommand: string, forced=false) => {
+  await validateProblem(todoCommand, forced);
+  await chooseProblem(todoCommand, forced);
 };

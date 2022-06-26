@@ -36,6 +36,8 @@ export interface UserType {
   bojHandle?: string;
   hwQuery?: string;
   numProbsPerCycle?: number;
+  initialTime?: number;
+  repeatTime?: number;
 }
 
 export type UserDocument = Document & UserType;
@@ -63,6 +65,8 @@ const userSchema = new Schema<UserDocument>({
   bojHandle: { type: String },
   hwQuery: { type: String },
   numProbsPerCycle: { type: Number, default: 1 },
+  initialTime: {type: Number, default: 0},
+  repeatTime: {type: Number, default: 1},
 });
 
 const User = model('user', userSchema, 'users');
@@ -132,6 +136,14 @@ export const setNumProbsPerCycle = async (command: string, numProbsPerCycle: num
 
 export const setHWQuery = async (command: string, hwQuery: string) => {
   await User.findOneAndUpdate({ command }, { hwQuery });
+}
+
+export const setHWInitialTime = async (command: string, initialTime: number) => {
+  await User.findOneAndUpdate({ command }, { initialTime });
+}
+
+export const setHWRepeatTime = async (command: string, repeatTime: number) => {
+  await User.findOneAndUpdate({ command }, { repeatTime });
 }
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.
 // KKOWA?

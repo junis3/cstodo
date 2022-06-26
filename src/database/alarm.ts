@@ -1,6 +1,7 @@
 import { model, Schema, Document } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
 import { getFunctionByName } from '../etc/functionNameMap';
+import { getAllUsers } from './user';
 
 export interface AlarmType {
   id: string,
@@ -62,5 +63,9 @@ export const initiateAlarms = async () => {
     };
 
     scheduleJob(nextFireTime(nowTime), callback);
+  });
+
+  const users = await getAllUsers();
+  users.forEach((user) => {
   });
 };

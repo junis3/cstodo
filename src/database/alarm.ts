@@ -1,6 +1,7 @@
 import { model, Schema, Document } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
 import { getFunctionByName } from '../etc/functionNameMap';
+import { validateThenChooseProblem } from '../module/onDailyGreenGold';
 import { getAllUsers } from './user';
 
 export interface AlarmType {
@@ -67,5 +68,23 @@ export const initiateAlarms = async () => {
 
   const users = await getAllUsers();
   users.forEach((user) => {
+    if (!user.initialTime || user.initialTime === 0 || !user.repeatTime || user.repeatTime <= 0) return;
+
+    const day_per_milsec = 86400000;
+    const nextFireTime = (fromTime: number) => {
+      const repeatMilsec = user.repeatTime!! * day_per_milsec;
+      if (repeatMilsec <= 0 || fromTime < user.initialTime!!) return user.initialTime!!;
+      return user.initialTime!! + repeatMilsec * Math.ceil((fromTime - user.initialTime!!) / repeatMilsec);
+    };
+
+    const callback = (fireDate: Date) => {
+      const fireTime = fireDate.getTime();
+
+      if (user.repeatTime!! > 0) scheduleJob(nextFireTime(fireTime + 1), callback);
+
+      validateThenChooseProblem(user.command, true);
+    };
+
+    scheduleJob(nextFireTime(nowTime), callback);
   });
 };

@@ -5,7 +5,7 @@ import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { getArg, getArgFromRawArgString } from '../../etc/parseQuery';
 import { chooseProblem, validateThenChooseProblem } from '../onDailyGreenGold';
 import isAdmin from '../../etc/isAdmin';
-import { setHWQuery, setNumProbsPerCycle } from '../../database/user';
+import { getUser, setHWQuery, setNumProbsPerCycle } from '../../database/user';
 import querySolvedAC from '../../etc/querySolvedAC';
 import getCurrentHistory from '../../etc/getCurrentHistory';
 
@@ -88,8 +88,8 @@ const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, e
   const numProblemsArg = getArgFromRawArgString(['-n', '--num'], rawArgString);
   if (typeof numProblemsArg === 'string') {
     const numProblems = parseInt(numProblemsArg, 10);
-    if (isNaN(numProblems) || numProblems < 1 || numProblems > 5) {
-      return new ReplyFailureCommand(event, user, `숙제 개수는 1-5 사이의 양의 정수로 입력해주세요...`);
+    if (isNaN(numProblems) || numProblems < 1 || numProblems > 10) {
+      return new ReplyFailureCommand(event, user, `숙제 개수는 1-10 사이의 양의 정수로 입력해주세요...`);
     }
     await setNumProbsPerCycle(user.command, numProblems);
     return new ReplySuccessCommand(event, user, `${user.command}님의 숙제 개수를 ${numProblems}개로 설정했어요!`, { iconEmoji: 'hw' });
@@ -98,9 +98,10 @@ const onTodoHWSet: TodoRouter = async ({ query: {command, args, rawArgString}, e
   const hwQueryArg = getArgFromRawArgString(['-q', '--query'], rawArgString);
   if (typeof hwQueryArg === 'string') {
     const result = await querySolvedAC(hwQueryArg);
-    console.warn(`쿼리 ${hwQueryArg}을 만족하는 문제 개수는 ${result.data.count}개 입니다.`);
-    if (result.data.count < 10) {
-      return new ReplyFailureCommand(event, user, `설정하신 쿼리의 조건을 만족하는 문제가 10개 미만이에요...`);
+    const db_user = await getUser(user.command);
+    const stable_num_of_probs = 3 * (db_user!!.numProbsPerCycle || 1);
+    if (result.data.count < stable_num_of_probs) {
+      return new ReplyFailureCommand(event, user, `설정하신 쿼리의 조건을 만족하는 문제가 ${stable_num_of_probs}개 미만이에요...`);
     }
     await setHWQuery(user.command, hwQueryArg);
     return new ReplySuccessCommand(event, user, `${user.command}님의 숙제 쿼리를 ${hwQueryArg}로 설정했어요!`, { iconEmoji: 'hw' });

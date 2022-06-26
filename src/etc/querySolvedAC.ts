@@ -5,12 +5,13 @@ const querySolvedAC = async (query = '') => {
       const urlSafeQuery : string = query.split('&').join(' ').split('|').join('%7C')
       .split('(').join('%28').split(')').join('%29').split(':').join('%3A').split('.').join('%2E')
       .split('!').join('%21');
-      console.warn(urlSafeQuery)
-      return await axios.get(`https://solved.ac/api/v3/search/problem?query=${urlSafeQuery}&sort=random`, {
+      const result = await axios.get(`https://solved.ac/api/v3/search/problem?query=${urlSafeQuery}&sort=random`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      console.warn(`쿼리 ${query}를 만족하는 문제 개수는 ${result.data.count}개 입니다.`);
+      return result;
     } catch (error) {
       console.log(error);
       throw error;
@@ -18,9 +19,3 @@ const querySolvedAC = async (query = '') => {
 };
 
 export default querySolvedAC;
-
-const f = async () => {
-  const x = await querySolvedAC(`(from:apio|from:joisc|from:ktsc|tag:flow|(from:ioi&id:19929..))&!(id:20067..20076|id:20094..20103|id:22307..22315|id:21780..21784|id:24118..24122)&solvable:true&!solved_by:koosaga`);
-  console.log(x.data.count);
-};
-f();

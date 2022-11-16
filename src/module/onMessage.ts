@@ -41,7 +41,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   if (event.channel === cstodoTestChannel) {
     if (command === 'restart') {
-      if (event.user === 'UV6HYQD3J' || event.user === 'UV8DYMMV5' || event.user === 'U02QVE5EDE0') {
+      if (admins.find((x) => x === event.user)) {
         return new SerialCommand(
           new ReplyMessageCommand(event, {
             text: `안녕히 계세요 여러분!
@@ -79,8 +79,8 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   // Random blobaww
   let percentage = 0.00050;
-  if (event.channel === cstodoChannel) percentage *= 2.5;
-  if (event.user === csGod) percentage *= 2.5;
+  if (event.channel === cstodoChannel) percentage *= 2;
+  if (event.user === csGod) percentage *= 2;
 
   const blobawwFired = Math.random() < percentage;
 

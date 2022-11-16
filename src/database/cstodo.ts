@@ -47,15 +47,13 @@ export const addCstodo = async (cstodo: Partial<CstodoType>) => {
   // eslint-disable-next-line no-param-reassign
   delete cstodo.updatedAt;
 
-  //    if (await getCstodoInfo(cstodo.content)) return false;
-
   const result = await new Cstodo(cstodo).save();
   return result;
 };
 
 export const editCstodo = async (cstodo: Partial<CstodoType>, change: Partial<CstodoType>) => {
   if (!cstodo.content || !cstodo.owner || !cstodo.due) return false;
-  
+
   const result = await Cstodo.findOneAndUpdate(cstodo, change);
   return result;
 };

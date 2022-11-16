@@ -1,5 +1,7 @@
 node_modules
 .env
+.env.test
+.env.production
 
 cstodo.txt
 history.txt

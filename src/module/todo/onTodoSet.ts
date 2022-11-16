@@ -29,28 +29,48 @@ const onTodoSet: TodoRouter = async ({ event, user, query: { args } }) => {
   const rawHome = getArg(['--home'], args);
   const bojHandle = getArg(['--boj'], args);
 
+
   if (typeof rawOwner === 'string' && (rawOwner.startsWith('<@') && rawOwner.endsWith('>'))) {
     const owner = rawOwner.slice(2, -1);
     if (user.owner) {
-      await replyDdokddul(event, user, `저의 주인이 이미 <@${user.owner}>님으로 설정되어 있습니다!! 꼭 바꾸어야 한다면 <#${cstodoTestChannel}>에 말씀해주세요..`);
+      return new ReplyFailureCommand(
+        event,
+        user,
+        `저의 주인이 이미 <@${user.owner}>님으로 설정되어 있습니다!! 꼭 바꾸어야 한다면 <#${cstodoTestChannel}>에 말씀해주세요!`
+      );
     } else {
       await setOwner(user.command, owner);
-      await replySuccess(event, user, `저의 주인이 <@${owner}>님으로 설정되었습니다!`);
+      
+      return new ReplySuccessCommand(
+        event,
+        user,
+        `저의 주인이 <@${owner}>님으로 설정되었습니다!`
+      );
     }
   }
 
-  // FIXME: channel 하이퍼링크 파싱할 것
-  if (typeof rawHome === 'string') {
-    const home = rawHome;
+  if (typeof rawHome === 'string' && (rawHome.startsWith('<#') && rawHome.endsWith('>'))) {
+    const home = rawHome.slice(2, -1);
     if (event.channel !== home) {
       // eslint-disable-next-line no-console
       console.warn(`target ${home}과 event ${event.channel}이 다릅니다.`);
-      await replyDdokddul(event, user, `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`);
+
+      return new ReplyFailureCommand(
+        event,
+        user,
+        `이 명령어를 <#${home}>에서 직접 실행시켜주세요.. ㅠㅠ`
+      );
     } else {
       await setHome(user.command, home);
-      await replySuccess(event, user, `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`);
+
       // eslint-disable-next-line no-console
       console.warn(`${user.command} 봇의 위치가 <#${home}>으로 설정되었습니다.`);
+
+      return new ReplySuccessCommand(
+        event,
+        user,
+        `${user.name}님의 비서의 위치가 <#${home}>으로 설정되었습니다! ${user.name}님의 비서가 드리는 알림은 이 채널로 전달될 예정입니다..`
+      );
     }
   }
 

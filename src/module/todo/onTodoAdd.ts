@@ -1,4 +1,4 @@
-import { addCstodo, getCstodos } from '../../database/cstodo';
+import { addCstodo } from '../../database/cstodo';
 import { getArg } from '../../etc/parseQuery';
 import stringToTime from '../../etc/stringToTime';
 import preprocessContent from '../../etc/preprocessContent';

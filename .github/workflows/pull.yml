@@ -26,3 +26,4 @@ jobs:
         script: |
           cd cstodo
           git pull
+          yarn pm2 restart cstodo

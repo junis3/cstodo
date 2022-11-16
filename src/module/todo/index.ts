@@ -15,13 +15,14 @@ import { SlackMessageEvent } from '../../command/event';
 import { MessageRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { SerialCommand } from '../../command/SerialCommand';
+import { admins } from '../../config';
 
 const isQualified = (event: SlackMessageEvent, user: UserType) => {
   const isUserQualified = (() => {
     if (user.userControl === 'whitelist') {
       if (!user.userWhitelist) return false;
       // FIXME : give authority to users
-      if (event.user === 'UV8DYMMV5' || event.user === 'UV6HYQD3J') return true;
+      if (admins.find((x) => x === event.user)) return true;
       return user.userWhitelist.find((user) => user === event.user) !== undefined;
     }
     if (!user.userBlacklist) return true;
@@ -68,14 +69,6 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
     return onTodoHelp({ query, event, user });
   }
 
-  // if (query.command[0] === 'length' || query.command[0] === 'size') {
-  //   return onTodoLength({ query, event, user });
-  // }
-
-  // if (query.command[0] === 'search') {
-  //   return onTodoSearch({ query, event, user });
-  // }
-
   if (query.command[0] === 'all') {
     return onTodoAll({ query, event, user });
   }
@@ -84,28 +77,27 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
     return onTodoSet({ query, event, user });
   }
 
-  if (query.command[0] === 'hw' || query.command[0] === 'homework') {
+  if (['hw', 'homework', 'h'].find((x) => x === query.command[0])) {
     return onTodoHW({ query, event, user });
   }
 
   // CRUD operations
 
-  // FIXME: onTodoAll is executed even when onTodoAdd/Edit/Remove is unsuccessful.
-  if (query.command[0] === 'edit' || query.command[0] === 'update') {
+  if (['edit', 'update', 'u'].find((x) => x === query.command[0])) {
     return new SerialCommand(
       await onTodoEdit({ query, event, user }),
       await onTodoAll({ query, event, user }),
     );
   }
 
-  if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') {
+  if (['add', 'push', 'append', 'a'].find((x) => x === query.command[0])) {
     return new SerialCommand(
       await onTodoAdd({ query, event, user }),
       await onTodoAll({ query, event, user }),
     );
   }
 
-  if (query.command[0] === 'remove' || query.command[0] === 'delete' || query.command[0] === 'erase') {
+  if (['remove', 'delete', 'erase', 'rm', 'r'].find((x) => x === query.command[0])) {
     return new SerialCommand(
       await onTodoRemove({ query, event, user }),
       await onTodoAll({ query, event, user }),

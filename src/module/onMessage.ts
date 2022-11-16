@@ -1,4 +1,6 @@
-import { csGod, cstodoChannel, cstodoTestChannel } from '../config';
+import {
+  admins, csGod, cstodoChannel, cstodoTestChannel,
+} from '../config';
 import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
@@ -84,7 +86,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 
   const blobawwFired = Math.random() < percentage;
 
-  if(event.command) addMessage({ event, blobawwFired });
+  if (event.command) addMessage({ event, blobawwFired });
 
   if (blobawwFired) {
     return new ReplyMessageCommand(event, {

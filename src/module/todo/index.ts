@@ -15,6 +15,7 @@ import { SlackMessageEvent } from '../../command/event';
 import { MessageRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { SerialCommand } from '../../command/SerialCommand';
+import { admins } from '../../config';
 
 const isQualified = (event: SlackMessageEvent, user: UserType) => {
   const isUserQualified = (() => {

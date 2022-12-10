@@ -76,13 +76,13 @@ const onMessage: MessageRouter = async ({ event }) => {
     const mainUser = tokens[1].toLowerCase();
     const mainUserAdded = await setMainUser(event.user, mainUser);
     if(mainUserAdded) {
-      new ReplyMessageCommand(event, {
+      return new ReplyMessageCommand(event, {
         text: `<@${event.user}>님의 비서실장을 ${mainUser}로 설정했어요! 이제 "${mainUser} ..."를 "$ ..."로 간편히 사용하세요.`,
         channel: event.channel,
         username: '구슬랙의 비서',
       });
     } else {
-      new ReplyMessageCommand(event, {
+      return new ReplyMessageCommand(event, {
         text: `<@${event.user}>님의 비서실장을 ${mainUser}로 설정하는 데 실패했어요...`,
         channel: event.channel,
         username: '구슬랙의 똑떨한 비서',

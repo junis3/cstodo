@@ -6,6 +6,7 @@ import preprocessContent from '../../etc/preprocessContent';
 import { addBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
 import { SlackMessageEvent } from '../../command/event';
+import makeUnique from '../../etc/makeUnique';
 
 const isSlackDecoration = (text: string) => {
   const match = text.match(/[~_]+/);
@@ -22,10 +23,6 @@ const isContentValid = (content: string[]) => {
   }
   return '';
 };
-
-function makeUnique<T>(arr: T[]) {
-  return Array.from(new Set<T>(arr));
-}
 
 const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   const bars = await getBars(user.id);

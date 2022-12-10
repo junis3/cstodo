@@ -14,6 +14,7 @@ import { ReplyFailureCommand } from '../command/ReplyFailureCommand';
 import { PassCommand } from '../command/PassCommand';
 import { SerialCommand } from '../command/SerialCommand';
 import { addMessage } from '../database/message';
+import { getHuman, setMainUser, upsertHuman } from '../database/human';
 
 const turnOnTimestamp = new Date().getTime() / 1000;
 
@@ -68,7 +69,53 @@ const onMessage: MessageRouter = async ({ event }) => {
   if (command === 'code' && tokens.length > 1) return onCode({ event });
   if (command === 'on') return onYourMark({ event });
 
-  // Todo commands
+  // human-oriented todo commands
+  if (command === '$+') {
+    await upsertHuman(event.user);
+    if(tokens.length < 2) return new PassCommand();
+    const mainUser = tokens[1].toLowerCase();
+    const mainUserAdded = await setMainUser(event.user, mainUser);
+    if(mainUserAdded) {
+      new ReplyMessageCommand(event, {
+        text: `<@${event.user}>님의 비서실장을 ${mainUser}로 설정했어요! 이제 "${mainUser} ..."를 "$ ..."로 간편히 사용하세요.`,
+        channel: event.channel,
+        username: '구슬랙의 비서',
+      });
+    } else {
+      new ReplyMessageCommand(event, {
+        text: `<@${event.user}>님의 비서실장을 ${mainUser}로 설정하는 데 실패했어요...`,
+        channel: event.channel,
+        username: '구슬랙의 똑떨한 비서',
+      });
+    }
+  }
+  if (command === '$') {
+    const human = await getHuman(event.user);
+    if(human === undefined || human.main_user === undefined) {
+      await upsertHuman(event.user);
+      return new ReplyMessageCommand(event, {
+        text: `<@${event.user}>님은 비서실장을 지정하지 않아 똑떨이에요... "$+ cstodo"와 같이 비서실장을 설정해주세요.`,
+        channel: event.channel,
+        username: '구슬랙의 똑떨한 비서',
+      });
+    }
+    const user = await getUser(human.main_user);
+    if(user) {
+      if (user.taskType === 'todo') return onTodo({ event, user });
+      if (user.taskType === 'bar') {
+        await onBar(event, user);
+        return new PassCommand();
+      }
+    } else {
+      return new ReplyMessageCommand(event, {
+        text: `<@${event.user}>님의 비서실장 ${human.main_user}는 등록되지 않아 똑떨이에요... "$+ cstodo"와 같이 비서실장을 재설정해주세요.`,
+        channel: event.channel,
+        username: '구슬랙의 똑떨한 비서',
+      });
+    }
+  }
+
+  // normal todo command
   const user = await getUser(command);
 
   if (user) {

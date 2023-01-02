@@ -8,6 +8,9 @@ const querySolvedAC = async (query = '') => {
         'Content-Type': 'application/json',
       },
     });
+
+    console.log(`https://solved.ac/api/v3/search/problem?query=${urlSafeQuery}&sort=random`);
+    console.log(result);
     // eslint-disable-next-line no-console
     console.warn(`쿼리 ${query}를 만족하는 문제 개수는 ${result.data.count}개 입니다.`);
     return result;

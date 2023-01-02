@@ -1,12 +1,12 @@
 export interface Arg {
-    key: string,
-    value: string | null,
+  key: string,
+  value: string | null,
 }
 
 export interface QueryType {
-    command: string[],
-    args: Arg[],
-    rawArgString: string,
+  command: string[],
+  args: Arg[],
+  rawArgString: string,
 }
 
 // Argument set with key : the key
@@ -35,9 +35,22 @@ const findFlagFromRawArgString = (flag: string, rawArgString: string) => {
 
   if (nextIdx === -1) return null;
 
-  const nextQuoteOpener = rawArgString.indexOf('"', nextIdx);
+  const getNextQuoteOpener = (nextIdx: number) => {
+    const results = ['"', '“', "'"].map((x) => rawArgString.indexOf(x, nextIdx));
+
+    return results.find((x) => x !== -1) ?? -1;
+  };
+
+  const getNextQuoteCloser = (nextIdx: number) => {
+    const results = ['"', '”', "'"].map((x) => rawArgString.indexOf(x, nextIdx));
+
+    return results.find((x) => x !== -1) ?? -1;
+  };
+
+  const nextQuoteOpener = getNextQuoteOpener(nextIdx);
+
   if (nextQuoteOpener !== -1 && rawArgString.slice(nextIdx, nextQuoteOpener).trim() === '') {
-    const nextQuoteCloser = rawArgString.indexOf('"', nextIdx + 2);
+    const nextQuoteCloser = getNextQuoteCloser(nextIdx + 2);
     if (nextQuoteCloser === -1) return null;
     return rawArgString.slice(nextQuoteOpener + 1, nextQuoteCloser);
   }
@@ -46,24 +59,25 @@ const findFlagFromRawArgString = (flag: string, rawArgString: string) => {
   if (nextSpaceIdx === -1) return rawArgString.slice(nextIdx + 1);
   const value = rawArgString.slice(nextIdx + 1, nextSpaceIdx).trim();
 
-  if(value.startsWith('-')) {
+  if (value.startsWith('-')) {
     return '';
   }
   return value;
-}
+};
 
 export const getArgFromRawArgString = (flags: string[], rawArgString: string) => {
   const flagsWithoutDuplicates = flags.filter((name, idx) => flags.indexOf(name) === idx);
-  const argsMatched = flagsWithoutDuplicates.map((flag) => findFlagFromRawArgString(flag, rawArgString))
-                      .filter((arg) => arg !== undefined);
+  const argsMatched = flagsWithoutDuplicates.map(
+    (flag) => findFlagFromRawArgString(flag, rawArgString),
+  ).filter((arg) => arg !== undefined);
   if (argsMatched.length === 1) {
     return argsMatched[0];
   }
   if (argsMatched.length > 1) {
-    return new Error(`중복되는 인자가 있습니다.`);
+    return new Error('중복되는 인자가 있습니다.');
   }
-  return new Error(`요청한 인자가 없습니다.`);
-}
+  return new Error('요청한 인자가 없습니다.');
+};
 
 const parseQuery = (rawCommand: string) => {
   const arr = rawCommand.split(' -');
@@ -84,7 +98,7 @@ const parseQuery = (rawCommand: string) => {
       value: str.slice(idx + 1).trim(),
     };
   });
-  const rawArgString = '-' + arr.slice(1).join(' -');
+  const rawArgString = `-${arr.slice(1).join(' -')}`;
 
   return {
     command,

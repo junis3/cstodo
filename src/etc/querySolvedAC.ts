@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const querySolvedAC = async (query = '') => {
   try {
-    const urlSafeQuery: string = encodeURIComponent(query.split('&').join(' '));
+    const urlSafeQuery: string = encodeURIComponent(query.split('&amp;').join('&'));
     const result = await axios.get(`https://solved.ac/api/v3/search/problem?query=${urlSafeQuery}&sort=random`, {
       headers: {
         'Content-Type': 'application/json',

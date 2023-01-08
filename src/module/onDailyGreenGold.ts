@@ -103,7 +103,7 @@ const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryTyp
   } else {
     const maxTier = level2tier( Math.max(...problems.map((problem) => tier2Level(problem.level || "unranked"))) );
     await new PostMessageCommand({
-      text: `${user.name}녀석~ :heart:`,
+      text: `${user.name} 최~악 :heart:`,
       channel: home,
       icon_emoji: ':blobhug:',
       username: 'GreenGold',

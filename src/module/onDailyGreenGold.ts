@@ -5,8 +5,8 @@ import {
   addGreenGold, getLatestGreenGolds,
 } from '../database/greengold';
 import getCurrentHistory from '../etc/getCurrentHistory';
-import getProblemInfo from '../etc/getProblemInfo';
-import { getUser } from '../database/user';
+import getProblemInfo, { level2tier, tier2Level } from '../etc/getProblemInfo';
+import { getUser, UserType } from '../database/user';
 import { PostMessageCommand } from '../command/PostMessageCommand';
 
 export const chooseProblem = async (todoCommand = 'greentodo', forced = false) => {
@@ -71,6 +71,52 @@ const blameFail = async (problem: HistoryType, home: string) => {
   }).exec();
 };
 
+const spinIfAllSolved = async (user: UserType, home: string) => {
+  await new PostMessageCommand({
+    text: ':dhk2:',
+    channel: home,
+    icon_emoji: ':blobgreenorz:',
+    username: 'GreenGold',
+  }).exec();
+  await new PostMessageCommand({
+    text: `*역사상 최고, ${user.name.toUpperCase()}*`,
+    channel: home,
+    icon_emoji: ':blobgreenorz:',
+    username: 'GreenGold',
+  }).exec();
+};
+
+const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryType[]) => {
+  if (Math.random() < 0.5) {
+    await new PostMessageCommand({
+      text: ':blobghostnotlikethis: 너무해 :blobghostnotlikethis:',
+      channel: home,
+      icon_emoji: ':blobgreensad:',
+      username: 'GreenGold',
+    }).exec();
+    await new PostMessageCommand({
+      text: '어떻게 숙제를 안 할 수가 있어...',
+      channel: home,
+      icon_emoji: ':blobgreensad:',
+      username: 'GreenGold',
+    }).exec();
+  } else {
+    const maxTier = level2tier( Math.max(...problems.map((problem) => tier2Level(problem.level || "unranked"))) );
+    await new PostMessageCommand({
+      text: `${user.name}녀석~ :heart:`,
+      channel: home,
+      icon_emoji: ':blobhug:',
+      username: 'GreenGold',
+    }).exec();
+    await new PostMessageCommand({
+      text: `:${maxTier}: 문제도 못 푸는 초~허접 :heart:`,
+      channel: home,
+      icon_emoji: ':blobhug:',
+      username: 'GreenGold',
+    }).exec();
+  }
+}
+
 export const validateProblem = async (todoCommand = 'greentodo', forced=false) => {
   const user = await getUser(todoCommand);
   if (!user) return;
@@ -105,33 +151,11 @@ export const validateProblem = async (todoCommand = 'greentodo', forced=false) =
   }));
 
   if (problemStatus.every(({ solved }) => solved)) {
-    await new PostMessageCommand({
-      text: ':dhk2:',
-      channel: home,
-      icon_emoji: ':blobgreenorz:',
-      username: 'GreenGold',
-    }).exec();
-    await new PostMessageCommand({
-      text: `*역사상 최고, ${user.name.toUpperCase()}*`,
-      channel: home,
-      icon_emoji: ':blobgreenorz:',
-      username: 'GreenGold',
-    }).exec();
+    await spinIfAllSolved(user, home);
   }
 
   if (problemStatus.every(({ solved }) => !solved)) {
-    await new PostMessageCommand({
-      text: ':blobghostnotlikethis: 너무해 :blobghostnotlikethis:',
-      channel: home,
-      icon_emoji: ':blobgreensad:',
-      username: 'GreenGold',
-    }).exec();
-    await new PostMessageCommand({
-      text: '어떻게 숙제를 안 할 수가 있어...',
-      channel: home,
-      icon_emoji: ':blobgreensad:',
-      username: 'GreenGold',
-    }).exec();
+    await spinIfNoSolved(user, home, problems);
   }
 };
 

@@ -1,15 +1,18 @@
 import { ReactionsAddArguments } from '@slack/web-api';
 import { CommandInterface, webClient } from '.';
 
-const isAcceptableError = (e: unknown) => typeof e === 'object' && e !== null
-  && 'message' in e
-  && (e as any).message === 'An API error occurred: already_reacted';
+const isAcceptableError = (e: unknown) =>
+  typeof e === 'object' &&
+  e !== null &&
+  'message' in e &&
+  (e as any).message === 'An API error occurred: already_reacted';
 
 interface CustomReactionsAddArguments {
   command?: string;
-};
+}
 
-type ExtendedReactionsAddArguments = CustomReactionsAddArguments & ReactionsAddArguments;
+type ExtendedReactionsAddArguments = CustomReactionsAddArguments &
+  ReactionsAddArguments;
 
 // eslint-disable-next-line import/prefer-default-export
 export class AddReactionCommand implements CommandInterface {
@@ -21,7 +24,8 @@ export class AddReactionCommand implements CommandInterface {
 
   public async exec() {
     try {
-      if(this.props.command === undefined) await webClient.reactions.add(this.props);
+      if (this.props.command === undefined)
+        await webClient.reactions.add(this.props);
     } catch (e) {
       if (!isAcceptableError(e)) throw e;
     }

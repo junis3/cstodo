@@ -19,10 +19,7 @@ export class ReplyFailureCommand extends SerialCommand {
     const abortCommand = new AbortCommand();
 
     if (!message || !user) {
-      super(
-        addReactionCommand,
-        abortCommand,
-      );
+      super(addReactionCommand, abortCommand);
       return;
     }
 
@@ -31,16 +28,14 @@ export class ReplyFailureCommand extends SerialCommand {
       user: event.user,
       text: '',
       username: `${user.name}님의 똑떨한 비서`,
-      attachments: [{
-        text: `${message} ${emoji('ddokddul', user.theme)}`,
-        color: 'danger',
-      }],
+      attachments: [
+        {
+          text: `${message} ${emoji('ddokddul', user.theme)}`,
+          color: 'danger',
+        },
+      ],
     });
 
-    super(
-      addReactionCommand,
-      postEphemeralCommand,
-      abortCommand,
-    );
+    super(addReactionCommand, postEphemeralCommand, abortCommand);
   }
 }

@@ -1,6 +1,6 @@
 import { getArg, Arg } from './parseQuery';
 
-const globalFlags : Arg[] = [
+const globalFlags: Arg[] = [
   { key: '-a', value: null },
   { key: '-b', value: 'asdf' },
   { key: '-c', value: 'vc1' },
@@ -26,7 +26,9 @@ test('multiple arguments', () => {
   const arg = getArg(['-a', '-b'], globalFlags);
   expect(typeof arg).toBe('object');
   if (typeof arg === 'object') {
-    expect(arg!.message).toBe(`같은 인자들 ${['-a', '-b']}들이 여러 개 동시에 주어졌습니다.`);
+    expect(arg!.message).toBe(
+      `같은 인자들 ${['-a', '-b']}들이 여러 개 동시에 주어졌습니다.`
+    );
   }
 });
 

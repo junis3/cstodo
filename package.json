@@ -5,7 +5,10 @@
   "scripts": {
     "start": "npx ts-node ./src/index.ts",
     "watch": "nodemon --exec ts-node ./src/index.ts",
-    "lint": "yarn eslint ./src --ext .ts --fix"
+    "build": "tsc --build",
+    "start:build": "node ./build/index.js",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +45,7 @@
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
     "jest": "^27.2.5",
+    "prettier": "^2.8.8",
     "ts-jest": "^27.0.7"
   }
 }

@@ -32,10 +32,13 @@ const cstodoSchema = new Schema({
 const Cstodo = model<CstodoDocument>('cstodo', cstodoSchema, 'cstodos');
 export default Cstodo;
 
-export const getCstodos = async (owner: string) => (await Cstodo.find({ owner, status: 'pending' })).sort((a, b) => a.due - b.due).map((doc) => doc.toObject() as CstodoType);
+export const getCstodos = async (owner: string) =>
+  (await Cstodo.find({ owner, status: 'pending' }))
+    .sort((a, b) => a.due - b.due)
+    .map((doc) => doc.toObject() as CstodoType);
 
 export const getCstodoInfo = async (content: string) => {
-  const result = await Cstodo.findOne({ content }) as CstodoType | null;
+  const result = (await Cstodo.findOne({ content })) as CstodoType | null;
   return result;
 };
 
@@ -51,7 +54,10 @@ export const addCstodo = async (cstodo: Partial<CstodoType>) => {
   return result;
 };
 
-export const editCstodo = async (cstodo: Partial<CstodoType>, change: Partial<CstodoType>) => {
+export const editCstodo = async (
+  cstodo: Partial<CstodoType>,
+  change: Partial<CstodoType>
+) => {
   if (!cstodo.content || !cstodo.owner || !cstodo.due) return false;
 
   const result = await Cstodo.findOneAndUpdate(cstodo, change);
@@ -65,7 +71,10 @@ export const removeCstodo = async (cstodo: Partial<CstodoType>) => {
   return result;
 };
 
-export const updateCstodo = async (content: string, cstodo: Partial<CstodoType>) => {
+export const updateCstodo = async (
+  content: string,
+  cstodo: Partial<CstodoType>
+) => {
   if (!content) return;
 
   // eslint-disable-next-line no-param-reassign
@@ -75,10 +84,13 @@ export const updateCstodo = async (content: string, cstodo: Partial<CstodoType>)
   // eslint-disable-next-line no-param-reassign
   delete cstodo.updatedAt;
 
-  Cstodo.findOneAndUpdate({ content }, {
-    $set: {
-      ...cstodo,
-      updatedAt: new Date().getTime(),
-    },
-  });
+  Cstodo.findOneAndUpdate(
+    { content },
+    {
+      $set: {
+        ...cstodo,
+        updatedAt: new Date().getTime(),
+      },
+    }
+  );
 };

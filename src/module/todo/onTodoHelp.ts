@@ -16,11 +16,7 @@ const helpText = (user: UserType) => {
 \`${command} blob\` 또는 \`${command} weeb\`: ${command} 봇의 프로필을 바꿀 수 있습니다.`;
 };
 
-const onTodoHelp: TodoRouter = async ({ event, user }) => new ReplySuccessCommand(
-  event,
-  user,
-  helpText(user),
-  { iconEmoji: 'help' },
-);
+const onTodoHelp: TodoRouter = async ({ event, user }) =>
+  new ReplySuccessCommand(event, user, helpText(user), { iconEmoji: 'help' });
 
 export default onTodoHelp;

@@ -1,6 +1,4 @@
-import {
-  admins, csGod, cstodoChannel, cstodoTestChannel,
-} from '../config';
+import { admins, csGod, cstodoChannel, cstodoTestChannel } from '../config';
 import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
@@ -52,7 +50,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 여러분도 행복하세요~~!`,
             channel: event.channel,
           }),
-          new ShutdownCommand(),
+          new ShutdownCommand()
         );
       }
       return new ReplyFailureCommand(event);
@@ -72,10 +70,10 @@ const onMessage: MessageRouter = async ({ event }) => {
   // human-oriented todo commands
   if (command === '$+') {
     await upsertHuman(event.user);
-    if(tokens.length < 2) return new PassCommand();
+    if (tokens.length < 2) return new PassCommand();
     const mainUser = tokens[1].toLowerCase();
     const mainUserAdded = await setMainUser(event.user, mainUser);
-    if(mainUserAdded) {
+    if (mainUserAdded) {
       return new ReplyMessageCommand(event, {
         text: `<@${event.user}>님의 비서실장을 ${mainUser}로 설정했어요! 이제 "${mainUser} ..."를 "$ ..."로 간편히 사용하세요.`,
         channel: event.channel,
@@ -91,7 +89,7 @@ const onMessage: MessageRouter = async ({ event }) => {
   }
   if (command === '$') {
     const human = await getHuman(event.user);
-    if(human === undefined || human.main_user === undefined) {
+    if (human === undefined || human.main_user === undefined) {
       await upsertHuman(event.user);
       return new ReplyMessageCommand(event, {
         text: `<@${event.user}>님은 비서실장을 지정하지 않아 똑떨이에요... "$+ cstodo"와 같이 비서실장을 설정해주세요.`,
@@ -100,7 +98,7 @@ const onMessage: MessageRouter = async ({ event }) => {
       });
     }
     const user = await getUser(human.main_user);
-    if(user) {
+    if (user) {
       if (user.taskType === 'todo') return onTodo({ event, user });
       if (user.taskType === 'bar') {
         await onBar(event, user);
@@ -127,7 +125,7 @@ const onMessage: MessageRouter = async ({ event }) => {
   }
 
   // Random blobaww
-  let percentage = 0.00050;
+  let percentage = 0.0005;
   if (event.channel === cstodoChannel) percentage *= 2;
   if (event.user === csGod) percentage *= 2;
 

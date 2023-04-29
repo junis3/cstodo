@@ -56,10 +56,11 @@ jobs:
           envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION
           script: |
             rm -rf cstodo
+            mkdir cstodo
+            cd cstodo
             aws s3 cp s3://cstodo-deploy/live/build.zip ./
             unzip build.zip
             rm build.zip
-            cd cstodo
             aws s3 cp s3://cstodo-deploy/live/env/.env ./
             aws s3 cp s3://cstodo-deploy/live/env/ecosystem.config.js ./
             yarn install --immutable --immutable-cache

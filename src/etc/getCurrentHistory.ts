@@ -6,7 +6,7 @@ const getHTML = async (username = 'cs71107') => {
   try {
     return await axios.get(`https://www.acmicpc.net/user/${username}`, {
       headers: {
-        'User-Agent': 'cstodo'
+        'User-Agent': 'cstodo',
       },
     });
   } catch (error) {

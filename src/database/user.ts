@@ -1,13 +1,18 @@
 import { model, Schema, Document } from 'mongoose';
 
 export const themeList = ['weeb', 'blob'] as const;
-export type ThemeType = typeof themeList[number];
+export type ThemeType = (typeof themeList)[number];
 
 export const controlList = ['whitelist', 'blacklist'] as const;
-export type ControlType = typeof controlList[number];
+export type ControlType = (typeof controlList)[number];
 
-export const useFeatureList = ['always', 'optional', 'never', 'mention'] as const;
-export type UseFeatureType = typeof useFeatureList[number];
+export const useFeatureList = [
+  'always',
+  'optional',
+  'never',
+  'mention',
+] as const;
+export type UseFeatureType = (typeof useFeatureList)[number];
 
 export function isThemeType(str: string): str is ThemeType {
   return themeList.find((value) => value === str) !== undefined;
@@ -65,8 +70,8 @@ const userSchema = new Schema<UserDocument>({
   bojHandle: { type: String },
   hwQuery: { type: String },
   numProbsPerCycle: { type: Number, default: 1 },
-  initialTime: {type: Number, default: 0},
-  repeatTime: {type: Number, default: 1},
+  initialTime: { type: Number, default: 0 },
+  repeatTime: { type: Number, default: 1 },
 });
 
 const User = model('user', userSchema, 'users');
@@ -108,7 +113,10 @@ export const setUseDue = async (command: string, useDue: UseFeatureType) => {
   await User.findOneAndUpdate({ command }, { useDue });
 };
 
-export const setUsePriority = async (command: string, usePriority: UseFeatureType) => {
+export const setUsePriority = async (
+  command: string,
+  usePriority: UseFeatureType
+) => {
   await User.findOneAndUpdate({ command }, { usePriority });
 };
 
@@ -116,7 +124,10 @@ export const setUseBar = async (command: string, useBar: UseFeatureType) => {
   await User.findOneAndUpdate({ command }, { useBar });
 };
 
-export const setUseAlarm = async (command: string, useAlarm: UseFeatureType) => {
+export const setUseAlarm = async (
+  command: string,
+  useAlarm: UseFeatureType
+) => {
   //    const user = await User.findOne({ command });
   //    if (!user) return;
 
@@ -130,20 +141,26 @@ export const setBojHandle = async (command: string, bojHandle: string) => {
   return true;
 };
 
-export const setNumProbsPerCycle = async (command: string, numProbsPerCycle: number) => {
+export const setNumProbsPerCycle = async (
+  command: string,
+  numProbsPerCycle: number
+) => {
   await User.findOneAndUpdate({ command }, { numProbsPerCycle });
-}
+};
 
 export const setHWQuery = async (command: string, hwQuery: string) => {
   await User.findOneAndUpdate({ command }, { hwQuery });
-}
+};
 
-export const setHWInitialTime = async (command: string, initialTime: number) => {
+export const setHWInitialTime = async (
+  command: string,
+  initialTime: number
+) => {
   await User.findOneAndUpdate({ command }, { initialTime });
-}
+};
 
 export const setHWRepeatTime = async (command: string, repeatTime: number) => {
   await User.findOneAndUpdate({ command }, { repeatTime });
-}
+};
 // ONLY DB OWNER CAN MANUALLY ADD/REMOVE/CHANGE CLIENTS MANUALLY BY MONGODB CLIENT.
 // KKOWA?

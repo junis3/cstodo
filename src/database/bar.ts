@@ -72,10 +72,13 @@ export const updateBar = async (content: string, bar: Partial<BarType>) => {
   // eslint-disable-next-line no-param-reassign
   delete bar.updatedAt;
 
-  BarModel.findOneAndUpdate({ content }, {
-    $set: {
-      ...bar,
-      updatedAt: new Date().getTime(),
-    },
-  });
+  BarModel.findOneAndUpdate(
+    { content },
+    {
+      $set: {
+        ...bar,
+        updatedAt: new Date().getTime(),
+      },
+    }
+  );
 };

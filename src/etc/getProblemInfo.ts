@@ -7,27 +7,38 @@ const getProblemInfo = async (id: number) => {
     axios.get(`https://solved.ac/api/v3/problem/show?problemId=${id}`),
     axios.get(`https://www.acmicpc.net/problem/${id}`, {
       headers: {
-        'User-Agent': 'cstodo'
+        'User-Agent': 'cstodo',
       },
     }),
   ]);
 
-  if (solvedResp.status != 200) throw new Error(`Solved.ac api returned non-200 status: ${solvedResp.status} ${solvedResp.statusText}`);
-  if (bojResp.status != 200) throw new Error(`BOJ returned non-200 status: ${bojResp.status} ${bojResp.statusText}`);
+  if (solvedResp.status != 200)
+    throw new Error(
+      `Solved.ac api returned non-200 status: ${solvedResp.status} ${solvedResp.statusText}`
+    );
+  if (bojResp.status != 200)
+    throw new Error(
+      `BOJ returned non-200 status: ${bojResp.status} ${bojResp.statusText}`
+    );
 
   console.log(`Loaded information of problem ${id} with status 200.`);
 
-  const title : string = solvedResp.data.titleKo;
-  const levelNum : number = solvedResp.data.level;
+  const title: string = solvedResp.data.titleKo;
+  const levelNum: number = solvedResp.data.level;
   const level = (() => {
-    if (levelNum > 0) return `${['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum - 1) / 5 + 0.000001)]}${5 - (levelNum - 1) % 5}`;
+    if (levelNum > 0)
+      return `${
+        ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][
+          Math.floor((levelNum - 1) / 5 + 0.000001)
+        ]
+      }${5 - ((levelNum - 1) % 5)}`;
     return 'unranked';
   })();
 
   const $ = cheerioModule.load(bojResp.data);
   const $source = $('p', 'section#source').eq(0).children('a');
 
-  const source : string[] = [];
+  const source: string[] = [];
   $source.map((i, element) => {
     source.push($(element).text());
   });

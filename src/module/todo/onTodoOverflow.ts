@@ -4,11 +4,17 @@ import { replyMessage } from '../../etc/postMessage';
 import { QueryType } from '../../etc/parseQuery';
 import { SlackMessageEvent } from '../../command/event';
 
-const onTodoOverflow = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onTodoOverflow = async (
+  query: QueryType,
+  event: SlackMessageEvent,
+  user: UserType
+) => {
   const cstodo = await getCstodos(user.id);
 
   const maxLen = Math.max(...cstodo.map((item) => item.content.length));
-  const sumLen = cstodo.map((item) => item.content.length).reduce((x, y) => x + y, 0);
+  const sumLen = cstodo
+    .map((item) => item.content.length)
+    .reduce((x, y) => x + y, 0);
 
   if (sumLen <= 2000 || cstodo.length <= 50) return false;
 

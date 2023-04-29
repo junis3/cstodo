@@ -85,13 +85,15 @@ const EmojiMap: NestedStringMap = {
   },
 };
 
-export const emoji = (name: string = '', theme = 'blob') => EmojiMap[name][theme] || ':시신:';
+export const emoji = (name: string = '', theme = 'blob') =>
+  EmojiMap[name][theme] || ':시신:';
 
-const MessageMap : NestedStringMap = {
+const MessageMap: NestedStringMap = {
   go: {
     mark: 'and <https://youtu.be/gUYdph3a3lA|go...>',
     marx: 'and <https://youtu.be/YZuAf7VAeKg|go...>',
   },
 };
 
-export const message = (name: string = '', theme: string) => MessageMap[name][theme] || ':시신:';
+export const message = (name: string = '', theme: string) =>
+  MessageMap[name][theme] || ':시신:';

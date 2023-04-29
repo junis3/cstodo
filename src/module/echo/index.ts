@@ -11,8 +11,16 @@ const onEcho: MessageRouter = ({ event }) => {
   const { text } = event;
   const tokens = text.split(' ').map((token) => token.trim());
 
-  const preprocessQuery = (text: string) => text.trim().split('').filter((chr) => ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined).join('')
-    .slice(0, 600);
+  const preprocessQuery = (text: string) =>
+    text
+      .trim()
+      .split('')
+      .filter(
+        (chr) =>
+          ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined
+      )
+      .join('')
+      .slice(0, 600);
 
   const query = preprocessQuery(tokens.slice(1).join(' '));
 

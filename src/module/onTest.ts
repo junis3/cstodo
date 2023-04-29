@@ -1,7 +1,7 @@
 import schedule from 'node-schedule';
 
 const onTest = () => {
-  const alertTest = async () => { };
+  const alertTest = async () => {};
 
   alertTest();
   schedule.scheduleJob('0 0 * * * *', alertTest);

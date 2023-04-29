@@ -1,6 +1,9 @@
 import { UserType } from '../../database/user';
 import {
-  ForceMuteType, replyDdokddul, replyFail, replySuccess,
+  ForceMuteType,
+  replyDdokddul,
+  replyFail,
+  replySuccess,
 } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
@@ -9,7 +12,11 @@ import { BarType, editBar, getBars } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
 import { SlackMessageEvent } from '../../command/event';
 
-const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
+const onBarEdit = async (
+  { command, args }: QueryType,
+  event: SlackMessageEvent,
+  user: UserType
+) => {
   const bars = await getBars(user.id);
 
   const progArg = getArg(['--progress', '--prog', '-p'], args);
@@ -19,12 +26,20 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
   if (progArg) {
     if (typeof progArg === 'string') {
       if (!isInteger(progArg)) {
-        await replyDdokddul(event, user, '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...');
+        await replyDdokddul(
+          event,
+          user,
+          '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...'
+        );
         return;
       }
       newProg = Number.parseInt(progArg);
     } else {
-      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${progArg.message}`);
+      await replyDdokddul(
+        event,
+        user,
+        `이런 이유로 저는 똑떨이에요... ${progArg.message}`
+      );
       return;
     }
   } else {
@@ -35,12 +50,20 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
   if (goalArg) {
     if (typeof goalArg === 'string') {
       if (!isInteger(goalArg)) {
-        await replyDdokddul(event, user, '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...');
+        await replyDdokddul(
+          event,
+          user,
+          '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...'
+        );
         return;
       }
       newGoal = Number.parseInt(goalArg);
     } else {
-      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${goalArg.message}`);
+      await replyDdokddul(
+        event,
+        user,
+        `이런 이유로 저는 똑떨이에요... ${goalArg.message}`
+      );
       return;
     }
   } else {
@@ -56,7 +79,11 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`);
+    await replyDdokddul(
+      event,
+      user,
+      `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`
+    );
     return;
   }
 
@@ -95,19 +122,27 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
 
     if (!isInteger(content)) {
       if (!bars.find((item) => item.content === content)) {
-        await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`);
+        await replyDdokddul(
+          event,
+          user,
+          `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`
+        );
         return;
       }
     } else {
       const x = Number.parseInt(content);
 
       if (x <= 0 || x > bars.length) {
-        await replyDdokddul(event, user, `할 일이 ${bars.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`);
+        await replyDdokddul(
+          event,
+          user,
+          `할 일이 ${bars.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`
+        );
         return;
       }
 
-      const prog = (newProg !== undefined ? newProg : bars[x - 1].progress);
-      const goal = (newGoal !== undefined ? newGoal : bars[x - 1].goal);
+      const prog = newProg !== undefined ? newProg : bars[x - 1].progress;
+      const goal = newGoal !== undefined ? newGoal : bars[x - 1].goal;
       const validateFailMsg = validateBar(prog, goal);
       if (validateFailMsg !== undefined) {
         await replyDdokddul(event, user, validateFailMsg);
@@ -120,11 +155,21 @@ const onBarEdit = async ({ command, args }: QueryType, event: SlackMessageEvent,
 
   for (const content of Array.from(contents)) {
     if (await editBar(content, change)) {
-      await replySuccess(event, user, `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`, 'edit', {
-        forceMuteType: ForceMuteType.Unmute,
-      });
+      await replySuccess(
+        event,
+        user,
+        `${user.name}님의 할 일에서 *${content}* 의 ${changeString} 바꾸었어요!`,
+        'edit',
+        {
+          forceMuteType: ForceMuteType.Unmute,
+        }
+      );
     } else {
-      await replyFail(event, user, `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`);
+      await replyFail(
+        event,
+        user,
+        `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`
+      );
     }
   }
 };

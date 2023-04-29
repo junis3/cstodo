@@ -9,68 +9,107 @@ export const postMessage = async (props: ChatPostMessageArguments) => {
   await webClient.chat.postMessage(props);
 };
 
-export const addEmoji = async (ts: string, channel: string, emojiName: string) => {
+export const addEmoji = async (
+  ts: string,
+  channel: string,
+  emojiName: string
+) => {
   try {
     await webClient.reactions.add({
       name: emojiName,
       timestamp: ts,
       channel,
     });
-  } catch (e) {
-
-  }
+  } catch (e) {}
 };
 
 export enum ForceMuteType {
   Unmute,
-  Mute
+  Mute,
 }
 
 export interface Options {
   forceMuteType?: ForceMuteType;
 }
 
-export const replyDdokddul = async (event: SlackMessageEvent, user: UserType, message: string, options?: Options) => {
-  await replyMessage(event, user, {
-    text: '',
-    username: `${user.name}님의 똑떨한 비서`,
-    attachments: [{
-      text: `${message} ${emoji('ddokddul', user.theme)}`,
-      color: 'warning',
-    }],
-    channel: event.channel,
-    icon_emoji: emoji('ddokddul', user.theme),
-  }, options);
+export const replyDdokddul = async (
+  event: SlackMessageEvent,
+  user: UserType,
+  message: string,
+  options?: Options
+) => {
+  await replyMessage(
+    event,
+    user,
+    {
+      text: '',
+      username: `${user.name}님의 똑떨한 비서`,
+      attachments: [
+        {
+          text: `${message} ${emoji('ddokddul', user.theme)}`,
+          color: 'warning',
+        },
+      ],
+      channel: event.channel,
+      icon_emoji: emoji('ddokddul', user.theme),
+    },
+    options
+  );
 };
 
-export const replySuccess = async (event: SlackMessageEvent, user: UserType, message: string, icon_emoji?: string, options?: Options) => {
+export const replySuccess = async (
+  event: SlackMessageEvent,
+  user: UserType,
+  message: string,
+  icon_emoji?: string,
+  options?: Options
+) => {
   let emoji_kw = 'default';
   if (icon_emoji !== undefined) {
     emoji_kw = icon_emoji;
   }
-  await replyMessage(event, user, {
-    text: '',
-    username: `${user.name}님의 비서`,
-    attachments: [{
-      text: message,
-      color: 'good',
-    }],
-    channel: event.channel,
-    icon_emoji: emoji(emoji_kw, user.theme),
-  }, options);
+  await replyMessage(
+    event,
+    user,
+    {
+      text: '',
+      username: `${user.name}님의 비서`,
+      attachments: [
+        {
+          text: message,
+          color: 'good',
+        },
+      ],
+      channel: event.channel,
+      icon_emoji: emoji(emoji_kw, user.theme),
+    },
+    options
+  );
 };
 
-export const replyFail = async (event: SlackMessageEvent, user: UserType, message: string, options?: Options) => {
-  await replyMessage(event, user, {
-    text: '',
-    username: `${user.name}님의 똑떨한 비서`,
-    attachments: [{
-      text: `${message} ${emoji('ddokddul', user.theme)}`,
-      color: 'danger',
-    }],
-    channel: event.channel,
-    icon_emoji: emoji('ddokddul', user.theme),
-  }, options);
+export const replyFail = async (
+  event: SlackMessageEvent,
+  user: UserType,
+  message: string,
+  options?: Options
+) => {
+  await replyMessage(
+    event,
+    user,
+    {
+      text: '',
+      username: `${user.name}님의 똑떨한 비서`,
+      attachments: [
+        {
+          text: `${message} ${emoji('ddokddul', user.theme)}`,
+          color: 'danger',
+        },
+      ],
+      channel: event.channel,
+      icon_emoji: emoji('ddokddul', user.theme),
+    },
+    options
+  );
 
   await replyMessage(event, user, {
     text: message,
@@ -79,7 +118,12 @@ export const replyFail = async (event: SlackMessageEvent, user: UserType, messag
   });
 };
 
-export const replyMessage = async (event: SlackMessageEvent, user: UserType | undefined, props: ChatPostMessageArguments, options?: Options) => {
+export const replyMessage = async (
+  event: SlackMessageEvent,
+  user: UserType | undefined,
+  props: ChatPostMessageArguments,
+  options?: Options
+) => {
   let muted = user?.muted;
 
   if (options?.forceMuteType === ForceMuteType.Mute) muted = true;

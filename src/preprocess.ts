@@ -18,13 +18,18 @@ export const preprocess = async () => {
   }
 };
 
-mongoose.connect(mongodbUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then((res) => {
-  console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
-  preprocess();
-}).catch((err) => {
-  console.error(`Failed to connect to ${mongoose.connection.host}`);
-  throw err;
-});
+mongoose
+  .connect(mongodbUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((res) => {
+    console.log(
+      `Successfully connected to mongodb on ${mongoose.connection.host}`
+    );
+    preprocess();
+  })
+  .catch((err) => {
+    console.error(`Failed to connect to ${mongoose.connection.host}`);
+    throw err;
+  });

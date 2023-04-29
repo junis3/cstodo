@@ -23,7 +23,9 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
       if (!user.userWhitelist) return false;
       // FIXME : give authority to users
       if (admins.find((x) => x === event.user)) return true;
-      return user.userWhitelist.find((user) => user === event.user) !== undefined;
+      return (
+        user.userWhitelist.find((user) => user === event.user) !== undefined
+      );
     }
     if (!user.userBlacklist) return true;
     return user.userBlacklist.find((user) => user === event.user) === undefined;
@@ -32,10 +34,16 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
   const isChannelQualified = (() => {
     if (user.channelControl === 'whitelist') {
       if (!user.channelWhitelist) return false;
-      return user.channelWhitelist.find((channel) => channel === event.channel) !== undefined;
+      return (
+        user.channelWhitelist.find((channel) => channel === event.channel) !==
+        undefined
+      );
     }
     if (!user.channelBlacklist) return true;
-    return user.channelBlacklist.find((channel) => channel === event.channel) === undefined;
+    return (
+      user.channelBlacklist.find((channel) => channel === event.channel) ===
+      undefined
+    );
   })();
 
   return isUserQualified && isChannelQualified;
@@ -86,21 +94,23 @@ const onTodo: MessageRouter<{ user: UserType }> = async ({ event, user }) => {
   if (['edit', 'update', 'u'].find((x) => x === query.command[0])) {
     return new SerialCommand(
       await onTodoEdit({ query, event, user }),
-      await onTodoAll({ query, event, user }),
+      await onTodoAll({ query, event, user })
     );
   }
 
   if (['add', 'push', 'append', 'a'].find((x) => x === query.command[0])) {
     return new SerialCommand(
       await onTodoAdd({ query, event, user }),
-      await onTodoAll({ query, event, user }),
+      await onTodoAll({ query, event, user })
     );
   }
 
-  if (['remove', 'delete', 'erase', 'rm', 'r'].find((x) => x === query.command[0])) {
+  if (
+    ['remove', 'delete', 'erase', 'rm', 'r'].find((x) => x === query.command[0])
+  ) {
     return new SerialCommand(
       await onTodoRemove({ query, event, user }),
-      await onTodoAll({ query, event, user }),
+      await onTodoAll({ query, event, user })
     );
   }
 

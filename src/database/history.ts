@@ -20,9 +20,11 @@ const historySchema = new Schema<HistoryDocument>({
 const History = model('history', historySchema, 'histories');
 export default History;
 
-export const getHistories = async () => (await History.find()).map((doc) => doc.toObject() as HistoryType);
+export const getHistories = async () =>
+  (await History.find()).map((doc) => doc.toObject() as HistoryType);
 
-export const getHistoryInfo = async (id: number) => await History.findOne({ id }) as HistoryType | null;
+export const getHistoryInfo = async (id: number) =>
+  (await History.findOne({ id })) as HistoryType | null;
 
 export const addHistory = async ({ id, title, source }: HistoryType) => {
   const nowTimestamp = Date.now();
@@ -45,4 +47,5 @@ export const removeHistory = async (id: number) => {
   await History.findOneAndDelete({ id });
 };
 
-export const history2Href = (problem: HistoryType) => `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;
+export const history2Href = (problem: HistoryType) =>
+  `<http://icpc.me/${problem.id}|:${problem.level}:${problem.title}>`;

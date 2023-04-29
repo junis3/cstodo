@@ -18,7 +18,7 @@ export class ReplySuccessCommand extends SerialCommand {
     event: SlackMessageEvent,
     user: UserType,
     message: string | (Block | KnownBlock)[],
-    options?: ReplySuccessOptions,
+    options?: ReplySuccessOptions
   ) {
     const muted = options?.muted ?? user.muted;
     const emojiKeyword = options?.iconEmoji ?? 'default';
@@ -26,11 +26,13 @@ export class ReplySuccessCommand extends SerialCommand {
     const postOption = {
       text: '',
       username: `${user.name}님의 비서`,
-      attachments: [{
-        text: typeof message === 'string' ? message : undefined,
-        blocks: typeof message !== 'string' ? message : undefined,
-        color: 'good',
-      }],
+      attachments: [
+        {
+          text: typeof message === 'string' ? message : undefined,
+          blocks: typeof message !== 'string' ? message : undefined,
+          color: 'good',
+        },
+      ],
       channel: event.channel,
       icon_emoji: emoji(emojiKeyword, user.theme),
     };
@@ -46,12 +48,10 @@ export class ReplySuccessCommand extends SerialCommand {
           timestamp: event.ts,
           channel: event.channel,
           command: event.command,
-        }),
+        })
       );
     } else {
-      super(
-        new PostMessageCommand(postOption),
-      );
+      super(new PostMessageCommand(postOption));
     }
   }
 }

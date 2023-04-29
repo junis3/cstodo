@@ -59,6 +59,7 @@ jobs:
             rm .env || true
             rm ecosystem.config.js || true
             git pull
+            yarn
             mkdir ./build
             aws s3 cp s3://cstodo-deploy/live/$ZIP_FILE_NAME ./
             aws s3 cp s3://cstodo-deploy/env/live/.env ./

@@ -25,13 +25,15 @@ jobs:
             ${{ runner.OS }}-
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn install --immutable --immutable-cache
 
       - name: Build
         run: yarn build
 
-      - name: Zip build result
-        run: zip build-${{ github.run_number }}.zip -r ./build
+      - name: Zip a project without node_modules
+        run: |
+          rm -rf node_modules
+          zip build.zip -r .
 
       - name: Upload build result to S3
         env:
@@ -39,7 +41,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
         run: |
-          aws s3 cp build-${{ github.run_number }}.zip s3://cstodo-deploy/live/
+          aws s3 cp build.zip s3://cstodo-deploy/live/
 
       - name: Apply the change from the remote machine
         uses: appleboy/ssh-action@master
@@ -47,23 +49,18 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
-          ZIP_FILE_NAME: build-${{ github.run_number }}.zip
         with:
           host: ${{ secrets.MACHINE_HOST }}
           username: ${{ secrets.MACHINE_USER }}
           key: ${{ secrets.MACHINE_PRIVATE_KEY }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,ZIP_FILE_NAME
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION
           script: |
+            rm -rf cstodo
+            aws s3 cp s3://cstodo-deploy/live/build.zip ./
+            unzip build.zip
+            rm build.zip
             cd cstodo
-            rm -rf ./build || true
-            rm .env || true
-            rm ecosystem.config.js || true
-            git pull
-            yarn
-            mkdir ./build
-            aws s3 cp s3://cstodo-deploy/live/$ZIP_FILE_NAME ./
-            aws s3 cp s3://cstodo-deploy/env/live/.env ./
-            aws s3 cp s3://cstodo-deploy/env/live/ecosystem.config.js ./
-            unzip $ZIP_FILE_NAME
-            rm $ZIP_FILE_NAME
-            yarn pm2 restart cstodo
+            aws s3 cp s3://cstodo-deploy/live/env/.env ./
+            aws s3 cp s3://cstodo-deploy/live/env/ecosystem.config.js ./
+            yarn install --immutable --immutable-cache
+            yarn pm2 start

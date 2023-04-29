@@ -6,7 +6,7 @@ name: Deploy to EC2 (Test)
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [test]
+    branches: [main]
 
 jobs:
   build:
@@ -39,7 +39,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
         run: |
-          aws s3 cp build-${{ github.run_number }}.zip s3://cstodo-deploy/live
+          aws s3 cp build-${{ github.run_number }}.zip s3://cstodo-deploy/test/
 
       - name: Apply the change from the remote machine
         uses: appleboy/ssh-action@master
@@ -54,10 +54,10 @@ jobs:
           key: ${{ secrets.MACHINE_PRIVATE_KEY }}
           envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,ZIP_FILE_NAME
           script: |
-            cd cstodo
+            cd cstodo-test
             rm -rf ./build || true
             mkdir ./build
-            aws s3 cp s3://cstodo-deploy/live/$ZIP_FILE_NAME .
+            aws s3 cp s3://cstodo-deploy/test/$ZIP_FILE_NAME ./
             unzip $ZIP_FILE_NAME
             rm $ZIP_FILE_NAME
-            yarn pm2 restart cstodo
+            yarn pm2 restart cstodo-test

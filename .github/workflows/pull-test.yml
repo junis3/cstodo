@@ -56,11 +56,12 @@ jobs:
           script: |
             cd cstodo-test
             rm -rf ./build || true
+            rm .env || true
+            rm ecosystem.config.js || true
+            git pull
             mkdir ./build
             aws s3 cp s3://cstodo-deploy/test/$ZIP_FILE_NAME ./
-            rm .env || true
             aws s3 cp s3://cstodo-deploy/env/test/.env ./
-            rm ecosystem.config.js || true
             aws s3 cp s3://cstodo-deploy/env/test/ecosystem.config.js ./
             unzip $ZIP_FILE_NAME
             rm $ZIP_FILE_NAME

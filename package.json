@@ -5,7 +5,9 @@
   "scripts": {
     "start": "npx ts-node ./src/index.ts",
     "watch": "nodemon --exec ts-node ./src/index.ts",
-    "lint": "yarn eslint ./src --ext .ts --fix"
+    "lint": "yarn eslint ./src --ext .ts --fix",
+    "build": "tsc --build",
+    "start:build": "npx ts-node ./build/index.js"
   },
   "author": "",
   "license": "ISC",

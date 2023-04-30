@@ -18,7 +18,7 @@ export class ReplySuccessCommand extends SerialCommand {
     event: SlackMessageEvent,
     user: UserType,
     message: string | (Block | KnownBlock)[],
-    options?: ReplySuccessOptions
+    options?: ReplySuccessOptions,
   ) {
     const muted = options?.muted ?? user.muted;
     const emojiKeyword = options?.iconEmoji ?? 'default';
@@ -48,7 +48,7 @@ export class ReplySuccessCommand extends SerialCommand {
           timestamp: event.ts,
           channel: event.channel,
           command: event.command,
-        })
+        }),
       );
     } else {
       super(new PostMessageCommand(postOption));

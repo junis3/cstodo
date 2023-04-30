@@ -1,10 +1,5 @@
 import { UserType } from '../../database/user';
-import {
-  ForceMuteType,
-  replyDdokddul,
-  replyFail,
-  replySuccess,
-} from '../../etc/postMessage';
+import { ForceMuteType, replyDdokddul, replyFail, replySuccess } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
@@ -15,7 +10,7 @@ import { SlackMessageEvent } from '../../command/event';
 const onBarEdit = async (
   { command, args }: QueryType,
   event: SlackMessageEvent,
-  user: UserType
+  user: UserType,
 ) => {
   const bars = await getBars(user.id);
 
@@ -29,17 +24,13 @@ const onBarEdit = async (
         await replyDdokddul(
           event,
           user,
-          '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...'
+          '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...',
         );
         return;
       }
       newProg = Number.parseInt(progArg);
     } else {
-      await replyDdokddul(
-        event,
-        user,
-        `이런 이유로 저는 똑떨이에요... ${progArg.message}`
-      );
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${progArg.message}`);
       return;
     }
   } else {
@@ -53,17 +44,13 @@ const onBarEdit = async (
         await replyDdokddul(
           event,
           user,
-          '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...'
+          '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...',
         );
         return;
       }
       newGoal = Number.parseInt(goalArg);
     } else {
-      await replyDdokddul(
-        event,
-        user,
-        `이런 이유로 저는 똑떨이에요... ${goalArg.message}`
-      );
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${goalArg.message}`);
       return;
     }
   } else {
@@ -79,11 +66,7 @@ const onBarEdit = async (
   } else if (typeof contentArg === 'string') {
     newContent = preprocessContent(contentArg);
   } else {
-    await replyDdokddul(
-      event,
-      user,
-      `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`
-    );
+    await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요...\n${contentArg.message}`);
     return;
   }
 
@@ -122,11 +105,7 @@ const onBarEdit = async (
 
     if (!isInteger(content)) {
       if (!bars.find((item) => item.content === content)) {
-        await replyDdokddul(
-          event,
-          user,
-          `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`
-        );
+        await replyDdokddul(event, user, `할 일에 없는 *${content}* 를 바꾸면 똑떨이에요...`);
         return;
       }
     } else {
@@ -136,7 +115,7 @@ const onBarEdit = async (
         await replyDdokddul(
           event,
           user,
-          `할 일이 ${bars.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`
+          `할 일이 ${bars.length}개인데 여기서 ${x}번째 할일을 바꾸면 똑떨이에요...`,
         );
         return;
       }
@@ -162,13 +141,13 @@ const onBarEdit = async (
         'edit',
         {
           forceMuteType: ForceMuteType.Unmute,
-        }
+        },
       );
     } else {
       await replyFail(
         event,
         user,
-        `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`
+        `${user.name}님의 할 일에서 *${content}* 을 바꾸는 데 실패했어요...`,
       );
     }
   }

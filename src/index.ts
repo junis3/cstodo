@@ -32,9 +32,7 @@ mongoose
   })
   .then(() => {
     // eslint-disable-next-line no-console
-    console.log(
-      `Successfully connected to mongodb on ${mongoose.connection.host}`
-    );
+    console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
   })
   .catch((err) => {
     // eslint-disable-next-line no-console
@@ -53,9 +51,7 @@ export const slackEvents = createEventAdapter(signingSecret);
   const date = new Date();
 
   await webClient.chat.postMessage({
-    text: `[${date.toString()}] IP ${data.query} (${
-      data.regionName
-    }) 에서 cstodo가 실행됩니다!`,
+    text: `[${date.toString()}] IP ${data.query} (${data.regionName}) 에서 cstodo가 실행됩니다!`,
     channel: cstodoTestChannel,
     username: 'cstodo_boot',
   });
@@ -76,6 +72,4 @@ const app = express();
 
 app.use('/cstodo', slackEvents.requestListener());
 // eslint-disable-next-line no-console
-app.listen(port, () =>
-  console.log(`[CSTODO] Running slackbot on port ${port}.`)
-);
+app.listen(port, () => console.log(`[CSTODO] Running slackbot on port ${port}.`));

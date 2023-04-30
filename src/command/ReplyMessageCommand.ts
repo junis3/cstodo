@@ -13,7 +13,7 @@ export class ReplyMessageCommand extends SerialCommand {
   constructor(
     event: SlackMessageEvent,
     args: ChatPostMessageArguments,
-    options?: ReplyMessageOptions
+    options?: ReplyMessageOptions,
   ) {
     const { channel, user, ts: timestamp } = event;
 
@@ -27,7 +27,7 @@ export class ReplyMessageCommand extends SerialCommand {
           timestamp,
           channel,
           command: event.command,
-        })
+        }),
       );
     } else {
       super(new PostMessageCommand({ ...args, channel }));

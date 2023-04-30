@@ -16,12 +16,9 @@ const onTodoAll: TodoRouter = async ({ event, user }) => {
     }));
     return new ReplySuccessCommand(event, user, blocks, { iconEmoji: 'aww' });
   }
-  return new ReplySuccessCommand(
-    event,
-    user,
-    `${user.name}님의 진행중인 일이 없습니다!`,
-    { iconEmoji: 'add' }
-  );
+  return new ReplySuccessCommand(event, user, `${user.name}님의 진행중인 일이 없습니다!`, {
+    iconEmoji: 'add',
+  });
 };
 
 export default onTodoAll;

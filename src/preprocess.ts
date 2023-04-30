@@ -24,9 +24,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((res) => {
-    console.log(
-      `Successfully connected to mongodb on ${mongoose.connection.host}`
-    );
+    console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
     preprocess();
   })
   .catch((err) => {

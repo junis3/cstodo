@@ -85,8 +85,7 @@ const EmojiMap: NestedStringMap = {
   },
 };
 
-export const emoji = (name: string = '', theme = 'blob') =>
-  EmojiMap[name][theme] || ':시신:';
+export const emoji = (name: string = '', theme = 'blob') => EmojiMap[name][theme] || ':시신:';
 
 const MessageMap: NestedStringMap = {
   go: {
@@ -95,5 +94,4 @@ const MessageMap: NestedStringMap = {
   },
 };
 
-export const message = (name: string = '', theme: string) =>
-  MessageMap[name][theme] || ':시신:';
+export const message = (name: string = '', theme: string) => MessageMap[name][theme] || ':시신:';

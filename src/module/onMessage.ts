@@ -50,7 +50,7 @@ const onMessage: MessageRouter = async ({ event }) => {
 여러분도 행복하세요~~!`,
             channel: event.channel,
           }),
-          new ShutdownCommand()
+          new ShutdownCommand(),
         );
       }
       return new ReplyFailureCommand(event);

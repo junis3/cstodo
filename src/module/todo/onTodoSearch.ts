@@ -19,9 +19,7 @@ const onTodoSearch: TodoRouter = async ({ event, user }) => {
 
     const result = cstodos.filter(
       (todo) =>
-        todo.content
-          .toLowerCase()
-          .search(new RegExp(String.raw`${query.toLowerCase()}`)) !== -1
+        todo.content.toLowerCase().search(new RegExp(String.raw`${query.toLowerCase()}`)) !== -1,
     );
     resolve(result);
   });

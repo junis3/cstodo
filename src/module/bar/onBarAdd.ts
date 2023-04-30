@@ -1,9 +1,5 @@
 import { UserType } from '../../database/user';
-import {
-  replySuccess,
-  replyDdokddul,
-  ForceMuteType,
-} from '../../etc/postMessage';
+import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessage';
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
@@ -29,11 +25,7 @@ const isContentValid = (content: string[]) => {
   return '';
 };
 
-const onBarAdd = async (
-  { command, args }: QueryType,
-  event: SlackMessageEvent,
-  user: UserType
-) => {
+const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
   const bars = await getBars(user.id);
 
   const progArg = getArg(['--progress', '--prog', '-p'], args);
@@ -46,17 +38,13 @@ const onBarAdd = async (
         await replyDdokddul(
           event,
           user,
-          '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...'
+          '제가 너무 똑떨이라 말씀하신 진행 상태를 잘 이해를 못했어요... 죄송합니다...',
         );
         return;
       }
       _prog = Number.parseInt(progArg);
     } else {
-      await replyDdokddul(
-        event,
-        user,
-        `이런 이유로 저는 똑떨이에요... ${progArg.message}`
-      );
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${progArg.message}`);
       return;
     }
   }
@@ -67,17 +55,13 @@ const onBarAdd = async (
         await replyDdokddul(
           event,
           user,
-          '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...'
+          '제가 너무 똑떨이라 말씀하신 목표를 잘 이해를 못했어요... 죄송합니다...',
         );
         return;
       }
       _goal = Number.parseInt(goalArg);
     } else {
-      await replyDdokddul(
-        event,
-        user,
-        `이런 이유로 저는 똑떨이에요... ${goalArg.message}`
-      );
+      await replyDdokddul(event, user, `이런 이유로 저는 똑떨이에요... ${goalArg.message}`);
       return;
     }
   }
@@ -91,7 +75,7 @@ const onBarAdd = async (
   }
 
   const contents = makeUnique(
-    command.slice(1).join(' ').trim().split(',').map(preprocessContent)
+    command.slice(1).join(' ').trim().split(',').map(preprocessContent),
   ).filter((x) => x.length > 0);
 
   const contentValidateErrMsg = isContentValid(contents);
@@ -115,11 +99,10 @@ const onBarAdd = async (
         `${user.name}님의 진행중인 일에 *${content}* 를 추가했어요!`,
         'add',
         {
-          forceMuteType:
-            user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined,
-        }
+          forceMuteType: user.userControl === 'blacklist' ? ForceMuteType.Unmute : undefined,
+        },
       );
-    })
+    }),
   );
 };
 

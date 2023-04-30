@@ -24,8 +24,7 @@ const alarmSchema = new Schema<AlarmDocument>({
 const Alarm = model('alarm', alarmSchema, 'alarms');
 export default Alarm;
 
-export const getAlarms = async () =>
-  (await Alarm.find()).map((doc) => doc.toObject() as AlarmType);
+export const getAlarms = async () => (await Alarm.find()).map((doc) => doc.toObject() as AlarmType);
 
 export const addAlarm = async (alarm: Omit<AlarmType, 'id'>) => {
   await new Alarm(alarm).save();
@@ -52,16 +51,14 @@ export const initiateAlarms = async () => {
       if (fromTime < alarm.initialTime) return alarm.initialTime;
       return (
         alarm.initialTime +
-        alarm.repeatTime *
-          Math.ceil((fromTime - alarm.initialTime) / alarm.repeatTime)
+        alarm.repeatTime * Math.ceil((fromTime - alarm.initialTime) / alarm.repeatTime)
       );
     };
 
     const callback = (fireDate: Date) => {
       const fireTime = fireDate.getTime();
 
-      if (alarm.repeatTime > 0)
-        scheduleJob(nextFireTime(fireTime + 1), callback);
+      if (alarm.repeatTime > 0) scheduleJob(nextFireTime(fireTime + 1), callback);
 
       const f = getFunctionByName(alarm.function);
 
@@ -73,19 +70,13 @@ export const initiateAlarms = async () => {
 
   const users = await getAllUsers();
   users.forEach((user) => {
-    if (
-      !user.initialTime ||
-      user.initialTime === 0 ||
-      !user.repeatTime ||
-      user.repeatTime <= 0
-    )
+    if (!user.initialTime || user.initialTime === 0 || !user.repeatTime || user.repeatTime <= 0)
       return;
 
     const day_per_milsec = 86400000;
     const nextFireTime = (fromTime: number) => {
       const repeatMilsec = user.repeatTime!! * day_per_milsec;
-      if (repeatMilsec <= 0 || fromTime < user.initialTime!!)
-        return user.initialTime!!;
+      if (repeatMilsec <= 0 || fromTime < user.initialTime!!) return user.initialTime!!;
       return (
         user.initialTime!! +
         repeatMilsec * Math.ceil((fromTime - user.initialTime!!) / repeatMilsec)
@@ -95,8 +86,7 @@ export const initiateAlarms = async () => {
     const callback = (fireDate: Date) => {
       const fireTime = fireDate.getTime();
 
-      if (user.repeatTime!! > 0)
-        scheduleJob(nextFireTime(fireTime + 1), callback);
+      if (user.repeatTime!! > 0) scheduleJob(nextFireTime(fireTime + 1), callback);
 
       validateThenChooseProblem(user.command, true);
     };

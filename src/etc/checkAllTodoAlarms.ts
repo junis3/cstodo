@@ -20,11 +20,7 @@ async function checkAllTodoAlarms(date: Date) {
       const todos = await getCstodos(user.id);
 
       todos.forEach(async (todo) => {
-        if (
-          !todo.due ||
-          !todo.content ||
-          todo.due > time + (minutes_per_day + 1) * minute
-        ) {
+        if (!todo.due || !todo.content || todo.due > time + (minutes_per_day + 1) * minute) {
           return;
         }
         const todo_minute = Math.floor(todo.due / minute) % minutes_per_day;

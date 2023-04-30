@@ -11,8 +11,7 @@ interface CustomReactionsAddArguments {
   command?: string;
 }
 
-type ExtendedReactionsAddArguments = CustomReactionsAddArguments &
-  ReactionsAddArguments;
+type ExtendedReactionsAddArguments = CustomReactionsAddArguments & ReactionsAddArguments;
 
 // eslint-disable-next-line import/prefer-default-export
 export class AddReactionCommand implements CommandInterface {
@@ -24,8 +23,7 @@ export class AddReactionCommand implements CommandInterface {
 
   public async exec() {
     try {
-      if (this.props.command === undefined)
-        await webClient.reactions.add(this.props);
+      if (this.props.command === undefined) await webClient.reactions.add(this.props);
     } catch (e) {
       if (!isAcceptableError(e)) throw e;
     }

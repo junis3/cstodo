@@ -11,7 +11,7 @@ const onTodoTheme: TodoRouter = async ({ event, user, query: { command } }) => {
     return new ReplyFailureCommand(
       event,
       user,
-      `현재 *${newTheme}* 테마는 지원하지 않아요... 죄송합니다... `
+      `현재 *${newTheme}* 테마는 지원하지 않아요... 죄송합니다... `,
     );
   }
 
@@ -20,7 +20,7 @@ const onTodoTheme: TodoRouter = async ({ event, user, query: { command } }) => {
   return new ReplySuccessCommand(
     event,
     user,
-    `${user.command}봇의 프로필이 *${newTheme}* 모드로 바뀌었습니다!`
+    `${user.command}봇의 프로필이 *${newTheme}* 모드로 바뀌었습니다!`,
   );
 };
 

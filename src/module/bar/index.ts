@@ -12,9 +12,7 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
   const isUserQualified = (() => {
     if (user.userControl === 'whitelist') {
       if (!user.userWhitelist) return false;
-      return (
-        user.userWhitelist.find((user) => user === event.user) !== undefined
-      );
+      return user.userWhitelist.find((user) => user === event.user) !== undefined;
     }
     if (!user.userBlacklist) return true;
     return user.userBlacklist.find((user) => user === event.user) === undefined;
@@ -23,16 +21,10 @@ const isQualified = (event: SlackMessageEvent, user: UserType) => {
   const isChannelQualified = (() => {
     if (user.channelControl === 'whitelist') {
       if (!user.channelWhitelist) return false;
-      return (
-        user.channelWhitelist.find((channel) => channel === event.channel) !==
-        undefined
-      );
+      return user.channelWhitelist.find((channel) => channel === event.channel) !== undefined;
     }
     if (!user.channelBlacklist) return true;
-    return (
-      user.channelBlacklist.find((channel) => channel === event.channel) ===
-      undefined
-    );
+    return user.channelBlacklist.find((channel) => channel === event.channel) === undefined;
   })();
 
   return isUserQualified && isChannelQualified;
@@ -59,11 +51,7 @@ const onBar = async (event: SlackMessageEvent, user: UserType) => {
     await onBarEdit(query, event, user);
   }
 
-  if (
-    query.command[0] === 'add' ||
-    query.command[0] === 'push' ||
-    query.command[0] === 'append'
-  ) {
+  if (query.command[0] === 'add' || query.command[0] === 'push' || query.command[0] === 'append') {
     await onBarAdd(query, event, user);
   }
 

@@ -1,7 +1,5 @@
 const weekdayString = (date: Date) =>
-  ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][
-    date.getDay()
-  ];
+  ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'][date.getDay()];
 
 const timeToString = (timestamp: number) => {
   const time = new Date(timestamp);
@@ -9,14 +7,10 @@ const timeToString = (timestamp: number) => {
 
   let dateResult = (() => {
     const timeDay = Math.floor(
-      time.getTime() / (24 * 60 * 60 * 1000) -
-        now.getTimezoneOffset() / 24 / 60 +
-        1e-11
+      time.getTime() / (24 * 60 * 60 * 1000) - now.getTimezoneOffset() / 24 / 60 + 1e-11,
     );
     const nowDay = Math.floor(
-      now.getTime() / (24 * 60 * 60 * 1000) -
-        now.getTimezoneOffset() / 24 / 60 +
-        1e-11
+      now.getTime() / (24 * 60 * 60 * 1000) - now.getTimezoneOffset() / 24 / 60 + 1e-11,
     );
 
     if (timeDay === nowDay - 2) return '그저께';
@@ -26,13 +20,10 @@ const timeToString = (timestamp: number) => {
     if (timeDay === nowDay + 2) return '모레';
     if (nowDay <= timeDay && timeDay < nowDay + 7) return weekdayString(time);
     if (time.getFullYear() === now.getFullYear()) {
-      if (time.getMonth() === now.getMonth())
-        return `이번 달 ${time.getDate()}일`;
+      if (time.getMonth() === now.getMonth()) return `이번 달 ${time.getDate()}일`;
       return `올해 ${time.getMonth() + 1}월 ${time.getDate()}일`;
     }
-    return `${time.getFullYear()}년 ${
-      time.getMonth() + 1
-    }월 ${time.getDate()}일`;
+    return `${time.getFullYear()}년 ${time.getMonth() + 1}월 ${time.getDate()}일`;
   })();
 
   const timeResult = (() => {
@@ -44,8 +35,7 @@ const timeToString = (timestamp: number) => {
       throw new Error(`${x}시에 어떻게 일을 끝내요 ㅋㅋㅋ`);
     };
     const format = (x: number) => {
-      if (x < 0 || x > 100)
-        throw new Error('분/초에 음수나 100 이상이 들어왔어요!!');
+      if (x < 0 || x > 100) throw new Error('분/초에 음수나 100 이상이 들어왔어요!!');
       if (x < 10) return `0${x}`;
       return `${x}`;
     };
@@ -57,9 +47,9 @@ const timeToString = (timestamp: number) => {
       }
       return `${hourToString(time.getHours())}:${format(time.getMinutes())}`;
     }
-    return `${hourToString(time.getHours())}:${format(
-      time.getMinutes()
-    )}:${format(time.getSeconds())}`;
+    return `${hourToString(time.getHours())}:${format(time.getMinutes())}:${format(
+      time.getSeconds(),
+    )}`;
   })();
 
   if (dateResult === '오늘' && timeResult === '자정') {

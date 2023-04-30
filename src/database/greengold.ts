@@ -23,20 +23,14 @@ export default GreenGold;
 export const getGreenGolds = async () =>
   (await GreenGold.find()).map((doc) => doc.toObject() as GreenGoldType);
 
-export const getLatestGreenGolds = async (
-  username: string,
-  numProblems: number
-) =>
+export const getLatestGreenGolds = async (username: string, numProblems: number) =>
   (await GreenGold.find({ username })
     .sort({
       sourcedTimestamp: -1,
     })
     .limit(numProblems)) as Array<GreenGoldType> | null;
 
-export const addGreenGold = async (
-  username: string,
-  { id, title }: HistoryType
-) => {
+export const addGreenGold = async (username: string, { id, title }: HistoryType) => {
   const nowTimestamp = Date.now();
 
   await new GreenGold({
@@ -48,8 +42,7 @@ export const addGreenGold = async (
 };
 
 export const removeGreenGold = async (greenGold: Partial<GreenGoldType>) => {
-  if (!greenGold.id || !greenGold.username || !greenGold.sourcedTimestamp)
-    return false;
+  if (!greenGold.id || !greenGold.username || !greenGold.sourcedTimestamp) return false;
   const result = await GreenGold.findOneAndDelete({
     id: greenGold.id,
     username: greenGold.username,
@@ -61,5 +54,4 @@ export const removeGreenGold = async (greenGold: Partial<GreenGoldType>) => {
 export const greenGoldToHrefNoLevel = (problem: GreenGoldType) =>
   `<http://icpc.me/${problem.id}|${problem.title}>`;
 
-export const greenGoldToPlainText = (problem: GreenGoldType) =>
-  `*${problem.id}. ${problem.title}*`;
+export const greenGoldToPlainText = (problem: GreenGoldType) => `*${problem.id}. ${problem.title}*`;

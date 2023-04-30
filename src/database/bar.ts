@@ -79,6 +79,6 @@ export const updateBar = async (content: string, bar: Partial<BarType>) => {
         ...bar,
         updatedAt: new Date().getTime(),
       },
-    }
+    },
   );
 };

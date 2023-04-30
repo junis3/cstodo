@@ -9,11 +9,7 @@ export const postMessage = async (props: ChatPostMessageArguments) => {
   await webClient.chat.postMessage(props);
 };
 
-export const addEmoji = async (
-  ts: string,
-  channel: string,
-  emojiName: string
-) => {
+export const addEmoji = async (ts: string, channel: string, emojiName: string) => {
   try {
     await webClient.reactions.add({
       name: emojiName,
@@ -36,7 +32,7 @@ export const replyDdokddul = async (
   event: SlackMessageEvent,
   user: UserType,
   message: string,
-  options?: Options
+  options?: Options,
 ) => {
   await replyMessage(
     event,
@@ -53,7 +49,7 @@ export const replyDdokddul = async (
       channel: event.channel,
       icon_emoji: emoji('ddokddul', user.theme),
     },
-    options
+    options,
   );
 };
 
@@ -62,7 +58,7 @@ export const replySuccess = async (
   user: UserType,
   message: string,
   icon_emoji?: string,
-  options?: Options
+  options?: Options,
 ) => {
   let emoji_kw = 'default';
   if (icon_emoji !== undefined) {
@@ -83,7 +79,7 @@ export const replySuccess = async (
       channel: event.channel,
       icon_emoji: emoji(emoji_kw, user.theme),
     },
-    options
+    options,
   );
 };
 
@@ -91,7 +87,7 @@ export const replyFail = async (
   event: SlackMessageEvent,
   user: UserType,
   message: string,
-  options?: Options
+  options?: Options,
 ) => {
   await replyMessage(
     event,
@@ -108,7 +104,7 @@ export const replyFail = async (
       channel: event.channel,
       icon_emoji: emoji('ddokddul', user.theme),
     },
-    options
+    options,
   );
 
   await replyMessage(event, user, {
@@ -122,7 +118,7 @@ export const replyMessage = async (
   event: SlackMessageEvent,
   user: UserType | undefined,
   props: ChatPostMessageArguments,
-  options?: Options
+  options?: Options,
 ) => {
   let muted = user?.muted;
 

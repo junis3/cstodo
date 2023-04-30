@@ -6,19 +6,11 @@ import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { ParallelCommand } from '../../command/ParallelCommand';
 
-const onTodoRemove: TodoRouter = async ({
-  user,
-  event,
-  query: { command },
-}) => {
+const onTodoRemove: TodoRouter = async ({ user, event, query: { command } }) => {
   const todo = await getCstodos(user.id);
 
   if (command.length === 1) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      'remove 쿼리에 인자가 없으면 똑떨이에요...'
-    );
+    return new ReplyFailureCommand(event, user, 'remove 쿼리에 인자가 없으면 똑떨이에요...');
   }
 
   const todos = new Set<CstodoType>();
@@ -34,7 +26,7 @@ const onTodoRemove: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        '할 일을 제거할 땐 제거할 일의 번호를 주셔야 해요...'
+        '할 일을 제거할 땐 제거할 일의 번호를 주셔야 해요...',
       );
     }
     const x = Number.parseInt(content, 10);
@@ -43,7 +35,7 @@ const onTodoRemove: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요...`
+        `할 일이 ${todo.length}개인데 여기서 ${x}번째 할 일을 빼면 똑떨이에요...`,
       );
     }
 
@@ -61,16 +53,16 @@ const onTodoRemove: TodoRouter = async ({
             {
               muted: false,
               iconEmoji: 'remove',
-            }
+            },
           );
         }
         return new ReplyFailureCommand(
           event,
           user,
-          `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`
+          `${user.name}님의 할 일에서 *${content}* 를 제거하는 데 실패했어요...`,
         );
-      })
-    ))
+      }),
+    )),
   );
 };
 

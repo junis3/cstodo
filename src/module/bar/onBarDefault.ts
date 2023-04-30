@@ -20,11 +20,7 @@ const bulletEmoji = [
   ':keycap_ten:',
 ];
 
-const onBarDefault = async (
-  query: QueryType,
-  event: SlackMessageEvent,
-  user: UserType
-) => {
+const onBarDefault = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
   const allBars = await getBars(user.id);
   const bars = allBars;
 
@@ -62,12 +58,7 @@ const onBarDefault = async (
       username: `${user.name}님의 비서`,
     });
   } else {
-    await replySuccess(
-      event,
-      user,
-      `${user.name}님의 진행중인 일이 없습니다!`,
-      'add'
-    );
+    await replySuccess(event, user, `${user.name}님의 진행중인 일이 없습니다!`, 'add');
   }
 };
 

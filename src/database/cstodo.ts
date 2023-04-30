@@ -54,10 +54,7 @@ export const addCstodo = async (cstodo: Partial<CstodoType>) => {
   return result;
 };
 
-export const editCstodo = async (
-  cstodo: Partial<CstodoType>,
-  change: Partial<CstodoType>
-) => {
+export const editCstodo = async (cstodo: Partial<CstodoType>, change: Partial<CstodoType>) => {
   if (!cstodo.content || !cstodo.owner || !cstodo.due) return false;
 
   const result = await Cstodo.findOneAndUpdate(cstodo, change);
@@ -71,10 +68,7 @@ export const removeCstodo = async (cstodo: Partial<CstodoType>) => {
   return result;
 };
 
-export const updateCstodo = async (
-  content: string,
-  cstodo: Partial<CstodoType>
-) => {
+export const updateCstodo = async (content: string, cstodo: Partial<CstodoType>) => {
   if (!content) return;
 
   // eslint-disable-next-line no-param-reassign
@@ -91,6 +85,6 @@ export const updateCstodo = async (
         ...cstodo,
         updatedAt: new Date().getTime(),
       },
-    }
+    },
   );
 };

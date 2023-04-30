@@ -25,11 +25,7 @@ import timeToString from '../../etc/timeToString';
 
 const onTodoHWRefresh: TodoRouter = async ({ event, user }) => {
   if (!isAdmin(event.user) && event.user !== user.owner) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      '숙제 갱신은 관리자와 주인만 할 수 있어요...'
-    );
+    return new ReplyFailureCommand(event, user, '숙제 갱신은 관리자와 주인만 할 수 있어요...');
   }
   await validateThenChooseProblem(user.command, true);
   return new ReplySuccessCommand(event, user, '숙제 갱신이 완료되었어요!');
@@ -37,28 +33,18 @@ const onTodoHWRefresh: TodoRouter = async ({ event, user }) => {
 
 const onTodoHWPurge: TodoRouter = async ({ event, user }) => {
   if (!isAdmin(event.user) && event.user != user.owner) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      '숙제 정리는 관리자와 주인만 할 수 있어요...'
-    );
+    return new ReplyFailureCommand(event, user, '숙제 정리는 관리자와 주인만 할 수 있어요...');
   }
   const latestHW = await getLatestGreenGolds(user.command, 100);
   if (latestHW === null) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      '정리할 숙제가 없어서 똑떨이에요...'
-    );
+    return new ReplyFailureCommand(event, user, '정리할 숙제가 없어서 똑떨이에요...');
   }
   const currentHistory = await getCurrentHistory(user.bojHandle!!);
   const sourcedHWLength = latestHW.length;
-  const solvedHW = latestHW.filter((hw) =>
-    currentHistory.some((id) => id === hw.id)
-  );
+  const solvedHW = latestHW.filter((hw) => currentHistory.some((id) => id === hw.id));
   const solvedHWLength = solvedHW.length;
   const removalResult = await Promise.all(
-    solvedHW.map(async (hw) => !!(await removeGreenGold(hw)))
+    solvedHW.map(async (hw) => !!(await removeGreenGold(hw))),
   );
 
   const purgedHWLength = removalResult.filter((result) => result).length;
@@ -77,7 +63,7 @@ const onTodoHWList: TodoRouter = async ({
     return new ReplyFailureCommand(
       event,
       user,
-      '숙제 이력 조회를 위한 인자 (-l)을 확인해주세요...'
+      '숙제 이력 조회를 위한 인자 (-l)을 확인해주세요...',
     );
   }
   const numProblems = parseInt(listArg, 10);
@@ -85,23 +71,15 @@ const onTodoHWList: TodoRouter = async ({
     return new ReplyFailureCommand(
       event,
       user,
-      '조회할 숙제 개수는 1-10 사이의 양의 정수로 입력해주세요...'
+      '조회할 숙제 개수는 1-10 사이의 양의 정수로 입력해주세요...',
     );
   }
   const problems = await getLatestGreenGolds(user.command, numProblems);
   if (problems === null || problems.length === 0) {
-    return new ReplySuccessCommand(
-      event,
-      user,
-      `${user.name}님의 숙제가 없습니다!`
-    );
+    return new ReplySuccessCommand(event, user, `${user.name}님의 숙제가 없습니다!`);
   }
   if (!problems.every((problem) => problem !== undefined)) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      '숙제 정보를 가져오는데 실패했습니다.'
-    );
+    return new ReplyFailureCommand(event, user, '숙제 정보를 가져오는데 실패했습니다.');
   }
   const problemTexts = problems.map((problem) => greenGoldToPlainText(problem));
   const txt2Display = `${user.name}님의 최근 ${
@@ -114,32 +92,25 @@ const onTodoHWQuery: TodoRouter = async ({ event, user }) => {
   const numProblems = user.numProbsPerCycle || 1;
   const problems = await getLatestGreenGolds(user.command, numProblems);
   if (problems === null || problems.length === 0) {
-    return new ReplySuccessCommand(
-      event,
-      user,
-      `${user.command}님의 남은 숙제가 없어요!`
-    );
+    return new ReplySuccessCommand(event, user, `${user.command}님의 남은 숙제가 없어요!`);
   }
 
   if (!problems.every((problem) => problem !== undefined)) {
     return new ReplyFailureCommand(
       event,
       user,
-      '숙제 데이터에 문제가 생겼어요... 관리자에게 문의해주세요.'
+      '숙제 데이터에 문제가 생겼어요... 관리자에게 문의해주세요.',
     );
   }
 
   const hrefs = await Promise.all(
-    problems.map((problem: GreenGoldType) => greenGoldToHrefNoLevel(problem))
+    problems.map((problem: GreenGoldType) => greenGoldToHrefNoLevel(problem)),
   );
   const href = hrefs.join(', ');
   const josa = hrefs.length > 1 ? '들은' : '는';
-  return new ReplySuccessCommand(
-    event,
-    user,
-    `${user.name}님의 최근 숙제${josa} ${href}입니다!`,
-    { iconEmoji: 'hw' }
-  );
+  return new ReplySuccessCommand(event, user, `${user.name}님의 최근 숙제${josa} ${href}입니다!`, {
+    iconEmoji: 'hw',
+  });
 };
 
 const onTodoHWTime: TodoRouter = async ({ event, user }) => {
@@ -149,7 +120,7 @@ const onTodoHWTime: TodoRouter = async ({ event, user }) => {
     return new ReplyFailureCommand(
       event,
       user,
-      `${user.name}님의 숙제 주기나 시점이 설정되지 않은 것 같아요...`
+      `${user.name}님의 숙제 주기나 시점이 설정되지 않은 것 같아요...`,
     );
   }
 
@@ -158,10 +129,7 @@ const onTodoHWTime: TodoRouter = async ({ event, user }) => {
 
     const repeatMilsec = repeatTime * msPerDay;
     if (repeatMilsec <= 0 || fromTime < initialTime) return initialTime;
-    return (
-      initialTime +
-      repeatMilsec * Math.ceil((fromTime - initialTime) / repeatMilsec)
-    );
+    return initialTime + repeatMilsec * Math.ceil((fromTime - initialTime) / repeatMilsec);
   };
 
   const nextTime = nextFireTime(new Date().getTime());
@@ -169,22 +137,14 @@ const onTodoHWTime: TodoRouter = async ({ event, user }) => {
     event,
     user,
     `${user.name}님의 다음 숙제는 ${timeToString(
-      nextTime
-    )}에 드리겠습니다! 지금은 ${repeatTime}일마다 드리고 있어요.`
+      nextTime,
+    )}에 드리겠습니다! 지금은 ${repeatTime}일마다 드리고 있어요.`,
   );
 };
 
-const onTodoHWSet: TodoRouter = async ({
-  query: { args, rawArgString },
-  event,
-  user,
-}) => {
+const onTodoHWSet: TodoRouter = async ({ query: { args, rawArgString }, event, user }) => {
   if (!isAdmin(event.user) && event.user !== user.owner) {
-    return new ReplyFailureCommand(
-      event,
-      user,
-      '숙제 설정은 관리자와 주인만 바꿀 수 있어요...'
-    );
+    return new ReplyFailureCommand(event, user, '숙제 설정은 관리자와 주인만 바꿀 수 있어요...');
   }
 
   const numProblemsArg = getArgFromRawArgString(['-n', '--num'], rawArgString);
@@ -195,7 +155,7 @@ const onTodoHWSet: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        '숙제 개수는 1개 - 10개 사이의 양의 정수로 입력해주세요.'
+        '숙제 개수는 1개 - 10개 사이의 양의 정수로 입력해주세요.',
       );
     }
     await setNumProbsPerCycle(user.command, numProblems);
@@ -203,7 +163,7 @@ const onTodoHWSet: TodoRouter = async ({
       event,
       user,
       `${user.command}님의 숙제 개수를 ${numProblems}개로 설정했어요!`,
-      { iconEmoji: 'hw' }
+      { iconEmoji: 'hw' },
     );
   }
 
@@ -217,7 +177,7 @@ const onTodoHWSet: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        `설정하신 쿼리의 조건을 만족하는 문제가 ${stable_num_of_probs}개 미만이에요...`
+        `설정하신 쿼리의 조건을 만족하는 문제가 ${stable_num_of_probs}개 미만이에요...`,
       );
     }
     await setHWQuery(user.command, hwQueryArg);
@@ -225,7 +185,7 @@ const onTodoHWSet: TodoRouter = async ({
       event,
       user,
       `${user.command}님의 숙제 쿼리를 ${hwQueryArg}로 설정했어요!`,
-      { iconEmoji: 'hw' }
+      { iconEmoji: 'hw' },
     );
   }
 
@@ -236,16 +196,14 @@ const onTodoHWSet: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        `제가 너무 바보같아서 말씀하신 시각(${initialTimeArg})을 잘 이해를 못했어요... 죄송합니다...`
+        `제가 너무 바보같아서 말씀하신 시각(${initialTimeArg})을 잘 이해를 못했어요... 죄송합니다...`,
       );
     }
     await setHWInitialTime(user.command, initialTime);
     return new ReplySuccessCommand(
       event,
       user,
-      `${user.command}님의 숙제를 ${timeToString(
-        initialTime
-      )}부터 드리겠습니다!`
+      `${user.command}님의 숙제를 ${timeToString(initialTime)}부터 드리겠습니다!`,
     );
   }
 
@@ -256,29 +214,25 @@ const onTodoHWSet: TodoRouter = async ({
       return new ReplyFailureCommand(
         event,
         user,
-        '숙제 주기는 1-10 사이의 양의 정수 (일)로 입력해 주세요...'
+        '숙제 주기는 1-10 사이의 양의 정수 (일)로 입력해 주세요...',
       );
     }
     await setHWRepeatTime(user.command, repeatTime);
     return new ReplySuccessCommand(
       event,
       user,
-      `앞으로 ${repeatTime}일마다 ${user.command}님의 숙제를 드리겠습니다!`
+      `앞으로 ${repeatTime}일마다 ${user.command}님의 숙제를 드리겠습니다!`,
     );
   }
 
   return new ReplyFailureCommand(
     event,
     user,
-    '숙제 관련 설정을 위한 인자 (-n|--num, -q|--query)를 입력해주세요...'
+    '숙제 관련 설정을 위한 인자 (-n|--num, -q|--query)를 입력해주세요...',
   );
 };
 
-const onTodoHW: TodoRouter = async ({
-  query: { command, args, rawArgString },
-  event,
-  user,
-}) => {
+const onTodoHW: TodoRouter = async ({ query: { command, args, rawArgString }, event, user }) => {
   if (command.length > 1 && command[1] === 'set') {
     return onTodoHWSet({ query: { command, args, rawArgString }, event, user });
   }
@@ -296,7 +250,7 @@ const onTodoHW: TodoRouter = async ({
     return new ReplyFailureCommand(
       event,
       user,
-      `${user.name}님의 숙제가 등록되지 않은 것 같아요... cstodo-dev 채널에 문의해주세요.`
+      `${user.name}님의 숙제가 등록되지 않은 것 같아요... cstodo-dev 채널에 문의해주세요.`,
     );
   }
 
@@ -329,7 +283,7 @@ const onTodoHW: TodoRouter = async ({
       event,
       user,
       `${user.name}님의 숙제 쿼리는 \`${user.hwQuery!!}\` 입니다!`,
-      { iconEmoji: 'hw' }
+      { iconEmoji: 'hw' },
     );
   }
 

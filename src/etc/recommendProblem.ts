@@ -5,9 +5,7 @@ import querySolvedAC from './querySolvedAC';
 const parseLevel = (levelNum: number) => {
   if (levelNum > 0)
     return `${
-      ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][
-        Math.floor((levelNum - 1) / 5 + 0.000001)
-      ]
+      ['bron', 'silv', 'gold', 'plat', 'dia', 'ruby'][Math.floor((levelNum - 1) / 5 + 0.000001)]
     }${5 - ((levelNum - 1) % 5)}`;
   return 'unranked';
 };
@@ -30,7 +28,7 @@ const recommendProblem = async (todoCommand: string = 'greentodo') => {
         title: problem.titleKo,
         level: parseLevel(problem.level),
         source: undefined,
-      } as HistoryType)
+      } as HistoryType),
   );
 };
 export default recommendProblem;

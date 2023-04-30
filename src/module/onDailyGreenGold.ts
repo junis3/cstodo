@@ -7,14 +7,10 @@ import getProblemInfo, { level2tier, tier2Level } from '../etc/getProblemInfo';
 import { getUser, UserType } from '../database/user';
 import { PostMessageCommand } from '../command/PostMessageCommand';
 
-export const chooseProblem = async (
-  todoCommand = 'greentodo',
-  forced = false
-) => {
+export const chooseProblem = async (todoCommand = 'greentodo', forced = false) => {
   const user = await getUser(todoCommand);
   if (!user) return;
-  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced)
-    return;
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return;
   const problems = await recommendProblem(todoCommand);
   const username = user.name;
   const home = user.home!!;
@@ -22,12 +18,10 @@ export const chooseProblem = async (
   await Promise.all(
     problems.map(async (problem: HistoryType) => {
       addGreenGold(user.command, { id: problem.id, title: problem.title });
-    })
+    }),
   );
 
-  const hrefs = await Promise.all(
-    problems.map((problem: HistoryType) => history2Href(problem))
-  );
+  const hrefs = await Promise.all(problems.map((problem: HistoryType) => history2Href(problem)));
 
   const href = hrefs.join(', ');
   const josa = hrefs.length > 1 ? '들은' : '는';
@@ -107,7 +101,9 @@ const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryTyp
       username: 'GreenGold',
     }).exec();
   } else {
-    const maxTier = level2tier( Math.max(...problems.map((problem) => tier2Level(problem.level || "unranked"))) );
+    const maxTier = level2tier(
+      Math.max(...problems.map((problem) => tier2Level(problem.level || 'unranked'))),
+    );
     await new PostMessageCommand({
       text: `${user.name} 최~악 :heart:`,
       channel: home,
@@ -121,13 +117,12 @@ const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryTyp
       username: 'GreenGold',
     }).exec();
   }
-}
+};
 
-export const validateProblem = async (todoCommand = 'greentodo', forced=false) => {
+export const validateProblem = async (todoCommand = 'greentodo', forced = false) => {
   const user = await getUser(todoCommand);
   if (!user) return;
-  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced)
-    return;
+  if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return;
   const numProblems = user.numProbsPerCycle || 1;
   const greenGolds = await getLatestGreenGolds(user.command, numProblems);
   const home = user.home!!;
@@ -147,9 +142,7 @@ export const validateProblem = async (todoCommand = 'greentodo', forced=false) =
 
   const currentHistory = new Set(await getCurrentHistory(user.bojHandle!!));
 
-  const problems = await Promise.all(
-    greenGolds.map((problem) => getProblemInfo(problem.id!!))
-  );
+  const problems = await Promise.all(greenGolds.map((problem) => getProblemInfo(problem.id!!)));
 
   const problemStatus = problems.map((problem) => ({
     problem,
@@ -160,7 +153,7 @@ export const validateProblem = async (todoCommand = 'greentodo', forced=false) =
     problemStatus.map(({ problem, solved }) => {
       if (solved) return worshipSuccess(problem, home);
       return blameFail(problem, home);
-    })
+    }),
   );
 
   if (problemStatus.every(({ solved }) => solved)) {
@@ -172,10 +165,7 @@ export const validateProblem = async (todoCommand = 'greentodo', forced=false) =
   }
 };
 
-export const validateThenChooseProblem = async (
-  todoCommand: string,
-  forced = false
-) => {
+export const validateThenChooseProblem = async (todoCommand: string, forced = false) => {
   await validateProblem(todoCommand, forced);
   await chooseProblem(todoCommand, forced);
 };

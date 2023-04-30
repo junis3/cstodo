@@ -12,7 +12,7 @@ const onTodoMute: TodoRouter = async ({ event, user }) => {
       event,
       user,
       `이제 ${user.command} 봇이 응답을 조용히 전달합니다.`,
-      { muted: false }
+      { muted: false },
     );
   }
   await setMuted(user.command, false);
@@ -20,7 +20,7 @@ const onTodoMute: TodoRouter = async ({ event, user }) => {
     event,
     user,
     `이제 ${user.command} 봇이 응답을 시끄럽게 보냅니다.`,
-    { muted: false }
+    { muted: false },
   );
 };
 

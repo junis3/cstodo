@@ -1,12 +1,4 @@
-type TimeToken =
-  | 'year'
-  | 'month'
-  | 'date'
-  | 'hour'
-  | 'hourAM'
-  | 'hourPM'
-  | 'minute'
-  | 'second';
+type TimeToken = 'year' | 'month' | 'date' | 'hour' | 'hourAM' | 'hourPM' | 'minute' | 'second';
 
 interface MatchInfo {
   re: RegExp;
@@ -104,15 +96,7 @@ const matchInfo: MatchInfo[] = [
   },
 ];
 
-const weekdays = [
-  '일요일',
-  '월요일',
-  '화요일',
-  '수요일',
-  '목요일',
-  '금요일',
-  '토요일',
-];
+const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 
 const stringToTime = (str: string) => {
   const now = new Date();
@@ -126,16 +110,12 @@ const stringToTime = (str: string) => {
 
   const tokens = str.split(' ');
   tokens.forEach((token, k) => {
-    if (token.endsWith('까지') && k === tokens.length - 1)
-      token = token.replace('까지', '');
+    if (token.endsWith('까지') && k === tokens.length - 1) token = token.replace('까지', '');
 
     if (token === '그제' || token === '그저께') date = now.getDate() - 2;
-    else if (token === '어제' || token.toLowerCase() === 'yesterday')
-      date = now.getDate() - 1;
-    else if (token === '오늘' || token.toLowerCase() === 'today')
-      date = now.getDate();
-    else if (token === '내일' || token.toLowerCase() === 'tomorrow')
-      date = now.getDate() + 1;
+    else if (token === '어제' || token.toLowerCase() === 'yesterday') date = now.getDate() - 1;
+    else if (token === '오늘' || token.toLowerCase() === 'today') date = now.getDate();
+    else if (token === '내일' || token.toLowerCase() === 'tomorrow') date = now.getDate() + 1;
     else if (token === '모레') date = now.getDate() + 2;
     else if (token === '자정') (hour = 23), (minute = 59);
     else if (token === '정오') hour = 12;
@@ -145,10 +125,8 @@ const stringToTime = (str: string) => {
 
       if (nowDay < tokenDay) date = now.getDate() + tokenDay - nowDay;
       else date = now.getDate() + 7 + tokenDay - nowDay;
-    } else if (token === '오후' || token.toLowerCase() === 'am')
-      isAfternoon = true;
-    else if (token === '오전' || token.toLowerCase() === 'pm')
-      isAfternoon = false;
+    } else if (token === '오후' || token.toLowerCase() === 'am') isAfternoon = true;
+    else if (token === '오전' || token.toLowerCase() === 'pm') isAfternoon = false;
 
     matchInfo.forEach(({ re, args }) => {
       const result = re.exec(token);
@@ -199,11 +177,7 @@ const stringToTime = (str: string) => {
     else hour %= 12;
   }
 
-  if (
-    year === now.getFullYear() &&
-    month === now.getMonth() &&
-    date === now.getDate()
-  ) {
+  if (year === now.getFullYear() && month === now.getMonth() && date === now.getDate()) {
     if (
       isAfternoon === undefined &&
       hour > 0 &&

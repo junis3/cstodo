@@ -15,10 +15,7 @@ const onEcho: MessageRouter = ({ event }) => {
     text
       .trim()
       .split('')
-      .filter(
-        (chr) =>
-          ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined
-      )
+      .filter((chr) => ['<', '>', '\u202e', '\u202d'].find((x) => x === chr) === undefined)
       .join('')
       .slice(0, 600);
 

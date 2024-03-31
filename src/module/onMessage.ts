@@ -3,6 +3,7 @@ import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
 import onYourMark from './yourMark';
+import onBamboo from './bamboo';
 import { getUser } from '../database/user';
 import { emoji } from '../etc/theme';
 import { MessageRouter } from '../router';
@@ -63,6 +64,10 @@ const onMessage: MessageRouter = async ({ event }) => {
   //     await runCommands(onEcho(event));
   //   }
   // }
+
+  if (command === '대나무숲') {
+    return onBamboo({ event });
+  }
 
   if (command === 'code' && tokens.length > 1) return onCode({ event });
   if (command === 'on') return onYourMark({ event });

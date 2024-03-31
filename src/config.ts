@@ -10,6 +10,8 @@ export const port = Number.parseInt(process.env.PORT || '3000', 10);
 
 export const isTesting = !process.env.IS_PRODUCTION;
 
+export const bambooChannel = process.env.BAMBOO_CHANNEL || 'CV7RX9WEL';
+
 export const csGod = 'UV78YL6TW';
 export const cstodoTestChannel = process.env.CSTODO_TEST_CHANNEL || 'C01JER4T7AN';
 export const cstodoChannel = isTesting

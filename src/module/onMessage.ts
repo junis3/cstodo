@@ -65,7 +65,7 @@ const onMessage: MessageRouter = async ({ event }) => {
   //   }
   // }
 
-  if (command === '대나무숲') {
+  if (event.channel[0] === 'D' || event.channel === 'C06S1KCAR7F') {
     return onBamboo({ event });
   }
 

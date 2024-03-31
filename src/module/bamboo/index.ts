@@ -8,7 +8,7 @@ const onBamboo: MessageRouter = async ({ event }) => {
   if (attack) return attack;
 
   return new PostMessageCommand({
-    text: event.text.split(' ').slice(1).join(' '),
+    text: event.text,
     channel: bambooChannel,
   });
 };

@@ -65,10 +65,6 @@ const onMessage: MessageRouter = async ({ event }) => {
   //   }
   // }
 
-  if (event.channel[0] === 'D' || event.channel === 'C06S1KCAR7F') {
-    return onBamboo({ event });
-  }
-
   if (command === 'code' && tokens.length > 1) return onCode({ event });
   if (command === 'on') return onYourMark({ event });
 

@@ -120,6 +120,8 @@ const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryTyp
 };
 
 export const validateProblem = async (todoCommand = 'greentodo', forced = false) => {
+  return;
+  
   const user = await getUser(todoCommand);
   if (!user) return;
   if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return;

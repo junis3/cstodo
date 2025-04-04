@@ -28,6 +28,8 @@ function randomChoice<Type>(array: Type[]) {
 }
 
 const dailyProblem = async () => {
+  return;
+  
   const history = await getHistories();
   const currentHistory = await getCurrentHistory();
 

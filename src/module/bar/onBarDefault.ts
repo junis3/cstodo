@@ -1,24 +1,11 @@
-import { Block } from '@slack/types/dist/index';
 import { getBars } from '../../database/bar';
-import { isThemeType, UserType } from '../../database/user';
+import { UserType } from '../../database/user';
 import { QueryType } from '../../etc/parseQuery';
 import { formatBar } from './barFormatter';
 import { replyMessage, replySuccess } from '../../etc/postMessage';
 import { emoji } from '../../etc/theme';
 import { SlackMessageEvent } from '../../command/event';
 
-const bulletEmoji = [
-  ':one:',
-  ':two:',
-  ':three:',
-  ':four:',
-  ':five:',
-  ':six:',
-  ':seven:',
-  ':eight:',
-  ':nine:',
-  ':keycap_ten:',
-];
 
 const onBarDefault = async (query: QueryType, event: SlackMessageEvent, user: UserType) => {
   const allBars = await getBars(user.id);

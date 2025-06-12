@@ -1,6 +1,5 @@
 import { CommandInterface, CommandSignal } from './index';
 
-// eslint-disable-next-line import/prefer-default-export
 export class SerialCommand implements CommandInterface {
   commands: CommandInterface[];
 

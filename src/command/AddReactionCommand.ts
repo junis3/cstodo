@@ -13,7 +13,6 @@ interface CustomReactionsAddArguments {
 
 type ExtendedReactionsAddArguments = CustomReactionsAddArguments & ReactionsAddArguments;
 
-// eslint-disable-next-line import/prefer-default-export
 export class AddReactionCommand implements CommandInterface {
   private props: ExtendedReactionsAddArguments;
 

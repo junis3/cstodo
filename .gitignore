@@ -9,3 +9,5 @@ history.txt
 *.log
 
 build
+
+.claude

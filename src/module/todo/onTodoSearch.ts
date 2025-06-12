@@ -1,10 +1,6 @@
-import { UserType } from '../../database/user';
 import { CstodoType, getCstodos } from '../../database/cstodo';
-import { emoji } from '../../etc/theme';
 import { replyDdokddul, replySuccess } from '../../etc/postMessage';
-import { QueryType } from '../../etc/parseQuery';
-import { SlackMessageEvent } from '../../slack/event';
-import { TodoRouter } from '../router';
+import { TodoRouter } from '../../router';
 
 // Needs refactor......
 const onTodoSearch: TodoRouter = async ({ event, user }) => {
@@ -14,7 +10,7 @@ const onTodoSearch: TodoRouter = async ({ event, user }) => {
 
   const cstodos = await getCstodos(user.id);
 
-  const result = await new Promise<CstodoType[] | null>((resolve, reject) => {
+  const result = await new Promise<CstodoType[] | null>((resolve) => {
     setTimeout(() => resolve(null), 3000);
 
     const result = cstodos.filter(

@@ -1,4 +1,4 @@
-import parseQuery, { getArgFromRawArgString, QueryType } from './parseQuery';
+import parseQuery, { QueryType } from './parseQuery';
 
 test('argument with single chars', () => {
   const pq: QueryType = parseQuery('cmd subcmd -a va -b vb -c');

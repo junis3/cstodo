@@ -1,7 +1,7 @@
 import { ChatPostMessageArguments } from '@slack/web-api';
 import { webClient } from '../command';
 import { emoji } from './theme';
-import { cstodoChannel, cstodoTestChannel } from '../config';
+import { cstodoTestChannel } from '../config';
 import { UserType } from '../database/user';
 import { SlackMessageEvent } from '../command/event';
 

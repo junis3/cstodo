@@ -9,7 +9,7 @@ import { TodoRouter } from '../../router';
 import { ReplyFailureCommand } from '../../command/ReplyFailureCommand';
 import { ReplySuccessCommand } from '../../command/ReplySuccessCommand';
 import { getArg, getArgFromRawArgString } from '../../etc/parseQuery';
-import { chooseProblem, validateThenChooseProblem } from '../onDailyGreenGold';
+import { validateThenChooseProblem } from '../onDailyGreenGold';
 import isAdmin from '../../etc/isAdmin';
 import {
   getUser,
@@ -54,7 +54,7 @@ const onTodoHWPurge: TodoRouter = async ({ event, user }) => {
 };
 
 const onTodoHWList: TodoRouter = async ({
-  query: { command, args, rawArgString },
+  query: { args },
   event,
   user,
 }) => {

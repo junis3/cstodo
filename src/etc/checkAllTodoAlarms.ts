@@ -1,9 +1,7 @@
-import { SlackMessageEvent } from '../command/event';
 import { PostEphemeralCommand } from '../command/PostEphemeralCommand';
 import { PostMessageCommand } from '../command/PostMessageCommand';
 import { getCstodos } from '../database/cstodo';
 import { getAllUsers } from '../database/user';
-import { postMessage } from './postMessage';
 import { emoji } from './theme';
 import timeToString from './timeToString';
 

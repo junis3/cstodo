@@ -3,7 +3,6 @@ import onCode from './code';
 import onTodo from './todo';
 import onBar from './bar';
 import onYourMark from './yourMark';
-import onBamboo from './bamboo';
 import { getUser } from '../database/user';
 import { emoji } from '../etc/theme';
 import { MessageRouter } from '../router';

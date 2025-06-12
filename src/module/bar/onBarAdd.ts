@@ -3,7 +3,7 @@ import { replySuccess, replyDdokddul, ForceMuteType } from '../../etc/postMessag
 import { getArg, QueryType } from '../../etc/parseQuery';
 import { isInteger } from '../../etc/isInteger';
 import preprocessContent from '../../etc/preprocessContent';
-import { addBar, getBars } from '../../database/bar';
+import { addBar } from '../../database/bar';
 import { validateBar } from '../../etc/validateBar';
 import { SlackMessageEvent } from '../../command/event';
 import makeUnique from '../../etc/makeUnique';
@@ -26,8 +26,6 @@ const isContentValid = (content: string[]) => {
 };
 
 const onBarAdd = async ({ command, args }: QueryType, event: SlackMessageEvent, user: UserType) => {
-  const bars = await getBars(user.id);
-
   const progArg = getArg(['--progress', '--prog', '-p'], args);
   const goalArg = getArg(['--goal', '-g'], args);
 

@@ -2,7 +2,6 @@ import { BarType } from '../../database/bar';
 import { emoji } from '../../etc/theme';
 import { UserType } from '../../database/user';
 
-// eslint-disable-next-line import/prefer-default-export
 export const formatBar = (bar: BarType, user: UserType) => {
   let { goal, progress } = bar;
   if (goal === 0) {

@@ -1,8 +1,6 @@
 import { model, Schema, Document } from 'mongoose';
 import { getAllUsers, getUser } from './user';
-import isAdmin from '../etc/isAdmin';
 import makeUnique from '../etc/makeUnique';
-import { hasJSDocParameterTags } from 'typescript';
 
 export interface HumanType {
   id: string;

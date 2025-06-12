@@ -1,4 +1,4 @@
-import parseQuery, { getArg, getArgFromRawArgString, QueryType } from './parseQuery';
+import parseQuery, { getArgFromRawArgString, QueryType } from './parseQuery';
 
 test('quoted solved.ac query', () => {
   const pq: QueryType = parseQuery('cstodo hw set -q "tier:d5..r1 -solved_by:cs71107"');

@@ -1,5 +1,4 @@
 import recommendProblem from '../etc/recommendProblem';
-import { postMessage } from '../etc/postMessage';
 import { history2Href, HistoryType } from '../database/history';
 import { addGreenGold, getLatestGreenGolds } from '../database/greengold';
 import getCurrentHistory from '../etc/getCurrentHistory';
@@ -121,7 +120,7 @@ const spinIfNoSolved = async (user: UserType, home: string, problems: HistoryTyp
 
 export const validateProblem = async (todoCommand = 'greentodo', forced = false) => {
   return;
-  
+  /*
   const user = await getUser(todoCommand);
   if (!user) return;
   if (user.initialTime && user.initialTime > 0 && user.repeatTime && !forced) return;
@@ -165,6 +164,7 @@ export const validateProblem = async (todoCommand = 'greentodo', forced = false)
   if (problemStatus.every(({ solved }) => !solved)) {
     await spinIfNoSolved(user, home, problems);
   }
+  */
 };
 
 export const validateThenChooseProblem = async (todoCommand: string, forced = false) => {

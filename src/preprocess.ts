@@ -1,7 +1,6 @@
-import fs from 'fs';
 import mongoose from 'mongoose';
 import getCurrentHistory from './etc/getCurrentHistory';
-import { addHistory, HistoryType } from './database/history';
+import { addHistory } from './database/history';
 import { mongodbUri } from './config';
 
 export const preprocess = async () => {
@@ -23,7 +22,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((res) => {
+  .then(() => {
     console.log(`Successfully connected to mongodb on ${mongoose.connection.host}`);
     preprocess();
   })

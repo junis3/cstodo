@@ -12,7 +12,6 @@ interface ReplySuccessOptions {
   muted?: boolean;
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export class ReplySuccessCommand extends SerialCommand {
   constructor(
     event: SlackMessageEvent,

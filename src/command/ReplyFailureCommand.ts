@@ -6,7 +6,6 @@ import { SlackMessageEvent } from './event';
 import { UserType } from '../database/user';
 import { emoji } from '../etc/theme';
 
-// eslint-disable-next-line import/prefer-default-export
 export class ReplyFailureCommand extends SerialCommand {
   constructor(event: SlackMessageEvent, user?: UserType, message?: string) {
     const addReactionCommand = new AddReactionCommand({

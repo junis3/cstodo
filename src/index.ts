@@ -12,7 +12,6 @@ import {
 } from './config';
 import onMessage from './module/onMessage';
 import onTest from './module/onTest';
-import { initiateAlarms } from './database/alarm';
 import { webClient } from './command';
 import { SlackMessageEvent } from './command/event';
 
@@ -41,7 +40,6 @@ mongoose
     throw err;
   });
 
-// eslint-disable-next-line import/prefer-default-export
 export const slackEvents = createEventAdapter(signingSecret);
 
 (async () => {

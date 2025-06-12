@@ -63,7 +63,7 @@ slackEvents.on('message', (event: SlackMessageEvent) => {
   });
 });
 
-initiateAlarms();
+// initiateAlarms();
 
 // 테스트 모드가 켜져있으면 끄라고 #cstodo-test에 알림을 보냅니다.
 if (isTesting) onTest();
